@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_agri_app/bloc/fertilizer/fertilizer_event.dart';
 import 'package:smart_agri_app/bloc/fertilizer/fertilizer_state.dart';
+import 'package:smart_agri_app/config.dart';
 
 class FertilizerBloc extends Bloc<FertilizerEvent, FertilizerState> {
   final Dio dio = Dio();
@@ -15,7 +16,7 @@ class FertilizerBloc extends Bloc<FertilizerEvent, FertilizerState> {
     emit(FertilizerLoading());
 
     try {
-      final response = await dio.get('http://192.168.100.35:6070/api/dropdowns');
+      final response = await dio.get('${Config.baseUrl}/dropdowns');
       emit(FertilizerDropdownsLoaded(
           List<String>.from(response.data['crops']),
           List<String>.from(response.data['stages']),
@@ -30,7 +31,7 @@ class FertilizerBloc extends Bloc<FertilizerEvent, FertilizerState> {
   Future<void> _onGetRecommendation(GetRecommendation event, Emitter<FertilizerState> emit) async {
     emit(FertilizerLoading());
     try {
-      final response = await dio.post('http://192.168.100.35:6070/predict_fertilizer', 
+      final response = await dio.post('${Config.baseUrl.replaceAll('/api', '')}/predict_fertilizer', 
           data: event.formData);
       if(response.statusCode == 200){
         emit(FertilizerRecommendationSuccess(response.data['recommendation']));

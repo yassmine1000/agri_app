@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:smart_agri_app/local/pref_helper.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
+import 'package:smart_agri_app/config.dart';
 
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -17,7 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _handleLogin(LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final response = await _dio.post('http://192.168.100.35:6070/api/auth/login', data: {
+      final response = await _dio.post('${Config.baseUrl}/auth/login', data: {
         'username': event.username,
         'password': event.password,
       });
@@ -38,7 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _handleRegister(RegisterEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final response = await _dio.post('http://192.168.100.35:6070/api/auth/register',
+      final response = await _dio.post('${Config.baseUrl}/auth/register',
           data: event.userDate
       );
       if (response.statusCode == 201) {

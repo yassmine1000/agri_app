@@ -1,124 +1,125 @@
 import 'package:flutter/material.dart';
-
+import 'package:smart_agri_app/utils/app_theme.dart';
+import 'package:smart_agri_app/utils/custom_widgets.dart';
 import '../disease_detection_screen.dart';
 import '../fetilizer_form.dart';
 
-
-class DetectionScreen extends StatefulWidget {
+class DetectionScreen extends StatelessWidget {
   const DetectionScreen({super.key});
 
   @override
-  State<DetectionScreen> createState() => _DetectionScreenState();
-}
-
-class _DetectionScreenState extends State<DetectionScreen> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'AI-Powered',
+                        style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600, letterSpacing: 1),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Plant Intelligence',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Detect diseases and optimize your crops with advanced AI analysis.',
+                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.5),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppColors.primary, AppColors.cyan],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Center(child: Text('🤖', style: TextStyle(fontSize: 30))),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 28),
+
+          const Text(
+            'TOOLS',
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary, letterSpacing: 2),
+          ),
+          const SizedBox(height: 14),
+
+          FeatureCard(
+            title: 'Disease Detection',
+            subtitle: 'Upload or capture a leaf image to identify diseases and get treatment advice instantly.',
+            emoji: '🔬',
+            accentColor: AppColors.primary,
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DiseaseDetectionScreen())),
+          ),
+
+          const SizedBox(height: 12),
+
+          FeatureCard(
+            title: 'Fertilizer Recommendation',
+            subtitle: 'Get personalized fertilizer advice based on your crop type and soil conditions.',
+            emoji: '⚗️',
+            accentColor: AppColors.gold,
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => FertilizerForm())),
+          ),
+
+          const SizedBox(height: 28),
+
+          // Stats row
+          Row(
+            children: [
+              _statCard('95%', 'Accuracy', AppColors.primary),
+              const SizedBox(width: 12),
+              _statCard('50+', 'Diseases', AppColors.cyan),
+              const SizedBox(width: 12),
+              _statCard('24/7', 'Available', AppColors.gold),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _statCard(String value, String label, Color color) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: color.withOpacity(0.2)),
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Welcome to Agri App",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              "This app helps farmers detect plant diseases early and get advice "
-                  "to protect crops. It also provides fertilizer recommendations "
-                  "to improve crop yield and reduce costs.",
-              style: TextStyle(fontSize: 16, color: Colors.black87),
-            ),
-            const SizedBox(height: 40),
-
-            Card(
-              color: Colors.green.shade100,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              elevation: 4,
-              child: InkWell(
-                onTap: () {
-                  // Navigate to Disease Detection Page
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> DiseaseDetectionScreen()));
-                },
-                borderRadius: BorderRadius.circular(15),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.camera_alt,
-                          size: 40, color: Colors.green),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Disease Detection",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              "Upload plant leaf images to identify "
-                                  "diseases and get treatment advice instantly.",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            Card(
-              color: Colors.yellow.shade100,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              elevation: 4,
-              child: InkWell(
-                onTap: () {
-                  // Navigate to Fertilizer Recommendation Page
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>FertilizerForm()));
-
-                },
-                borderRadius: BorderRadius.circular(15),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.eco, size: 40, color: Colors.brown),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Fertilizer Recommendation",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              "Get personalized fertilizer advice "
-                                  "based on your crop type and soil condition.",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
+            const SizedBox(height: 4),
+            Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
           ],
         ),
       ),

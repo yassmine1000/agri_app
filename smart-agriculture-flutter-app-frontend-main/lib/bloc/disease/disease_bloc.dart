@@ -57,15 +57,22 @@ class DiseaseBloc extends Bloc<DiseaseEvent, DiseaseState> {
         "image": await MultipartFile.fromFile(event.image.path, filename: "image.jpg"),
       });
 
-      final response = await Dio().post(apiUrl, data: formData);
+      final response = await Dio().post(
+  apiUrl,
+  data: formData,
+  options: Options(
+    headers: {'ngrok-skip-browser-warning': 'true'},
+  ),
+);
       emit(DiseaseSuccess(
-        event.image,
-        response.data['disease'],
-        response.data['confidence'],
-        response.data['advice'],
-      ));
+  event.image,
+  response.data['disease'],
+  (response.data['confidence'] as num).toDouble(),
+  response.data['advice'],
+));
     } catch (e) {
-      emit(DiseaseError("Échec de l'analyse: $e", selectedImage: event.image));
-    }
+  print("ERREUR DETECTION: $e");
+  emit(DiseaseError("Échec de l'analyse: $e", selectedImage: event.image));
+}
   }
 }

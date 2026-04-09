@@ -35,6 +35,7 @@ app.use("/api/prices", priceRoute);
 
 // Disease Detection endpoint
 app.post("/predict", upload.single("image"), async (req: Request, res: Response) => {
+    console.log("PREDICT REQUEST REÇU");  // ← AJOUTE ICI  
     if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
     }
@@ -46,14 +47,15 @@ app.post("/predict", upload.single("image"), async (req: Request, res: Response)
         const fileStream = fs.createReadStream(imagePath);
         formData.append("image", fileStream);  // was "file"
 
-
+        console.log("ENVOI A FLASK..."); // ← AJOUTE
         const response = await axios.post("http://127.0.0.1:4000/predict", formData, {
             headers: formData.getHeaders(),
         });
-
+        console.log("REPONSE FLASK:", response.data); // ← AJOUTE
         fs.unlinkSync(imagePath); // cleanup
         res.json(response.data);
     } catch (error: any) {
+        console.log("ERREUR FLASK:", error.message); // ← AJOUTE ICI
         fs.unlinkSync(imagePath);
         res.status(500).json({ error: error.message });
     }

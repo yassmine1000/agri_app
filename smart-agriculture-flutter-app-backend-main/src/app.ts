@@ -5,7 +5,7 @@ import path from "path";
 import fs from "fs";
 import FormData from "form-data";
 import axios from "axios";
-
+import historyRoute from "./routes/historyRoute";
 
 import csv from "csv-parser";
 
@@ -16,6 +16,7 @@ import authRouter from "./routes/authRoute";
 import farmerRoute from "./routes/farmerRoute";
 import errorHandling from "./middleware/errorHandler";
 import priceRoute from "./routes/priceRoute";   // avec les autres imports
+
 
 dotenv.config();
 
@@ -32,33 +33,35 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRouter);
 app.use("/api/farmer", farmerRoute);
 app.use("/api/prices", priceRoute);
+app.use("/api/history", historyRoute);
 
 // Disease Detection endpoint
 app.post("/predict", upload.single("image"), async (req: Request, res: Response) => {
-    console.log("PREDICT REQUEST REÇU");  // ← AJOUTE ICI  
-    if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
-    }
+  console.log("PREDICT REQUEST REÇU");
+  if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+  }
 
-    const imagePath = path.resolve(req.file.path);
+  const imagePath = path.resolve(req.file.path);
+  const lang = req.headers['accept-language'] || 'EN'; // ← récupère la langue
 
-    try {
-        const formData = new FormData();
-        const fileStream = fs.createReadStream(imagePath);
-        formData.append("image", fileStream);  // was "file"
+  try {
+      const formData = new FormData();
+      const fileStream = fs.createReadStream(imagePath);
+      formData.append("image", fileStream);
 
-        console.log("ENVOI A FLASK..."); // ← AJOUTE
-        const response = await axios.post("http://127.0.0.1:4000/predict", formData, {
-            headers: formData.getHeaders(),
-        });
-        console.log("REPONSE FLASK:", response.data); // ← AJOUTE
-        fs.unlinkSync(imagePath); // cleanup
-        res.json(response.data);
-    } catch (error: any) {
-        console.log("ERREUR FLASK:", error.message); // ← AJOUTE ICI
-        fs.unlinkSync(imagePath);
-        res.status(500).json({ error: error.message });
-    }
+      const response = await axios.post(
+          `http://127.0.0.1:4000/predict?lang=${lang}`, // ← ajoute lang dans l'URL
+          formData,
+          { headers: formData.getHeaders() }
+      );
+
+      fs.unlinkSync(imagePath);
+      res.json(response.data);
+  } catch (error: any) {
+      fs.unlinkSync(imagePath);
+      res.status(500).json({ error: error.message });
+  }
 });
 
 // API to fetch crop, stage and soil types names from CSV

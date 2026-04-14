@@ -32,10 +32,10 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 };
 
 export const farmerOnly = (req: Request, res: Response, next: NextFunction) => {
-    if (req.user?.role !== "farmer") {
-        return res.status(403).json({ message: "Farmer access only" });
-    }
-    next();
+  if (req.user?.role !== "farmer" && req.user?.role !== "admin") {
+      return res.status(403).json({ message: "Farmer access only" });
+  }
+  next();
 };
 
 export const adminOnly = (req: Request, res: Response, next: NextFunction) => {

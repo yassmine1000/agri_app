@@ -31,8 +31,8 @@ model   = tf.keras.Model(inputs, outputs)
 model.load_weights("best_weights.weights.h5")
 print("✅ Poids chargés avec succès")
 
-# ── Conseils détaillés pour toutes les 39 classes ────────────────
-disease_advice = {
+# ── Conseils EN ──────────────────────────────────────────────────
+disease_advice_en = {
     "Apple___Apple_scab": [
         "Apply fungicides (myclobutanil or captan) at early leaf development. Remove and destroy fallen leaves to reduce overwintering spores.",
         "Prune trees to improve air circulation. Apply protective fungicide sprays before and after rain events during spring.",
@@ -71,7 +71,7 @@ disease_advice = {
     "Cherry___healthy": [
         "Cherry tree is in great health! Prune after harvest to maintain shape and remove crossing branches.",
         "Looking good! Apply balanced fertilizer in spring and ensure deep, infrequent watering during dry spells.",
-        "Healthy tree detected. Monitor for cherry leaf spot and brown rot as seasons change. Maintain good sanitation."
+        "Healthy tree detected. Monitor for cherry leaf spot and brown rot as seasons change."
     ],
     "Corn___Cercospora_leaf_spot Gray_leaf_spot": [
         "Apply strobilurin or triazole fungicide at early tassel stage. Rotate crops — avoid planting corn after corn.",
@@ -176,7 +176,7 @@ disease_advice = {
     "Strawberry___healthy": [
         "Strawberry plants are in excellent health! Apply balanced fertilizer after renovation and maintain consistent moisture.",
         "Great condition! Mulch with straw to keep fruit clean and reduce soil splash that spreads disease.",
-        "Healthy plants detected. Monitor for two-spotted spider mite during hot, dry weather. Remove runners to focus energy on fruit."
+        "Healthy plants detected. Monitor for two-spotted spider mite during hot, dry weather."
     ],
     "Tomato___Bacterial_spot": [
         "Apply copper + mancozeb bactericide spray every 5-7 days. Avoid working in the field when plants are wet.",
@@ -230,6 +230,205 @@ disease_advice = {
     ],
 }
 
+# ── Conseils FR ──────────────────────────────────────────────────
+disease_advice_fr = {
+    "Apple___Apple_scab": [
+        "Appliquer des fongicides (myclobutanil ou captane) dès le débourrement. Ramasser et détruire les feuilles tombées pour réduire les spores hivernantes.",
+        "Tailler les arbres pour améliorer la circulation de l'air. Appliquer des fongicides préventifs avant et après les pluies printanières.",
+        "Utiliser des variétés de pommes résistantes lors de la replantation. Ratisser les feuilles infectées loin du verger."
+    ],
+    "Apple___Black_rot": [
+        "Retirer immédiatement les fruits momifiés et le bois mort des arbres. Appliquer un fongicide à base de cuivre pendant la saison de croissance.",
+        "Tailler les chancres et les branches mortes. Désinfecter les outils de taille entre chaque coupe. Appliquer du captane à la chute des pétales.",
+        "Maintenir la vigueur de l'arbre par une nutrition et une irrigation appropriées. Retirer les fruits infectés rapidement avant que les spores ne se propagent."
+    ],
+    "Apple___Cedar_apple_rust": [
+        "Retirer les genévriers/cèdres proches si possible. Appliquer du myclobutanil ou du mancozèbe au stade bouton rose.",
+        "Appliquer des fongicides protecteurs du stade bouton rose jusqu'à la chute des pétales. Utiliser des variétés résistantes à la rouille pour les nouvelles plantations.",
+        "Surveiller les masses de spores orange sur les cèdres voisins au printemps. Appliquer des fongicides avant les pluies pendant la période d'infection."
+    ],
+    "Apple___healthy": [
+        "Votre pommier est en bonne santé ! Maintenez une taille régulière pour améliorer la circulation de l'air et la pénétration de la lumière.",
+        "Très bonne condition ! Appliquez un engrais équilibré au début du printemps et assurez un arrosage régulier pendant les périodes sèches.",
+        "Arbre en bonne santé. Continuez à surveiller les premiers signes de maladie et maintenez un verger propre."
+    ],
+    "Background_without_leaves": [
+        "Aucune plante détectée dans l'image. Veuillez prendre une photo claire d'une feuille de plante pour une détection précise.",
+        "L'image ne contient pas de feuille reconnaissable. Assurez un bon éclairage et focalisez l'appareil photo directement sur la feuille.",
+        "Veuillez reprendre la photo avec une seule feuille remplissant la majeure partie du cadre pour de meilleurs résultats."
+    ],
+    "Blueberry___healthy": [
+        "La myrtille est en bonne santé ! Maintenez le pH du sol entre 4,5 et 5,5 pour une absorption optimale des nutriments.",
+        "Excellente condition ! Paillez avec de l'écorce de pin pour maintenir l'acidité et l'humidité. Taillez les vieilles tiges annuellement.",
+        "Plante prospère. Assurez une irrigation adéquate pendant le développement des fruits et fertilisez avec des engrais acidifiants."
+    ],
+    "Cherry___Powdery_mildew": [
+        "Appliquer un fongicide à base de soufre ou du bicarbonate de potassium au premier signe de revêtement blanc poudreux sur les feuilles.",
+        "Améliorer la circulation de l'air par la taille. Éviter l'irrigation par aspersion. Appliquer de l'huile de neem le matin.",
+        "Retirer et détruire les pousses fortement infectées. Appliquer du myclobutanil et éviter une fertilisation azotée excessive."
+    ],
+    "Cherry___healthy": [
+        "Le cerisier est en excellente santé ! Taillez après la récolte pour maintenir la forme et retirer les branches croisées.",
+        "Très bon état ! Appliquez un engrais équilibré au printemps et assurez un arrosage profond et peu fréquent pendant les périodes sèches.",
+        "Arbre sain détecté. Surveillez la tache foliaire et la pourriture brune au changement de saison."
+    ],
+    "Corn___Cercospora_leaf_spot Gray_leaf_spot": [
+        "Appliquer un fongicide strobilurine ou triazole au début de la floraison. Alterner les cultures — éviter de planter du maïs après du maïs.",
+        "Utiliser des hybrides résistants. Le labour pour enfouir les résidus infectés réduit considérablement l'inoculum hivernal.",
+        "Appliquer un fongicide (azoxystrobine ou propiconazole) dès l'apparition des lésions. Maintenir un espacement adéquat entre les plantes."
+    ],
+    "Corn___Common_rust": [
+        "Appliquer un fongicide foliaire (propiconazole ou azoxystrobine) dès l'apparition des pustules de rouille sur les feuilles inférieures.",
+        "Planter des hybrides de maïs résistants à la rouille. Inspecter régulièrement les champs et appliquer un fongicide avant la propagation.",
+        "L'application de fongicide est la plus efficace avant la floraison. Utiliser du mancozèbe ou des produits triazolés dès les premiers signes."
+    ],
+    "Corn___Northern_Leaf_Blight": [
+        "Appliquer un fongicide (azoxystrobine, propiconazole) à la floraison si le mildiou apparaît sur les feuilles inférieures.",
+        "Alterner les cultures et labourer les débris infectés. Utiliser des hybrides résistants au mildiou nordique.",
+        "Inspecter les champs à partir du stade V8. Appliquer un fongicide si le mildiou atteint la troisième feuille avant la floraison."
+    ],
+    "Corn___healthy": [
+        "Le maïs est en bonne santé ! Assurez une fertilisation azotée adéquate au stade V6 pour un développement optimal de l'épi.",
+        "Excellente santé végétale ! Surveiller les dommages causés par les ravageurs et maintenir une humidité du sol constante pendant la pollinisation.",
+        "Culture saine détectée. Continuer à surveiller les premiers signes de maladie et maintenir la densité de plantation recommandée."
+    ],
+    "Grape___Black_rot": [
+        "Appliquer du mancozèbe ou du myclobutanil dès le débourrement. Retirer les baies momifiées et les sarments infectés.",
+        "Tailler abondamment pour améliorer la circulation de l'air. Appliquer un fongicide protecteur tous les 7-10 jours par temps pluvieux.",
+        "Retirer tous les matériaux végétaux infectés du vignoble. Appliquer un fongicide triazole à la nouaison et au stade fermeture de la grappe."
+    ],
+    "Grape___Esca_(Black_Measles)": [
+        "Aucun traitement curatif disponible. Retirer et détruire le bois infecté. Peindre les plaies de taille avec une pâte fongicide.",
+        "Retarder la taille jusqu'à la fin de l'hiver pour réduire le risque d'infection. Appliquer du Trichoderma sur les plaies de taille.",
+        "Améliorer la nutrition de la vigne et réduire le stress hydrique. Retirer les vignes sévèrement infectées pour éviter la propagation."
+    ],
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": [
+        "Appliquer un fongicide à base de cuivre ou du mancozèbe aux premiers signes de lésions brunes angulaires sur les feuilles.",
+        "Améliorer la gestion de la canopée par l'effeuillage et le positionnement des rameaux pour augmenter la circulation de l'air.",
+        "Appliquer des fongicides après les pluies. Retirer les feuilles fortement infectées pour ralentir la progression de la maladie."
+    ],
+    "Grape___healthy": [
+        "La vigne est en excellent état ! Maintenir une nutrition équilibrée en potassium et magnésium pour une qualité optimale des baies.",
+        "Vigne saine détectée. Continuer la gestion de la canopée et surveiller l'oïdium et le mildiou pendant les périodes humides.",
+        "Très bon état ! Assurer un éclaircissage des rameaux et un effeuillage autour de la zone fructifère pour prévenir les maladies."
+    ],
+    "Orange___Haunglongbing_(Citrus_greening)": [
+        "Aucun remède n'existe. Retirer et détruire immédiatement les arbres infectés pour éviter la propagation aux agrumes sains.",
+        "Contrôler le psylle des agrumes (vecteur de la maladie) avec des insecticides systémiques. Inspecter les nouvelles plantations issues de pépinières certifiées.",
+        "Utiliser des pièges à psylles dans tout le verger. Appliquer des insecticides pour contrôler les populations de psylles. Signaler aux autorités locales."
+    ],
+    "Peach___Bacterial_spot": [
+        "Appliquer de l'hydroxyde de cuivre ou de l'oxytétracycline pendant la floraison. Éviter l'irrigation par aspersion pour réduire le mouillage des feuilles.",
+        "Planter des variétés de pêchers résistants. Appliquer un bactéricide cuivré à la chute des calices et continuer tous les 7-14 jours.",
+        "Tailler pour améliorer la circulation de l'air. Appliquer des pulvérisations de cuivre fixe avant les pluies pendant la saison de croissance."
+    ],
+    "Peach___healthy": [
+        "Le pêcher est en bonne santé ! Éclaircissez les fruits à 15-20 cm d'intervalle pour obtenir des pêches plus grosses et de meilleure qualité.",
+        "Excellent état ! Appliquez un engrais équilibré au début du printemps. Surveillez la cloque du pêcher à l'émergence des feuilles.",
+        "Arbre sain détecté. Maintenez le désherbage sous la canopée et assurez un arrosage adéquat pendant le développement des fruits."
+    ],
+    "Pepper,_bell___Bacterial_spot": [
+        "Appliquer un mélange cuivre + mancozèbe aux premiers signes de lésions gorgées d'eau. Éviter de travailler dans les champs mouillés.",
+        "Utiliser des plants certifiés indemnes de maladies. Appliquer un bactéricide cuivré tous les 5-7 jours par temps chaud et humide.",
+        "Retirer et détruire les plants fortement infectés. Alterner avec des cultures non solanacées pendant au moins 2 ans."
+    ],
+    "Pepper,_bell___healthy": [
+        "Le poivron est en excellent état ! Maintenez une humidité du sol constante et fertilisez avec du calcium pour prévenir la pourriture apicale.",
+        "Plante saine ! Tuteurez les plants pour améliorer la circulation de l'air. Appliquez un engrais équilibré à la nouaison.",
+        "Excellente condition. Surveillez les pucerons et les thrips qui peuvent transmettre des maladies virales aux plantes saines."
+    ],
+    "Potato___Early_blight": [
+        "Appliquer du chlorothalonil ou du mancozèbe dès l'apparition des premières lésions. Retirer les feuilles inférieures touchant le sol.",
+        "Maintenir des niveaux adéquats de potassium — la carence augmente la sensibilité. Appliquer un fongicide tous les 7 jours par temps humide.",
+        "Alterner les cultures pendant 3 ans minimum. Appliquer des fongicides préventifs dès la fermeture des rangs."
+    ],
+    "Potato___Late_blight": [
+        "Appliquer immédiatement un fongicide systémique (métalaxyl + mancozèbe). Détruire les matériaux végétaux infectés — NE PAS composter.",
+        "Éviter l'irrigation par aspersion. Appliquer un fongicide protecteur avant la pluie et un systémique après confirmation de l'infection.",
+        "Retirer et détruire les plants entiers infectés y compris les tubercules. Appliquer un fongicide tous les 5-7 jours par temps frais et humide."
+    ],
+    "Potato___healthy": [
+        "La plante de pomme de terre est en bonne santé ! Buttez le sol autour des tiges pour éviter le verdissement des tubercules et améliorer le rendement.",
+        "Très bon état ! Assurez une humidité constante — un arrosage irrégulier provoque la gale commune et les désordres du cœur creux.",
+        "Culture saine ! Surveillez régulièrement le doryphore et les pucerons. Appliquez un défanant 2 semaines avant la récolte."
+    ],
+    "Raspberry___healthy": [
+        "Les cannes de framboisier sont en bonne santé ! Retirez les cannes fruitières usées après la récolte pour encourager la croissance des nouvelles.",
+        "Excellent état ! Appliquez un engrais équilibré au début du printemps et paillez abondamment pour supprimer les mauvaises herbes.",
+        "Plante saine détectée. Palissez correctement les cannes pour la circulation de l'air. Surveillez les dégâts du foreur des cannes."
+    ],
+    "Soybean___healthy": [
+        "La culture de soja est en excellent état ! Assurez un apport adéquat en phosphore et potassium pour un remplissage optimal des gousses.",
+        "Culture saine détectée. Surveiller le syndrome de mort subite et la pourriture blanche aux stades R3-R5.",
+        "Très bon état ! Surveiller le puceron du soja et le coléoptère des haricots. Maintenir la densité de plantation pour la fermeture de la canopée."
+    ],
+    "Squash___Powdery_mildew": [
+        "Appliquer du bicarbonate de potassium ou un fongicide soufré aux premiers signes de taches blanches poudreuses sur les feuilles.",
+        "Appliquer de l'huile de neem ou de l'huile horticole tôt le matin. Retirer rapidement les feuilles fortement infectées.",
+        "Améliorer la circulation de l'air par un espacement adéquat. Appliquer du myclobutanil ou de la trifloxystrobine de manière préventive."
+    ],
+    "Strawberry___Leaf_scorch": [
+        "Appliquer du captane ou du myclobutanil aux premiers signes de taches violettes. Retirer et détruire les feuilles infectées.",
+        "Éviter l'irrigation par aspersion. Appliquer un fongicide à base de cuivre pendant la période de rénovation après la récolte.",
+        "Rénover les plantations de fraisiers après la récolte — tondre le feuillage, réduire les rangs, appliquer un fongicide pour encourager une repousse saine."
+    ],
+    "Strawberry___healthy": [
+        "Les plants de fraisiers sont en excellent état ! Appliquez un engrais équilibré après la rénovation et maintenez une humidité constante.",
+        "Très bon état ! Paillez avec de la paille pour garder les fruits propres et réduire les éclaboussures de terre qui propagent les maladies.",
+        "Plants sains détectés. Surveillez l'acarien tétranyque par temps chaud et sec. Retirez les stolons pour concentrer l'énergie sur les fruits."
+    ],
+    "Tomato___Bacterial_spot": [
+        "Appliquer un spray bactéricide cuivre + mancozèbe toutes les 5-7 jours. Éviter de travailler dans les champs quand les plants sont mouillés.",
+        "Utiliser des transplants sains et des variétés résistantes. Retirer les feuilles infectées et appliquer de l'hydroxyde de cuivre de manière préventive.",
+        "Alterner les tomates avec des cultures non solanacées. Appliquer un bactéricide après les opérations de taille et les événements orageux."
+    ],
+    "Tomato___Early_blight": [
+        "Pailler abondamment pour éviter les éclaboussures de sol. Appliquer du chlorothalonil ou du mancozèbe dès les premières lésions. Retirer les feuilles basses infectées.",
+        "Appliquer un fongicide tous les 7-10 jours par temps chaud et humide. Tuteurer les plants pour améliorer la circulation d'air autour du feuillage.",
+        "Alterner les cultures pendant 2-3 ans. Maintenir une fertilisation adéquate en potassium pour renforcer la résistance des plants."
+    ],
+    "Tomato___Late_blight": [
+        "Appliquer immédiatement du métalaxyl + mancozèbe. Retirer et emballer tous les matériaux végétaux infectés — ne pas composter.",
+        "Appliquer un fongicide protecteur avant les pluies. Éviter l'irrigation par aspersion et travailler dans les champs uniquement quand ils sont secs.",
+        "Détruire les plants infectés pour éviter la propagation. Appliquer un fongicide à base de cuivre comme mesure préventive sur les plants voisins."
+    ],
+    "Tomato___Leaf_Mold": [
+        "Réduire l'humidité en serre en dessous de 85%. Appliquer un fongicide cuivré ou du chlorothalonil dès les premiers symptômes.",
+        "Améliorer la ventilation en serre. Retirer rapidement les feuilles infectées. Appliquer du mancozèbe ou du thirame de manière préventive.",
+        "Espacer adéquatement les plants pour la circulation de l'air. Éviter le mouillage des feuilles grâce à l'irrigation goutte à goutte."
+    ],
+    "Tomato___Septoria_leaf_spot": [
+        "Appliquer du chlorothalonil ou du mancozèbe aux premiers symptômes. Retirer les feuilles basses infectées pour ralentir la progression de la maladie.",
+        "Pailler pour éviter les éclaboussures de sol. Appliquer un fongicide cuivré tous les 7-10 jours par temps humide.",
+        "Tuteurer les plants et retirer les gourmands pour améliorer la circulation de l'air. Alterner les cultures et éviter l'irrigation par aspersion."
+    ],
+    "Tomato___Spider_mites Two-spotted_spider_mite": [
+        "Pulvériser le dessous des feuilles avec force d'eau pour déloger les acariens. Appliquer de l'huile horticole ou du savon insecticide.",
+        "Utiliser un acaricide (abamectine ou bifénazate) et alterner les modes d'action. Retirer les feuilles fortement infestées.",
+        "Maintenir une humidité du sol adéquate — les plants stressés par la sécheresse sont plus vulnérables. Introduire des acariens prédateurs comme lutte biologique."
+    ],
+    "Tomato___Target_Spot": [
+        "Appliquer un fongicide strobilurine ou triazole (azoxystrobine, difénoconazole) dès l'apparition des premières lésions.",
+        "Améliorer la circulation de l'air par le tuteurage, la taille et un espacement adéquat. Appliquer du mancozèbe comme spray protecteur.",
+        "Retirer les feuilles infectées. Appliquer un fongicide tous les 7-14 jours par temps humide. Alterner les cultures avec des espèces non solanacées."
+    ],
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": [
+        "Contrôler les populations d'aleurodes avec des insecticides systémiques (imidaclopride). Utiliser des pièges jaunes collants pour la surveillance.",
+        "Retirer et détruire immédiatement les plants infectés. Utiliser un paillis réfléchissant pour repousser les aleurodes des jeunes transplants.",
+        "Planter des variétés résistantes (TYLCV-résistantes). Appliquer des insecticides à la plantation et utiliser des filets insect-proof en pépinière."
+    ],
+    "Tomato___Tomato_mosaic_virus": [
+        "Désinfecter les mains et les outils avec du savon ou une solution de javel à 10% avant de manipuler les plants. Retirer les plants infectés.",
+        "Contrôler les populations de pucerons et de thrips qui transmettent le virus. Utiliser des variétés de tomates résistantes si disponibles.",
+        "Éviter les produits du tabac près des plants de tomates — le TMV peut être transmis mécaniquement. Retirer et détruire tous les matériaux infectés."
+    ],
+    "Tomato___healthy": [
+        "Le plant de tomate est en excellent état ! Maintenez un arrosage régulier au niveau du sol pour prévenir la pourriture apicale.",
+        "Très bon état ! Taillez régulièrement les gourmands pour les variétés indéterminées. Appliquez un engrais équilibré toutes les 2-3 semaines.",
+        "Plant sain détecté. Surveillez les premiers signes de mildiou et assurez la disponibilité du calcium pour prévenir les désordres des fruits."
+    ],
+}
+
 app = Flask(__name__)
 CORS(app)
 
@@ -242,10 +441,13 @@ def preprocess_image(image_bytes):
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    print("URL ARGS:", dict(request.args))
+    print("FULL URL:", request.url)
     if "image" not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
 
     file = request.files["image"]
+    print("FORM FIELDS:", dict(request.form))
     img_bytes = file.read()
     img = preprocess_image(img_bytes)
 
@@ -254,12 +456,20 @@ def predict():
     confidence   = float(np.max(prediction[0]))
     disease_name = classes.get(class_idx, "Unknown")
 
-    print(f"→ disease_name: '{disease_name}'")
-    print(f"→ in advice dict: {disease_name in disease_advice}")
-    print(f"→ repr: {repr(disease_name)}")
+    # Détecter la langue depuis le header
+    lang = request.args.get('lang', request.form.get('lang', 'EN')).upper()
+    print(f"→ {disease_name} ({confidence:.2%}) — Lang: {lang}")
 
-    advice_list = disease_advice.get(disease_name, ["Please consult a local agronomist for proper diagnosis and treatment advice."])
-    print(f"DEBUG: '{disease_name}' -> found: {disease_name in disease_advice} -> list length: {len(advice_list)}")
+    # Choisir le bon dictionnaire
+    if lang == 'FR':
+        advice_dict = disease_advice_fr
+    else:
+        advice_dict = disease_advice_en
+
+    advice_list = advice_dict.get(disease_name, [
+        "Consultez un agronome pour un diagnostic et un traitement appropriés." if lang == 'FR' else
+        "Please consult a local agronomist for proper diagnosis and treatment advice."
+    ])
     advice = random.choice(advice_list)
 
     return jsonify({

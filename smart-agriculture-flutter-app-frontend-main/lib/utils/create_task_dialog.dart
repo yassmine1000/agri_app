@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_agri_app/generated/app_localizations.dart';
 import 'package:smart_agri_app/utils/app_theme.dart';
 import '../service/crop_service.dart';
 
@@ -7,7 +8,17 @@ class CreateTaskDialog extends StatefulWidget {
   final CropService taskService;
   final int planningId;
   final VoidCallback onTaskCreated;
-  const CreateTaskDialog({super.key, required this.taskService, required this.planningId, required this.onTaskCreated});
+  final bool isDarkMode;
+  final String lang;
+
+  const CreateTaskDialog({
+    super.key,
+    required this.taskService,
+    required this.planningId,
+    required this.onTaskCreated,
+    this.isDarkMode = true,
+    this.lang = 'EN',
+  });
 
   @override
   State<CreateTaskDialog> createState() => _CreateTaskDialogState();
@@ -16,39 +27,54 @@ class CreateTaskDialog extends StatefulWidget {
 class _CreateTaskDialogState extends State<CreateTaskDialog> {
   final _formKey = GlobalKey<FormState>();
   final List<String> _taskTypes = ['Sowing', 'Irrigation', 'Fertilizing', 'Weeding', 'Pruning', 'Harvesting', 'Inspection'];
+  final Map<String, String> _taskTypesFr = {
+    'Sowing': 'Semis', 'Irrigation': 'Irrigation', 'Fertilizing': 'Fertilisation',
+    'Weeding': 'Désherbage', 'Pruning': 'Taille', 'Harvesting': 'Récolte', 'Inspection': 'Inspection',
+  };
+
   String? _selectedTaskType;
   DateTime? _selectedDate;
   bool _isSubmitting = false;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final isDark = widget.isDarkMode;
+    final bg = isDark ? AppColors.background : AppColorsLight.background;
+    final surface = isDark ? AppColors.surface : AppColorsLight.surface;
+    final surfaceAlt = isDark ? AppColors.surfaceAlt : AppColorsLight.surfaceAlt;
+    final border = isDark ? AppColors.border : AppColorsLight.border;
+    final primary = isDark ? AppColors.primary : AppColorsLight.primary;
+    final cyan = isDark ? AppColors.cyan : AppColorsLight.cyan;
+    final textPrimary = isDark ? AppColors.textPrimary : AppColorsLight.textPrimary;
+    final textSecondary = isDark ? AppColors.textSecondary : AppColorsLight.textSecondary;
+
     return AlertDialog(
-      backgroundColor: AppColors.surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: const BorderSide(color: AppColors.border)),
+      backgroundColor: surface,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: border)),
       title: Row(children: [
-        Container(width: 32, height: 32, decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.12), borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.add_task, color: AppColors.primary, size: 18)),
+        Container(width: 32, height: 32, decoration: BoxDecoration(color: primary.withOpacity(0.12), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.add_task, color: primary, size: 18)),
         const SizedBox(width: 10),
-        const Text('New Task', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w700, fontSize: 16)),
+        Text(l.newTask, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, fontSize: 16)),
       ]),
       content: Form(
         key: _formKey,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           DropdownButtonFormField<String>(
             value: _selectedTaskType,
-            dropdownColor: AppColors.surfaceAlt,
-            style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
+            dropdownColor: surfaceAlt,
+            style: TextStyle(color: textPrimary, fontSize: 13),
             decoration: InputDecoration(
-              labelText: 'Task Type',
-              labelStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
-              prefixIcon: const Icon(Icons.category_outlined, color: AppColors.textSecondary, size: 18),
-              filled: true, fillColor: AppColors.surfaceAlt,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.border)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.border)),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.primary, width: 1.5)),
+              labelText: l.taskType, labelStyle: TextStyle(color: textSecondary, fontSize: 13),
+              prefixIcon: Icon(Icons.category_outlined, color: textSecondary, size: 18),
+              filled: true, fillColor: surfaceAlt,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: border)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: border)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primary, width: 1.5)),
             ),
-            items: _taskTypes.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
+            items: _taskTypes.map((t) => DropdownMenuItem(value: t, child: Text(widget.lang == 'FR' ? (_taskTypesFr[t] ?? t) : t))).toList(),
             onChanged: (v) => setState(() => _selectedTaskType = v),
-            validator: (v) => v == null ? 'Select a task type' : null,
+            validator: (v) => v == null ? l.required : null,
           ),
           const SizedBox(height: 12),
           GestureDetector(
@@ -58,13 +84,13 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-              decoration: BoxDecoration(color: AppColors.surfaceAlt, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.border)),
+              decoration: BoxDecoration(color: surfaceAlt, borderRadius: BorderRadius.circular(10), border: Border.all(color: border)),
               child: Row(children: [
-                const Icon(Icons.calendar_today, color: AppColors.primary, size: 16),
+                Icon(Icons.calendar_today, color: primary, size: 16),
                 const SizedBox(width: 10),
                 Text(
-                  _selectedDate == null ? 'Select Date' : DateFormat('MMM dd, yyyy').format(_selectedDate!),
-                  style: TextStyle(color: _selectedDate == null ? AppColors.textSecondary : AppColors.textPrimary, fontSize: 13),
+                  _selectedDate == null ? l.selectDate : DateFormat('MMM dd, yyyy').format(_selectedDate!),
+                  style: TextStyle(color: _selectedDate == null ? textSecondary : textPrimary, fontSize: 13),
                 ),
               ]),
             ),
@@ -72,15 +98,15 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
         ]),
       ),
       actions: [
-        TextButton(onPressed: _isSubmitting ? null : () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary))),
+        TextButton(onPressed: _isSubmitting ? null : () => Navigator.pop(context), child: Text(l.cancel, style: TextStyle(color: textSecondary))),
         Container(
-          decoration: BoxDecoration(gradient: const LinearGradient(colors: [AppColors.primary, AppColors.cyan]), borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(gradient: LinearGradient(colors: [primary, cyan]), borderRadius: BorderRadius.circular(10)),
           child: ElevatedButton(
             onPressed: _isSubmitting ? null : _submitForm,
             style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
             child: _isSubmitting
-                ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.background))
-                : const Text('Create', style: TextStyle(color: AppColors.background, fontWeight: FontWeight.w700)),
+                ? SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: bg))
+                : Text(l.create, style: TextStyle(color: bg, fontWeight: FontWeight.w700)),
           ),
         ),
       ],
@@ -88,12 +114,13 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
   }
 
   void _submitForm() async {
+    final l = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
-    if (_selectedDate == null) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select a date'))); return; }
+    if (_selectedDate == null) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.selectDate))); return; }
     setState(() => _isSubmitting = true);
     try {
       await widget.taskService.createCropTask(widget.planningId, _selectedTaskType!, DateFormat('yyyy-MM-dd').format(_selectedDate!));
-      if (mounted) { Navigator.pop(context); widget.onTaskCreated(); ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Task created!'))); }
+      if (mounted) { Navigator.pop(context); widget.onTaskCreated(); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.taskCreated))); }
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
     } finally {

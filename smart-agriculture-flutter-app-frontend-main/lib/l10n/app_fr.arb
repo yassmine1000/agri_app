@@ -150,5 +150,16 @@
 
   "signOutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
   "yes": "Oui",
-  "no": "Non"
+  "no": "Non",
+
+  "profile": "Profil",
+  "profileUpdated": "Profil mis à jour avec succès",
+  "deleteAccount": "Supprimer le compte",
+  "deleteAccountConfirm": "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.",
+  "changePassword": "CHANGER LE MOT DE PASSE",
+  "newPassword": "Nouveau mot de passe",
+  "leaveBlank": "Laisser vide pour conserver le mot de passe actuel",
+  "saveChanges": "Enregistrer les modifications",
+  "accountInfo": "INFORMATIONS DU COMPTE",
+  "memberSince": "Membre depuis"
 }

@@ -23,9 +23,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         'password': event.password,
       });
       if (response.statusCode == 200) {
-        final data = response.data['data'];
-        await PrefHelper.saveLoginData(data['token'], data['user']);
-        emit(AuthSuccess(data: response.data));
+        await PrefHelper.saveLoginData(response.data['token'], response.data['user']);
+emit(AuthSuccess(data: response.data));
       } else {
         emit(AuthFailure(error: 'Login failed: ${response.statusCode}'));
       }

@@ -231,7 +231,20 @@ class CropService {
       }
     }
   }
-
+  Future<void> deletePlanning(int planningId) async {
+    try {
+      final response = await _dio.delete('/planning/$planningId');
+      if (response.statusCode != 200) {
+        throw Exception('Failed to delete planning');
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw Exception('Server Error: ${e.response?.data['message']}');
+      } else {
+        throw Exception('Network Error: ${e.message}');
+      }
+    }
+  }
 
 }
 

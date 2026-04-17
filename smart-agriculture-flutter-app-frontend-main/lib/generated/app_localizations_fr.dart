@@ -430,4 +430,35 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get no => 'Non';
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get profileUpdated => 'Profil mis à jour avec succès';
+
+  @override
+  String get deleteAccount => 'Supprimer le compte';
+
+  @override
+  String get deleteAccountConfirm =>
+      'Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.';
+
+  @override
+  String get changePassword => 'CHANGER LE MOT DE PASSE';
+
+  @override
+  String get newPassword => 'Nouveau mot de passe';
+
+  @override
+  String get leaveBlank => 'Laisser vide pour conserver le mot de passe actuel';
+
+  @override
+  String get saveChanges => 'Enregistrer les modifications';
+
+  @override
+  String get accountInfo => 'INFORMATIONS DU COMPTE';
+
+  @override
+  String get memberSince => 'Membre depuis';
 }

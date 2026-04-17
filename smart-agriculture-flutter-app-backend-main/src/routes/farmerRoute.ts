@@ -1,6 +1,6 @@
 import express from "express";
 import { authMiddleware, farmerOnly } from "../middleware/authMiddleware";
-import { createCropPlanning, getCropPlanning, createTask, getTasksCalendar, getCropLibrary, updateTaskStatus, deleteTask, getTasksByPlanningId } from "../controllers/farmerController";
+import { createCropPlanning, getCropPlanning, createTask, getTasksCalendar, getCropLibrary, updateTaskStatus, deleteTask, getTasksByPlanningId, deletePlanning } from "../controllers/farmerController";
 
 const router = express.Router();
 
@@ -14,5 +14,6 @@ router.get("/tasks/calendar", getTasksCalendar);
 router.get("/tasks/:planning_id/tasks", getTasksByPlanningId);
 router.patch("/tasks/:task_id", updateTaskStatus);
 router.delete("/tasks/:task_id", deleteTask);
+router.delete("/planning/:planning_id", deletePlanning);
 
 export default router;

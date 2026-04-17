@@ -8,6 +8,7 @@ import 'package:smart_agri_app/utils/custom_widgets.dart';
 import '../bloc/auth/auth_bloc.dart';
 import '../bloc/auth/auth_event.dart';
 import '../bloc/auth/auth_state.dart';
+import 'package:smart_agri_app/screens/forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(Locale)? onLocaleChange;
@@ -137,6 +138,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
+
+                        Center(
+  child: TextButton(
+    onPressed: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+    ),
+    child: Text(
+      'Mot de passe oublié ?',
+      style: TextStyle(color: textSecondary, fontSize: 13),
+    ),
+  ),
+),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

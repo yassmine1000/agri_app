@@ -150,5 +150,16 @@
 
   "signOutConfirm": "Are you sure you want to sign out?",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+
+  "profile": "Profile",
+  "profileUpdated": "Profile updated successfully",
+  "deleteAccount": "Delete Account",
+  "deleteAccountConfirm": "Are you sure you want to permanently delete your account? This action cannot be undone.",
+  "changePassword": "CHANGE PASSWORD",
+  "newPassword": "New Password",
+  "leaveBlank": "Leave blank to keep current password",
+  "saveChanges": "Save Changes",
+  "accountInfo": "ACCOUNT INFO",
+  "memberSince": "Member Since"
 }

@@ -2,12 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import pool from "../config/database";
 
 //get all crop list
-export const getCropLibrary = async (req: Request, res: Response, next: NextFunction) => {
+export const getCropLibrary = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await pool.query(`
-            SELECT id, name, ideal_season, duration_days, ideal_sowing_period FROM crop_library 
-            ORDER BY id ASC
-        `);
+      const result = await pool.query(`
+        SELECT id, name, name_fr, ideal_season, ideal_season_fr, duration_days, ideal_sowing_period, ideal_sowing_period_fr FROM crop_library 
+        ORDER BY id ASC
+    `);
         res.json({ status: "success", data: result.rows });
     } catch (error) {
         next(error);
@@ -218,4 +218,22 @@ export const deleteTask = async (req: Request, res: Response, next: NextFunction
     } catch (error) {
         next(error);
     }
+};
+export const deletePlanning = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = (req.user as any).userId;
+  const { planning_id } = req.params;
+
+  try {
+      const check = await pool.query(
+          `SELECT id FROM crop_planning WHERE id = $1 AND user_id = $2`,
+          [planning_id, userId]
+      );
+      if (check.rowCount === 0) {
+          return res.status(404).json({ status: "fail", message: "Planning not found or unauthorized" });
+      }
+      await pool.query(`DELETE FROM crop_planning WHERE id = $1`, [planning_id]);
+      res.json({ status: "success", message: "Planning deleted successfully" });
+  } catch (error) {
+      next(error);
+  }
 };

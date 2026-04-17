@@ -16,7 +16,7 @@ import authRouter from "./routes/authRoute";
 import farmerRoute from "./routes/farmerRoute";
 import errorHandling from "./middleware/errorHandler";
 import priceRoute from "./routes/priceRoute";   // avec les autres imports
-
+import profileRoute from "./routes/profileRoute";
 
 dotenv.config();
 
@@ -34,6 +34,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/farmer", farmerRoute);
 app.use("/api/prices", priceRoute);
 app.use("/api/history", historyRoute);
+app.use("/api/profile", profileRoute);
 
 // Disease Detection endpoint
 app.post("/predict", upload.single("image"), async (req: Request, res: Response) => {

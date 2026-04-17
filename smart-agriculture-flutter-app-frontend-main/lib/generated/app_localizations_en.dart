@@ -429,4 +429,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no => 'No';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get profileUpdated => 'Profile updated successfully';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountConfirm =>
+      'Are you sure you want to permanently delete your account? This action cannot be undone.';
+
+  @override
+  String get changePassword => 'CHANGE PASSWORD';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get leaveBlank => 'Leave blank to keep current password';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get accountInfo => 'ACCOUNT INFO';
+
+  @override
+  String get memberSince => 'Member Since';
 }

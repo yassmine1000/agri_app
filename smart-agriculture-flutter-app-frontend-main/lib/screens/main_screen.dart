@@ -8,6 +8,7 @@ import 'bottom_screens/market_price_screen.dart';
 import 'bottom_screens/weather_screen.dart';
 import 'login_screen.dart';
 import 'settings_screen.dart';
+import 'package:smart_agri_app/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final Function(Locale) onLocaleChange;
@@ -128,6 +129,17 @@ class _MainScreenState extends State<MainScreen> {
                     onLocaleChange: widget.onLocaleChange,
                     onThemeChange: widget.onThemeChange,
                     isDarkNotifier: widget.isDarkNotifier,
+                  )),
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.person_outline, color: textSecondary, size: 20),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => ProfileScreen(
+                    isDarkNotifier: widget.isDarkNotifier,
+                    onLocaleChange: widget.onLocaleChange,
+                    onThemeChange: widget.onThemeChange,
                   )),
                 ),
               ),

@@ -57,6 +57,40 @@ class _PlanningTabState extends State<PlanningTab> {
     );
   }
 
+  Future<void> _deletePlanning(CropPlanning p) async {
+    final l = AppLocalizations.of(context)!;
+    final isDark = widget.isDarkMode;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: isDark ? AppColors.surface : AppColorsLight.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: isDark ? AppColors.border : AppColorsLight.border)),
+        title: Text(l.delete, style: TextStyle(color: isDark ? AppColors.textPrimary : AppColorsLight.textPrimary, fontWeight: FontWeight.w700)),
+        content: Text(
+          _lang == 'FR' ? 'Supprimer ce plan de culture ?' : 'Delete this crop plan?',
+          style: TextStyle(color: isDark ? AppColors.textSecondary : AppColorsLight.textSecondary),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l.cancel, style: TextStyle(color: isDark ? AppColors.textSecondary : AppColorsLight.textSecondary))),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(backgroundColor: isDark ? AppColors.error : AppColorsLight.error, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+            child: Text(l.delete, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      try {
+        await widget.cropService.deletePlanning(p.id);
+        _refreshPlanning();
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_lang == 'FR' ? 'Plan supprimé' : 'Plan deleted')));
+      } catch (e) {
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
+      }
+    }
+  }
+
   String _formatDate(String dateString) {
     try {
       final date = DateTime.parse(dateString);
@@ -70,11 +104,13 @@ class _PlanningTabState extends State<PlanningTab> {
     final isDark = widget.isDarkMode;
     final bg = isDark ? AppColors.background : AppColorsLight.background;
     final surface = isDark ? AppColors.surface : AppColorsLight.surface;
+    final surfaceAlt = isDark ? AppColors.surfaceAlt : AppColorsLight.surfaceAlt;
     final border = isDark ? AppColors.border : AppColorsLight.border;
     final primary = isDark ? AppColors.primary : AppColorsLight.primary;
     final cyan = isDark ? AppColors.cyan : AppColorsLight.cyan;
     final textPrimary = isDark ? AppColors.textPrimary : AppColorsLight.textPrimary;
     final textSecondary = isDark ? AppColors.textSecondary : AppColorsLight.textSecondary;
+    final errorColor = isDark ? AppColors.error : AppColorsLight.error;
 
     return Stack(children: [
       RefreshIndicator(
@@ -91,11 +127,7 @@ class _PlanningTabState extends State<PlanningTab> {
                 const SizedBox(height: 12),
                 Text('${snapshot.error}', style: TextStyle(color: textSecondary, fontSize: 13)),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _refreshPlanning,
-                  style: ElevatedButton.styleFrom(backgroundColor: primary),
-                  child: Text(l.retry, style: TextStyle(color: bg)),
-                ),
+                ElevatedButton(onPressed: _refreshPlanning, style: ElevatedButton.styleFrom(backgroundColor: primary), child: Text(l.retry, style: TextStyle(color: bg))),
               ]));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -117,10 +149,7 @@ class _PlanningTabState extends State<PlanningTab> {
               itemBuilder: (context, index) {
                 final p = snapshot.data![index];
                 return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PlanningDetailsScreen(planning: p, isDarkMode: isDark, lang: _lang)),
-                  ),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => PlanningDetailsScreen(planning: p, isDarkMode: isDark, lang: _lang))),
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.all(16),
@@ -133,7 +162,27 @@ class _PlanningTabState extends State<PlanningTab> {
                           p.cropName ?? (_lang == 'FR' ? 'Culture inconnue' : 'Unknown Crop'),
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary),
                         )),
-                        Icon(Icons.arrow_forward_ios, size: 12, color: textSecondary),
+                        // 3 points menu
+                        PopupMenuButton<String>(
+                          color: surfaceAlt,
+                          icon: Icon(Icons.more_horiz, color: textSecondary, size: 20),
+                          onSelected: (value) {
+                            if (value == 'delete') _deletePlanning(p);
+                            if (value == 'details') Navigator.push(context, MaterialPageRoute(builder: (_) => PlanningDetailsScreen(planning: p, isDarkMode: isDark, lang: _lang)));
+                          },
+                          itemBuilder: (_) => [
+                            PopupMenuItem(value: 'details', child: Row(children: [
+                              Icon(Icons.info_outline, color: primary, size: 16),
+                              const SizedBox(width: 8),
+                              Text(_lang == 'FR' ? 'Voir les détails' : 'View details', style: TextStyle(color: textPrimary, fontSize: 13)),
+                            ])),
+                            PopupMenuItem(value: 'delete', child: Row(children: [
+                              Icon(Icons.delete_outline, color: errorColor, size: 16),
+                              const SizedBox(width: 8),
+                              Text(l.delete, style: TextStyle(color: errorColor, fontSize: 13)),
+                            ])),
+                          ],
+                        ),
                       ]),
                       const SizedBox(height: 10),
                       Row(children: [
@@ -152,7 +201,7 @@ class _PlanningTabState extends State<PlanningTab> {
                       if (p.irrigationReminder || p.fertilizerReminder) ...[
                         const SizedBox(height: 10),
                         Wrap(spacing: 8, children: [
-                          if (p.irrigationReminder) _badge('💧 ${_lang == 'FR' ? 'Irrigation' : 'Irrigation'}', cyan),
+                          if (p.irrigationReminder) _badge('💧 Irrigation', cyan),
                           if (p.fertilizerReminder) _badge('🌿 ${_lang == 'FR' ? 'Engrais' : 'Fertilizer'}', primary),
                         ]),
                       ],
@@ -168,12 +217,7 @@ class _PlanningTabState extends State<PlanningTab> {
         bottom: 16, right: 16,
         child: Container(
           decoration: BoxDecoration(gradient: LinearGradient(colors: [primary, cyan]), borderRadius: BorderRadius.circular(16)),
-          child: FloatingActionButton(
-            onPressed: _showCreatePlanningDialog,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            child: Icon(Icons.add, color: bg),
-          ),
+          child: FloatingActionButton(onPressed: _showCreatePlanningDialog, backgroundColor: Colors.transparent, elevation: 0, child: Icon(Icons.add, color: bg)),
         ),
       ),
     ]);

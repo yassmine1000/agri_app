@@ -29,7 +29,16 @@ class PrefHelper {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
     await prefs.remove(_userKey);
+    await prefs.remove('qr_token');
   }
+  static Future<void> saveQrToken(String token) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('qr_token', token);
+}
 
+static Future<String?> getQrToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('qr_token');
+}
 
 }

@@ -60,6 +60,7 @@ class MyAppState extends State<MyApp> {
   Locale _langToLocale(String lang) {
     switch (lang) {
       case 'FR': return const Locale('fr');
+      case 'AR': return const Locale('ar');
       default:   return const Locale('en');
     }
   }
@@ -95,6 +96,7 @@ class MyAppState extends State<MyApp> {
           supportedLocales: const [
             Locale('en'),
             Locale('fr'),
+            Locale('ar'),
           ],
           home: SplashScreen(
             onLocaleChange: changeLocale,

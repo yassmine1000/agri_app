@@ -32,6 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadPrefs() async {
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
     setState(() {
       _selectedLanguage = prefs.getString('language') ?? 'EN';
       _imageQuality = prefs.getString('image_quality') ?? 'high';
@@ -42,7 +43,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('language', lang);
     setState(() => _selectedLanguage = lang);
-    final localeMap = {'EN': const Locale('en'), 'FR': const Locale('fr')};
+    final localeMap = {
+      'EN': const Locale('en'),
+      'FR': const Locale('fr'),
+      'AR': const Locale('ar'),
+    };
     widget.onLocaleChange(localeMap[lang]!);
   }
 
@@ -58,6 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       valueListenable: widget.isDarkNotifier,
       builder: (context, isDark, _) {
         final l = AppLocalizations.of(context)!;
+        final isAr = _selectedLanguage == 'AR';
         final bg = isDark ? AppColors.background : AppColorsLight.background;
         final surface = isDark ? AppColors.surface : AppColorsLight.surface;
         final border = isDark ? AppColors.border : AppColorsLight.border;
@@ -66,110 +72,114 @@ class _SettingsScreenState extends State<SettingsScreen> {
         final textPrimary = isDark ? AppColors.textPrimary : AppColorsLight.textPrimary;
         final textSecondary = isDark ? AppColors.textSecondary : AppColorsLight.textSecondary;
 
-        return Scaffold(
-          backgroundColor: bg,
-          appBar: AppBar(
+        return Directionality(
+          textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
+          child: Scaffold(
             backgroundColor: bg,
-            title: Text(l.settings),
-            bottom: PreferredSize(preferredSize: const Size.fromHeight(1), child: Container(height: 1, color: border)),
-          ),
-          body: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              // Language
-              _sectionLabel(l.language, textSecondary),
-              _card(surface, border, child: Row(
-                children: ['EN', 'FR'].map((lang) {
-                  final selected = _selectedLanguage == lang;
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => _saveLanguage(lang),
-                      child: Container(
-                        margin: const EdgeInsets.all(4),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: selected ? primary.withOpacity(0.15) : Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: selected ? primary : border),
+            appBar: AppBar(
+              backgroundColor: bg,
+              title: Text(l.settings),
+              bottom: PreferredSize(preferredSize: const Size.fromHeight(1), child: Container(height: 1, color: border)),
+            ),
+            body: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                // Language — 3 options
+                _sectionLabel(l.language, textSecondary),
+                _card(surface, border, child: Row(
+                  children: ['EN', 'FR', 'AR'].map((lang) {
+                    final selected = _selectedLanguage == lang;
+                    final flag = lang == 'EN' ? '🇬🇧' : lang == 'FR' ? '🇫🇷' : '🇹🇳';
+                    final name = lang == 'EN' ? 'English' : lang == 'FR' ? 'Français' : 'العربية';
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () => _saveLanguage(lang),
+                        child: Container(
+                          margin: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: selected ? primary.withOpacity(0.15) : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: selected ? primary : border),
+                          ),
+                          child: Column(children: [
+                            Text(flag, style: const TextStyle(fontSize: 20)),
+                            const SizedBox(height: 4),
+                            Text(name, style: TextStyle(fontSize: 11, color: selected ? primary : textSecondary, fontWeight: selected ? FontWeight.w700 : FontWeight.normal)),
+                          ]),
                         ),
-                        child: Column(children: [
-                          Text(lang == 'EN' ? '🇬🇧' : '🇫🇷', style: const TextStyle(fontSize: 20)),
-                          const SizedBox(height: 4),
-                          Text(lang == 'EN' ? 'English' : 'Français',
-                            style: TextStyle(fontSize: 12, color: selected ? primary : textSecondary, fontWeight: selected ? FontWeight.w700 : FontWeight.normal)),
-                        ]),
                       ),
-                    ),
-                  );
-                }).toList(),
-              )),
+                    );
+                  }).toList(),
+                )),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              // Dark Mode
-              _sectionLabel(l.appearance, textSecondary),
-              _card(surface, border, child: Row(children: [
-                Icon(Icons.dark_mode_outlined, color: textSecondary, size: 20),
-                const SizedBox(width: 12),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(l.darkMode, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
-                  Text(l.darkModeDesc, style: TextStyle(color: textSecondary, fontSize: 12)),
-                ])),
-                Switch(
-                  value: isDark,
-                  activeColor: primary,
-                  onChanged: (val) {
-                    widget.isDarkNotifier.value = val;
-                    widget.onThemeChange(val);
-                  },
-                ),
-              ])),
-
-              const SizedBox(height: 20),
-
-              // Image Quality
-              _sectionLabel(l.imageQuality, textSecondary),
-              _card(surface, border, child: Column(children: [
-                _qualityOption(l.low, l.lowDesc, Icons.image_outlined, 'low', primary, textPrimary, textSecondary),
-                Divider(height: 16, color: border, thickness: 0.5),
-                _qualityOption(l.medium, l.mediumDesc, Icons.image, 'medium', primary, textPrimary, textSecondary),
-                Divider(height: 16, color: border, thickness: 0.5),
-                _qualityOption(l.high, l.highDesc, Icons.hd_outlined, 'high', primary, textPrimary, textSecondary),
-              ])),
-
-              const SizedBox(height: 20),
-
-              // History
-              _sectionLabel(l.data, textSecondary),
-              _card(surface, border, child: GestureDetector(
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryScreen(isDarkMode: isDark))),
-                child: Row(children: [
-                  Container(width: 36, height: 36, decoration: BoxDecoration(color: cyan.withOpacity(0.12), borderRadius: BorderRadius.circular(10)), child: Icon(Icons.history, color: cyan, size: 18)),
+                // Dark Mode
+                _sectionLabel(l.appearance, textSecondary),
+                _card(surface, border, child: Row(children: [
+                  Icon(Icons.dark_mode_outlined, color: textSecondary, size: 20),
                   const SizedBox(width: 12),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(l.detectionHistory, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
-                    Text(l.detectionHistoryDesc, style: TextStyle(color: textSecondary, fontSize: 12)),
+                    Text(l.darkMode, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
+                    Text(l.darkModeDesc, style: TextStyle(color: textSecondary, fontSize: 12)),
                   ])),
-                  Icon(Icons.arrow_forward_ios, size: 14, color: textSecondary),
-                ]),
-              )),
+                  Switch(
+                    value: isDark,
+                    activeColor: primary,
+                    onChanged: (val) {
+                      widget.isDarkNotifier.value = val;
+                      widget.onThemeChange(val);
+                    },
+                  ),
+                ])),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              // About
-              _sectionLabel(l.about, textSecondary),
-              _card(surface, border, child: Column(children: [
-                _infoRow(l.appNameLabel, 'AgriScan', textPrimary, textSecondary),
-                Divider(height: 16, color: border, thickness: 0.5),
-                _infoRow(l.version, '1.0.0', textPrimary, textSecondary),
-                Divider(height: 16, color: border, thickness: 0.5),
-                _infoRow(l.developer, 'Jarray Agro', textPrimary, textSecondary),
-                Divider(height: 16, color: border, thickness: 0.5),
-                _infoRow(l.technology, 'Flutter + Node.js + AI', textPrimary, textSecondary),
-              ])),
+                // Image Quality
+                _sectionLabel(l.imageQuality, textSecondary),
+                _card(surface, border, child: Column(children: [
+                  _qualityOption(l.low, l.lowDesc, Icons.image_outlined, 'low', primary, textPrimary, textSecondary),
+                  Divider(height: 16, color: border, thickness: 0.5),
+                  _qualityOption(l.medium, l.mediumDesc, Icons.image, 'medium', primary, textPrimary, textSecondary),
+                  Divider(height: 16, color: border, thickness: 0.5),
+                  _qualityOption(l.high, l.highDesc, Icons.hd_outlined, 'high', primary, textPrimary, textSecondary),
+                ])),
 
-              const SizedBox(height: 40),
-            ],
+                const SizedBox(height: 20),
+
+                // History
+                _sectionLabel(l.data, textSecondary),
+                _card(surface, border, child: GestureDetector(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryScreen(isDarkMode: isDark))),
+                  child: Row(children: [
+                    Container(width: 36, height: 36, decoration: BoxDecoration(color: cyan.withOpacity(0.12), borderRadius: BorderRadius.circular(10)), child: Icon(Icons.history, color: cyan, size: 18)),
+                    const SizedBox(width: 12),
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(l.detectionHistory, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
+                      Text(l.detectionHistoryDesc, style: TextStyle(color: textSecondary, fontSize: 12)),
+                    ])),
+                    Icon(Icons.arrow_forward_ios, size: 14, color: textSecondary),
+                  ]),
+                )),
+
+                const SizedBox(height: 20),
+
+                // About
+                _sectionLabel(l.about, textSecondary),
+                _card(surface, border, child: Column(children: [
+                  _infoRow(l.appNameLabel, 'AgriScan', textPrimary, textSecondary),
+                  Divider(height: 16, color: border, thickness: 0.5),
+                  _infoRow(l.version, '1.0.0', textPrimary, textSecondary),
+                  Divider(height: 16, color: border, thickness: 0.5),
+                  _infoRow(l.developer, 'Jarray Agro', textPrimary, textSecondary),
+                  Divider(height: 16, color: border, thickness: 0.5),
+                  _infoRow(l.technology, 'Flutter + Node.js + AI', textPrimary, textSecondary),
+                ])),
+
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
         );
       },

@@ -1,0 +1,80 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="200" fill="#050E1A"/>
+
+  <!-- Outer glow ring -->
+  <circle cx="512" cy="512" r="460" fill="none" stroke="#00FF88" stroke-width="5" opacity="0.4"/>
+
+  <!-- Arc segments -->
+  <path d="M512 55 A457 457 0 0 1 858 280" fill="none" stroke="#00FF88" stroke-width="32" stroke-linecap="round" opacity="0.9"/>
+  <path d="M870 306 A457 457 0 0 1 910 540" fill="none" stroke="#00FF88" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
+  <path d="M512 969 A457 457 0 0 1 166 744" fill="none" stroke="#00FF88" stroke-width="32" stroke-linecap="round" opacity="0.9"/>
+  <path d="M154 718 A457 457 0 0 1 114 484" fill="none" stroke="#00FF88" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
+  <path d="M110 456 A457 457 0 0 1 248 194" fill="none" stroke="#00C4FF" stroke-width="22" stroke-linecap="round" opacity="0.85"/>
+  <path d="M916 568 A457 457 0 0 1 776 830" fill="none" stroke="#00C4FF" stroke-width="22" stroke-linecap="round" opacity="0.85"/>
+
+  <!-- Inner ring -->
+  <circle cx="512" cy="512" r="372" fill="none" stroke="#00FF88" stroke-width="2" opacity="0.2"/>
+
+  <!-- Leaf fill -->
+  <path d="M512 180 C640 215, 768 335, 768 512 C768 688, 642 790, 512 830 C382 790, 256 688, 256 512 C256 335, 384 215, 512 180 Z" fill="#00FF88" opacity="0.18"/>
+  
+  <!-- Leaf outline -->
+  <path d="M512 180 C640 215, 768 335, 768 512 C768 688, 642 790, 512 830 C382 790, 256 688, 256 512 C256 335, 384 215, 512 180 Z" fill="none" stroke="#00FF88" stroke-width="5" opacity="0.85"/>
+
+  <!-- Central spine -->
+  <line x1="512" y1="192" x2="512" y2="822" stroke="#00FF88" stroke-width="5" opacity="0.85"/>
+
+  <!-- Left veins -->
+  <path d="M512 310 C465 335, 392 348, 340 378" fill="none" stroke="#00FF88" stroke-width="3.5" opacity="0.65"/>
+  <path d="M512 400 C460 425, 380 440, 318 472" fill="none" stroke="#00FF88" stroke-width="3.5" opacity="0.6"/>
+  <path d="M512 490 C456 518, 372 532, 305 568" fill="none" stroke="#00FF88" stroke-width="3.5" opacity="0.55"/>
+  <path d="M512 580 C462 604, 390 614, 342 640" fill="none" stroke="#00FF88" stroke-width="3" opacity="0.45"/>
+  <path d="M512 665 C474 684, 424 690, 388 712" fill="none" stroke="#00FF88" stroke-width="2.5" opacity="0.35"/>
+
+  <!-- Right veins -->
+  <path d="M512 310 C559 335, 632 348, 684 378" fill="none" stroke="#00FF88" stroke-width="3.5" opacity="0.65"/>
+  <path d="M512 400 C564 425, 644 440, 706 472" fill="none" stroke="#00FF88" stroke-width="3.5" opacity="0.6"/>
+  <path d="M512 490 C568 518, 652 532, 719 568" fill="none" stroke="#00FF88" stroke-width="3.5" opacity="0.55"/>
+  <path d="M512 580 C562 604, 634 614, 682 640" fill="none" stroke="#00FF88" stroke-width="3" opacity="0.45"/>
+  <path d="M512 665 C550 684, 600 690, 636 712" fill="none" stroke="#00FF88" stroke-width="2.5" opacity="0.35"/>
+
+  <!-- Scan band -->
+  <rect x="220" y="493" width="584" height="38" rx="6" fill="#00C4FF" opacity="0.07"/>
+  <line x1="218" y1="512" x2="806" y2="512" stroke="#00C4FF" stroke-width="5" opacity="1"/>
+  <line x1="218" y1="504" x2="806" y2="504" stroke="#00C4FF" stroke-width="1.5" opacity="0.35"/>
+  <line x1="218" y1="520" x2="806" y2="520" stroke="#00C4FF" stroke-width="1.5" opacity="0.35"/>
+
+  <!-- Scan dots -->
+  <circle cx="300" cy="512" r="9" fill="#00C4FF" opacity="0.7"/>
+  <circle cx="360" cy="512" r="6" fill="#00C4FF" opacity="0.4"/>
+  <circle cx="664" cy="512" r="6" fill="#00C4FF" opacity="0.4"/>
+  <circle cx="724" cy="512" r="9" fill="#00C4FF" opacity="0.7"/>
+
+  <!-- Center target -->
+  <circle cx="512" cy="512" r="42" fill="#00C4FF" opacity="0.12"/>
+  <circle cx="512" cy="512" r="26" fill="#00C4FF" opacity="0.22"/>
+  <circle cx="512" cy="512" r="13" fill="#00C4FF" opacity="0.95"/>
+  <circle cx="512" cy="512" r="42" fill="none" stroke="#00C4FF" stroke-width="3.5" opacity="0.8"/>
+  <circle cx="512" cy="512" r="68" fill="none" stroke="#00C4FF" stroke-width="1.5" opacity="0.3"/>
+
+  <!-- Corner scan brackets -->
+  <path d="M308 308 L308 356 M308 308 L356 308" fill="none" stroke="#00C4FF" stroke-width="7" opacity="0.9" stroke-linecap="round"/>
+  <path d="M716 308 L716 356 M716 308 L668 308" fill="none" stroke="#00C4FF" stroke-width="7" opacity="0.9" stroke-linecap="round"/>
+  <path d="M308 716 L308 668 M308 716 L356 716" fill="none" stroke="#00C4FF" stroke-width="7" opacity="0.9" stroke-linecap="round"/>
+  <path d="M716 716 L716 668 M716 716 L668 716" fill="none" stroke="#00C4FF" stroke-width="7" opacity="0.9" stroke-linecap="round"/>
+
+  <!-- Accent dots -->
+  <circle cx="512" cy="88" r="12" fill="#00FF88" opacity="0.95"/>
+  <circle cx="512" cy="88" r="24" fill="none" stroke="#00FF88" stroke-width="3" opacity="0.4"/>
+  <circle cx="512" cy="936" r="12" fill="#00FF88" opacity="0.95"/>
+  <circle cx="512" cy="936" r="24" fill="none" stroke="#00FF88" stroke-width="3" opacity="0.4"/>
+  <circle cx="88" cy="512" r="12" fill="#00C4FF" opacity="0.95"/>
+  <circle cx="936" cy="512" r="12" fill="#00C4FF" opacity="0.95"/>
+
+  <!-- Diagonal accents -->
+  <line x1="222" y1="222" x2="258" y2="258" stroke="#00FF88" stroke-width="5" opacity="0.6" stroke-linecap="round"/>
+  <line x1="802" y1="222" x2="766" y2="258" stroke="#00FF88" stroke-width="5" opacity="0.6" stroke-linecap="round"/>
+  <line x1="222" y1="802" x2="258" y2="766" stroke="#00FF88" stroke-width="5" opacity="0.6" stroke-linecap="round"/>
+  <line x1="802" y1="802" x2="766" y2="766" stroke="#00FF88" stroke-width="5" opacity="0.6" stroke-linecap="round"/>
+</svg>

@@ -9,6 +9,7 @@ import '../bloc/auth/auth_bloc.dart';
 import '../bloc/auth/auth_event.dart';
 import '../bloc/auth/auth_state.dart';
 import 'package:smart_agri_app/screens/forgot_password_screen.dart';
+import 'package:smart_agri_app/screens/qr_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function(Locale)? onLocaleChange;
@@ -81,11 +82,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(children: [
                         Container(
                           width: 72, height: 72,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(colors: [primary, cyan], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
+                            child: Image.asset('assets/icons/agriscan_logo.png', fit: BoxFit.cover),
                           ),
-                          child: const Center(child: Text('🌿', style: TextStyle(fontSize: 36))),
                         ),
                         const SizedBox(height: 14),
                         Text(l.appName, style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: textPrimary, letterSpacing: 3)),
@@ -137,26 +138,46 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 12),
 
+                        // Forgot password
                         Center(
-  child: TextButton(
-    onPressed: () => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
-    ),
-    child: Text(
-      'Mot de passe oublié ?',
-      style: TextStyle(color: textSecondary, fontSize: 13),
-    ),
-  ),
-),
+                          child: TextButton(
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForgotPasswordScreen())),
+                            child: Text('Mot de passe oublié ?', style: TextStyle(color: textSecondary, fontSize: 13)),
+                          ),
+                        ),
+
+                        // QR login
+                        Center(
+                          child: TextButton.icon(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => QrScreen(
+                                isDarkNotifier: isDarkNotifier,
+                                onLocaleChange: widget.onLocaleChange ?? (_) {},
+                                onThemeChange: widget.onThemeChange ?? (_) {},
+                              )),
+                            ),
+                            icon: Icon(Icons.qr_code_scanner, color: primary),
+                            label: Text('Se connecter avec QR Code', style: TextStyle(color: primary, fontSize: 13)),
+                          ),
+                        ),
+
+                        // Register
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(l.noAccount, style: TextStyle(color: textSecondary, fontSize: 13)),
                             GestureDetector(
-                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => RegistrationScreen())),
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => RegistrationScreen(
+                                  isDarkNotifier: isDarkNotifier,
+                                  onLocaleChange: widget.onLocaleChange,
+                                  onThemeChange: widget.onThemeChange,
+                                )),
+                              ),
                               child: Text(l.register, style: TextStyle(color: primary, fontWeight: FontWeight.w600, fontSize: 13)),
                             ),
                           ],

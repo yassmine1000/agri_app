@@ -41,8 +41,16 @@ class DetectionScreen extends StatelessWidget {
               const SizedBox(width: 12),
               Container(
                 width: 60, height: 60,
-                decoration: BoxDecoration(gradient: LinearGradient(colors: [primary, cyan], begin: Alignment.topLeft, end: Alignment.bottomRight), borderRadius: BorderRadius.circular(16)),
-                child: const Center(child: Text('🤖', style: TextStyle(fontSize: 30))),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    'assets/icons/agriscan_logo.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ]),
           ),

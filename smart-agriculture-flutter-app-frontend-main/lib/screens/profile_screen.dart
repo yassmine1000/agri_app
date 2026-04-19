@@ -6,6 +6,10 @@ import 'package:smart_agri_app/generated/app_localizations.dart';
 import 'package:smart_agri_app/local/pref_helper.dart';
 import 'package:smart_agri_app/utils/app_theme.dart';
 import 'login_screen.dart';
+import 'package:smart_agri_app/screens/qr_screen.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:smart_agri_app/local/pref_helper.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   final ValueNotifier<bool> isDarkNotifier;
@@ -30,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _editing = false;
   bool _saving = false;
   String? _error;
+  String? _qrToken;
 
   // Controllers
   final _nameCtrl = TextEditingController();
@@ -58,12 +63,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadProfile() async {
     setState(() { _loading = true; _error = null; });
     try {
+      final qrToken = await PrefHelper.getQrToken();
       final token = await PrefHelper.getToken();
       final response = await _dio.get(
         '${Config.baseUrl}/profile',
         options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true'}),
       );
       final data = response.data['data'];
+      if (mounted) setState(() => _qrToken = qrToken);
       if (!mounted) return;
       setState(() {
         _profile = data;
@@ -138,6 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+
     if (confirmed == true) {
       try {
         final token = await PrefHelper.getToken();
@@ -194,6 +202,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icon: Icon(Icons.close, color: textSecondary, size: 20),
                   onPressed: () { setState(() => _editing = false); _loadProfile(); },
                 ),
+                  IconButton(
+                    icon: Icon(Icons.qr_code, color: textSecondary, size: 20),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => QrScreen(
+                        isDarkNotifier: widget.isDarkNotifier,
+                        onLocaleChange: widget.onLocaleChange,
+                        onThemeChange: widget.onThemeChange,
+                      )),
+                    ),
+                  ),
               const SizedBox(width: 4),
             ],
             bottom: PreferredSize(preferredSize: const Size.fromHeight(1), child: Container(height: 1, color: border)),
@@ -230,7 +249,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text(_profile?['role']?.toUpperCase() ?? '', style: TextStyle(fontSize: 12, color: primary, fontWeight: FontWeight.w700)),
                           ),
                         ])),
-
+                        if (_qrToken != null) ...[
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () => _showQrDialog(isDark, primary, surface, border, textPrimary, textSecondary),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: surface,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: primary.withOpacity(0.3)),
+                              ),
+                              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                                Icon(Icons.qr_code, color: primary, size: 18),
+                                const SizedBox(width: 8),
+                                Text('Voir mon QR Code', style: TextStyle(color: primary, fontWeight: FontWeight.w600, fontSize: 13)),
+                              ]),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 28),
 
                         // Personal info section
@@ -388,4 +425,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Text(value, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
     ]),
   );
+  void _showQrDialog(bool isDark, Color primary, Color surface, Color border, Color textPrimary, Color textSecondary) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: surface,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: border)),
+      title: Text('Mon QR Code', style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700)),
+      content: Column(mainAxisSize: MainAxisSize.min, children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+          child: SizedBox(
+            width: 200, height: 200,
+            child: PrettyQrView.data(
+              data: _qrToken!,
+              errorCorrectLevel: QrErrorCorrectLevel.H,
+              decoration: PrettyQrDecoration(
+                shape: PrettyQrSmoothSymbol(color: const Color(0xFF050E1A)),
+                image: const PrettyQrDecorationImage(
+                  image: AssetImage('assets/icons/agriscan_logo.png'),
+                  scale: 0.2,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text('Faites scanner ce code pour vous connecter', textAlign: TextAlign.center, style: TextStyle(color: textSecondary, fontSize: 12, height: 1.5)),
+      ]),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: Text('Fermer', style: TextStyle(color: textSecondary))),
+      ],
+    ),
+  );
+}
 }

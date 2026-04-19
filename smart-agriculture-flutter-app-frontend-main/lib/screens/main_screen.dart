@@ -108,11 +108,11 @@ class _MainScreenState extends State<MainScreen> {
             title: Row(children: [
               Container(
                 width: 32, height: 32,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [primary, cyan]),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(9)),
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(9),
+                  child: Image.asset('assets/icons/agriscan_logo.png', fit: BoxFit.cover),
                 ),
-                child: const Center(child: Text('🌿', style: TextStyle(fontSize: 16))),
               ),
               const SizedBox(width: 10),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

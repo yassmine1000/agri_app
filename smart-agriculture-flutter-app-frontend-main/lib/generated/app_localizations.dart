@@ -967,7 +967,7 @@ abstract class AppLocalizations {
   /// No description provided for @newPassword.
   ///
   /// In en, this message translates to:
-  /// **'New Password'**
+  /// **'New Password (leave blank to keep)'**
   String get newPassword;
 
   /// No description provided for @leaveBlank.
@@ -979,7 +979,7 @@ abstract class AppLocalizations {
   /// No description provided for @saveChanges.
   ///
   /// In en, this message translates to:
-  /// **'Save Changes'**
+  /// **'Save'**
   String get saveChanges;
 
   /// No description provided for @accountInfo.
@@ -993,6 +993,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Member Since'**
   String get memberSince;
+
+  /// No description provided for @userManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'User Management'**
+  String get userManagement;
+
+  /// No description provided for @addUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Add User'**
+  String get addUser;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @editUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit User'**
+  String get editUser;
+
+  /// No description provided for @deleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete User'**
+  String get deleteUser;
+
+  /// No description provided for @confirmDeleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this user permanently?'**
+  String get confirmDeleteUser;
+
+  /// No description provided for @userDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'User deleted'**
+  String get userDeleted;
+
+  /// No description provided for @userCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'User created'**
+  String get userCreated;
+
+  /// No description provided for @userUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'User updated'**
+  String get userUpdated;
+
+  /// No description provided for @searchUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name, username, email, role...'**
+  String get searchUsers;
+
+  /// No description provided for @registeredOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered:'**
+  String get registeredOn;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @defaultPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password (default: agriscan123)'**
+  String get defaultPassword;
+
+  /// No description provided for @noUsersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get noUsersFound;
+
+  /// No description provided for @shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get shop;
 }
 
 class _AppLocalizationsDelegate

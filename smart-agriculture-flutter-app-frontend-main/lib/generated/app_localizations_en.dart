@@ -447,17 +447,62 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changePassword => 'CHANGE PASSWORD';
 
   @override
-  String get newPassword => 'New Password';
+  String get newPassword => 'New Password (leave blank to keep)';
 
   @override
   String get leaveBlank => 'Leave blank to keep current password';
 
   @override
-  String get saveChanges => 'Save Changes';
+  String get saveChanges => 'Save';
 
   @override
   String get accountInfo => 'ACCOUNT INFO';
 
   @override
   String get memberSince => 'Member Since';
+
+  @override
+  String get userManagement => 'User Management';
+
+  @override
+  String get addUser => 'Add User';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get editUser => 'Edit User';
+
+  @override
+  String get deleteUser => 'Delete User';
+
+  @override
+  String get confirmDeleteUser => 'Delete this user permanently?';
+
+  @override
+  String get userDeleted => 'User deleted';
+
+  @override
+  String get userCreated => 'User created';
+
+  @override
+  String get userUpdated => 'User updated';
+
+  @override
+  String get searchUsers => 'Search by name, username, email, role...';
+
+  @override
+  String get registeredOn => 'Registered:';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get defaultPassword => 'Password (default: agriscan123)';
+
+  @override
+  String get noUsersFound => 'No users found';
+
+  @override
+  String get shop => 'Shop';
 }

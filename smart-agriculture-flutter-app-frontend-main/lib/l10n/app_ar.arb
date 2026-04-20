@@ -161,5 +161,23 @@
   "leaveBlank": "اتركه فارغاً للاحتفاظ بكلمة المرور الحالية",
   "saveChanges": "حفظ التغييرات",
   "accountInfo": "معلومات الحساب",
-  "memberSince": "عضو منذ"
+  "memberSince": "عضو منذ",
+
+  "userManagement": "إدارة المستخدمين",
+  "addUser": "إضافة",
+  "edit": "تعديل" ,
+  "editUser": "تعديل المستخدم",
+  "deleteUser": "حذف المستخدم",
+  "confirmDeleteUser": "حذف هذا المستخدم نهائياً؟",
+  "userDeleted": "تم حذف المستخدم",
+  "userCreated": "تم إنشاء المستخدم",
+  "userUpdated": "تم تعديل المستخدم",
+  "searchUsers": "البحث بالاسم أو اسم المستخدم أو البريد أو الدور...",
+  "registeredOn": "تاريخ الانضمام:",
+  "total": "المجموع",
+  "newPassword": "كلمة مرور جديدة (اتركها فارغة للإبقاء)",
+  "defaultPassword": "كلمة المرور (افتراضي: agriscan123)",
+  "saveChanges": "حفظ",
+  "noUsersFound": "لا يوجد مستخدمون",
+  "shop": "المتجر"
 }

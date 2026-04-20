@@ -17,6 +17,8 @@ import farmerRoute from "./routes/farmerRoute";
 import errorHandling from "./middleware/errorHandler";
 import priceRoute from "./routes/priceRoute";   // avec les autres imports
 import profileRoute from "./routes/profileRoute";
+import userRoute from "./routes/userRoute";
+import productRoute from "./routes/productRoute";
 
 dotenv.config();
 
@@ -35,6 +37,9 @@ app.use("/api/farmer", farmerRoute);
 app.use("/api/prices", priceRoute);
 app.use("/api/history", historyRoute);
 app.use("/api/profile", profileRoute);
+app.use("/api/users", userRoute);
+app.use("/api/products", productRoute);
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Disease Detection endpoint
 app.post("/predict", upload.single("image"), async (req: Request, res: Response) => {
@@ -63,6 +68,11 @@ app.post("/predict", upload.single("image"), async (req: Request, res: Response)
       fs.unlinkSync(imagePath);
       res.status(500).json({ error: error.message });
   }
+});
+
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error("ERREUR GLOBALE:", err);
+  res.status(500).json({ message: "Something went wrong", error: err.message });
 });
 
 // API to fetch crop, stage and soil types names from CSV

@@ -448,17 +448,62 @@ class AppLocalizationsFr extends AppLocalizations {
   String get changePassword => 'CHANGER LE MOT DE PASSE';
 
   @override
-  String get newPassword => 'Nouveau mot de passe';
+  String get newPassword => 'Nouveau mot de passe (laisser vide)';
 
   @override
   String get leaveBlank => 'Laisser vide pour conserver le mot de passe actuel';
 
   @override
-  String get saveChanges => 'Enregistrer les modifications';
+  String get saveChanges => 'Enregistrer';
 
   @override
   String get accountInfo => 'INFORMATIONS DU COMPTE';
 
   @override
   String get memberSince => 'Membre depuis';
+
+  @override
+  String get userManagement => 'Gestion des utilisateurs';
+
+  @override
+  String get addUser => 'Ajouter';
+
+  @override
+  String get edit => 'Modifier';
+
+  @override
+  String get editUser => 'Modifier l\'utilisateur';
+
+  @override
+  String get deleteUser => 'Supprimer l\'utilisateur';
+
+  @override
+  String get confirmDeleteUser => 'Supprimer cet utilisateur définitivement ?';
+
+  @override
+  String get userDeleted => 'Utilisateur supprimé';
+
+  @override
+  String get userCreated => 'Utilisateur créé';
+
+  @override
+  String get userUpdated => 'Utilisateur modifié';
+
+  @override
+  String get searchUsers => 'Rechercher par nom, username, email, rôle...';
+
+  @override
+  String get registeredOn => 'Inscrit:';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get defaultPassword => 'Mot de passe (défaut: agriscan123)';
+
+  @override
+  String get noUsersFound => 'Aucun utilisateur trouvé';
+
+  @override
+  String get shop => 'Magasin';
 }

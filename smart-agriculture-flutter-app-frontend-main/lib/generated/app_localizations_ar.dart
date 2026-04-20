@@ -447,17 +447,63 @@ class AppLocalizationsAr extends AppLocalizations {
   String get changePassword => 'تغيير كلمة المرور';
 
   @override
-  String get newPassword => 'كلمة المرور الجديدة';
+  String get newPassword => 'كلمة مرور جديدة (اتركها فارغة للإبقاء)';
 
   @override
   String get leaveBlank => 'اتركه فارغاً للاحتفاظ بكلمة المرور الحالية';
 
   @override
-  String get saveChanges => 'حفظ التغييرات';
+  String get saveChanges => 'حفظ';
 
   @override
   String get accountInfo => 'معلومات الحساب';
 
   @override
   String get memberSince => 'عضو منذ';
+
+  @override
+  String get userManagement => 'إدارة المستخدمين';
+
+  @override
+  String get addUser => 'إضافة';
+
+  @override
+  String get edit => 'تعديل';
+
+  @override
+  String get editUser => 'تعديل المستخدم';
+
+  @override
+  String get deleteUser => 'حذف المستخدم';
+
+  @override
+  String get confirmDeleteUser => 'حذف هذا المستخدم نهائياً؟';
+
+  @override
+  String get userDeleted => 'تم حذف المستخدم';
+
+  @override
+  String get userCreated => 'تم إنشاء المستخدم';
+
+  @override
+  String get userUpdated => 'تم تعديل المستخدم';
+
+  @override
+  String get searchUsers =>
+      'البحث بالاسم أو اسم المستخدم أو البريد أو الدور...';
+
+  @override
+  String get registeredOn => 'تاريخ الانضمام:';
+
+  @override
+  String get total => 'المجموع';
+
+  @override
+  String get defaultPassword => 'كلمة المرور (افتراضي: agriscan123)';
+
+  @override
+  String get noUsersFound => 'لا يوجد مستخدمون';
+
+  @override
+  String get shop => 'المتجر';
 }

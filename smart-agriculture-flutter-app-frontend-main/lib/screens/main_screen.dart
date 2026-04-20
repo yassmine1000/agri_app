@@ -9,6 +9,8 @@ import 'bottom_screens/weather_screen.dart';
 import 'login_screen.dart';
 import 'settings_screen.dart';
 import 'package:smart_agri_app/screens/profile_screen.dart';
+import 'package:smart_agri_app/screens/bottom_screens/shop_screen.dart';
+import 'package:smart_agri_app/screens/admin_users_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final Function(Locale) onLocaleChange;
@@ -28,13 +30,18 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  bool _isAdmin = false;
 
   Future<void> _logout(bool isDark) async {
     final l = AppLocalizations.of(context)!;
     final surface = isDark ? AppColors.surface : AppColorsLight.surface;
     final border = isDark ? AppColors.border : AppColorsLight.border;
-    final textPrimary = isDark ? AppColors.textPrimary : AppColorsLight.textPrimary;
-    final textSecondary = isDark ? AppColors.textSecondary : AppColorsLight.textSecondary;
+    final textPrimary = isDark
+        ? AppColors.textPrimary
+        : AppColorsLight.textPrimary;
+    final textSecondary = isDark
+        ? AppColors.textSecondary
+        : AppColorsLight.textSecondary;
     final errorColor = isDark ? AppColors.error : AppColorsLight.error;
 
     final confirm = await showDialog<bool>(
@@ -45,7 +52,10 @@ class _MainScreenState extends State<MainScreen> {
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: border),
         ),
-        title: Text(l.signOut, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700)),
+        title: Text(
+          l.signOut,
+          style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700),
+        ),
         content: Text(l.signOutConfirm, style: TextStyle(color: textSecondary)),
         actions: [
           TextButton(
@@ -55,10 +65,18 @@ class _MainScreenState extends State<MainScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: errorColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l.signOut, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+            child: Text(
+              l.signOut,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),
@@ -69,18 +87,31 @@ class _MainScreenState extends State<MainScreen> {
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => LoginScreen(
-          onLocaleChange: widget.onLocaleChange,
-          onThemeChange: widget.onThemeChange,
-          isDarkNotifier: widget.isDarkNotifier,
-        )),
+        MaterialPageRoute(
+          builder: (_) => LoginScreen(
+            onLocaleChange: widget.onLocaleChange,
+            onThemeChange: widget.onThemeChange,
+            isDarkNotifier: widget.isDarkNotifier,
+          ),
+        ),
         (route) => false,
       );
     }
   }
 
+   void initState() {
+    super.initState();
+    _loadRole(); // ✅ charge le rôle dès l’ouverture
+  }
+
+  Future<void> _loadRole() async {
+    final user = await PrefHelper.getUser();
+    if (mounted) setState(() => _isAdmin = user?['role'] == 'admin');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
     return ValueListenableBuilder<bool>(
       valueListenable: widget.isDarkNotifier,
       builder: (context, isDark, _) {
@@ -90,61 +121,121 @@ class _MainScreenState extends State<MainScreen> {
         final border = isDark ? AppColors.border : AppColorsLight.border;
         final primary = isDark ? AppColors.primary : AppColorsLight.primary;
         final cyan = isDark ? AppColors.cyan : AppColorsLight.cyan;
-        final textSecondary = isDark ? AppColors.textSecondary : AppColorsLight.textSecondary;
-        final textPrimary = isDark ? AppColors.textPrimary : AppColorsLight.textPrimary;
+        final textSecondary = isDark
+            ? AppColors.textSecondary
+            : AppColorsLight.textSecondary;
+        final textPrimary = isDark
+            ? AppColors.textPrimary
+            : AppColorsLight.textPrimary;
 
         final screens = [
           DetectionScreen(isDarkMode: isDark),
           FarmerScreen(isDarkMode: isDark),
           MarketPricesScreen(isDarkMode: isDark),
           WeatherScreen(isDarkMode: isDark),
+          ShopScreen(isDarkMode: isDark),
         ];
-        final titles = [l.detection, l.planning, l.market, l.weather];
+        final titles = [l.detection, l.planning, l.market, l.weather, l.shop];
 
         return Scaffold(
           backgroundColor: bg,
           appBar: AppBar(
             backgroundColor: bg,
-            title: Row(children: [
-              Container(
-                width: 32, height: 32,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(9)),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(9),
-                  child: Image.asset('assets/icons/agriscan_logo.png', fit: BoxFit.cover),
+            title: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(9),
+                    child: Image.asset(
+                      'assets/icons/agriscan_logo.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('AGRISCAN', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: textPrimary, letterSpacing: 2)),
-                Text(titles[_currentIndex], style: TextStyle(fontSize: 11, color: textSecondary)),
-              ]),
-            ]),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'AGRISCAN',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: textPrimary,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    Text(
+                      titles[_currentIndex],
+                      style: TextStyle(fontSize: 11, color: textSecondary),
+                    ),
+                  ],
+                ),
+              ],
+            ),
             actions: [
+              // Dans les actions de l'AppBar, ajoute avant le bouton settings :
+              if (_isAdmin)
+                IconButton(
+                  icon: Icon(
+                    Icons.manage_accounts_outlined,
+                    color: textSecondary,
+                    size: 20,
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => AdminUsersScreen(
+                        isDarkNotifier: widget.isDarkNotifier,
+                      ),
+                    ),
+                  ),
+                ),
               IconButton(
-                icon: Icon(Icons.settings_outlined, color: textSecondary, size: 20),
+                icon: Icon(
+                  Icons.settings_outlined,
+                  color: textSecondary,
+                  size: 20,
+                ),
                 onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => SettingsScreen(
-                    onLocaleChange: widget.onLocaleChange,
-                    onThemeChange: widget.onThemeChange,
-                    isDarkNotifier: widget.isDarkNotifier,
-                  )),
+                  MaterialPageRoute(
+                    builder: (_) => SettingsScreen(
+                      onLocaleChange: widget.onLocaleChange,
+                      onThemeChange: widget.onThemeChange,
+                      isDarkNotifier: widget.isDarkNotifier,
+                    ),
+                  ),
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.person_outline, color: textSecondary, size: 20),
+                icon: Icon(
+                  Icons.person_outline,
+                  color: textSecondary,
+                  size: 20,
+                ),
                 onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => ProfileScreen(
-                    isDarkNotifier: widget.isDarkNotifier,
-                    onLocaleChange: widget.onLocaleChange,
-                    onThemeChange: widget.onThemeChange,
-                  )),
+                  MaterialPageRoute(
+                    builder: (_) => ProfileScreen(
+                      isDarkNotifier: widget.isDarkNotifier,
+                      onLocaleChange: widget.onLocaleChange,
+                      onThemeChange: widget.onThemeChange,
+                    ),
+                  ),
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.logout_rounded, color: textSecondary, size: 20),
+                icon: Icon(
+                  Icons.logout_rounded,
+                  color: textSecondary,
+                  size: 20,
+                ),
                 onPressed: () => _logout(isDark),
               ),
               const SizedBox(width: 4),
@@ -171,10 +262,24 @@ class _MainScreenState extends State<MainScreen> {
               unselectedFontSize: 11,
               onTap: (i) => setState(() => _currentIndex = i),
               items: [
-                BottomNavigationBarItem(icon: const Icon(Icons.biotech_outlined), label: l.detection),
-                BottomNavigationBarItem(icon: const Icon(Icons.event_note_outlined), label: l.planning),
-                BottomNavigationBarItem(icon: const Icon(Icons.storefront_outlined), label: l.market),
-                BottomNavigationBarItem(icon: const Icon(Icons.wb_sunny_outlined), label: l.weather),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.biotech_outlined),
+                  label: l.detection,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.event_note_outlined),
+                  label: l.planning,
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.storefront_outlined),
+                  label: l.market,
+                ),
+                
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.wb_sunny_outlined),
+                  label: l.weather,
+                ),
+                BottomNavigationBarItem(icon: const Icon(Icons.storefront_outlined), label: isAr ? 'المتجر' : l.shop),
               ],
             ),
           ),

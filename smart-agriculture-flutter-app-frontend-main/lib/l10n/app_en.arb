@@ -161,5 +161,23 @@
   "leaveBlank": "Leave blank to keep current password",
   "saveChanges": "Save Changes",
   "accountInfo": "ACCOUNT INFO",
-  "memberSince": "Member Since"
+  "memberSince": "Member Since",
+
+  "userManagement": "User Management",
+  "addUser": "Add User",
+  "edit": "Edit",
+  "editUser": "Edit User",
+  "deleteUser": "Delete User",
+  "confirmDeleteUser": "Delete this user permanently?",
+  "userDeleted": "User deleted",
+  "userCreated": "User created",
+  "userUpdated": "User updated",
+  "searchUsers": "Search by name, username, email, role...",
+  "registeredOn": "Registered:",
+  "total": "Total",
+  "newPassword": "New Password (leave blank to keep)",
+  "defaultPassword": "Password (default: agriscan123)",
+  "saveChanges": "Save",
+  "noUsersFound": "No users found",
+  "shop": "Shop"
 }

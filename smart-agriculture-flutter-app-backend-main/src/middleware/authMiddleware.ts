@@ -40,7 +40,7 @@ export const farmerOnly = (req: Request, res: Response, next: NextFunction) => {
 
 export const adminOnly = (req: Request, res: Response, next: NextFunction) => {
   if (req.user?.role !== "admin") {
-      return res.status(403).json({ message: "Accès réservé à l'administrateur" });
+      return res.status(403).json({ message: "Admin access only" });
   }
   next();
 };

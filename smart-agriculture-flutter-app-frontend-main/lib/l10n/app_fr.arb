@@ -161,5 +161,23 @@
   "leaveBlank": "Laisser vide pour conserver le mot de passe actuel",
   "saveChanges": "Enregistrer les modifications",
   "accountInfo": "INFORMATIONS DU COMPTE",
-  "memberSince": "Membre depuis"
+  "memberSince": "Membre depuis",
+
+  "userManagement": "Gestion des utilisateurs",
+  "addUser": "Ajouter",
+  "edit": "Modifier",
+  "editUser": "Modifier l'utilisateur",
+  "deleteUser": "Supprimer l'utilisateur",
+  "confirmDeleteUser": "Supprimer cet utilisateur définitivement ?",
+  "userDeleted": "Utilisateur supprimé",
+  "userCreated": "Utilisateur créé",
+  "userUpdated": "Utilisateur modifié",
+  "searchUsers": "Rechercher par nom, username, email, rôle...",
+  "registeredOn": "Inscrit:",
+  "total": "Total",
+  "newPassword": "Nouveau mot de passe (laisser vide)",
+  "defaultPassword": "Mot de passe (défaut: agriscan123)",
+  "saveChanges": "Enregistrer",
+  "noUsersFound": "Aucun utilisateur trouvé",
+  "shop": "Magasin"
 }

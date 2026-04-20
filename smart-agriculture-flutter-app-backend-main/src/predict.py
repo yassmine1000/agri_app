@@ -15,21 +15,8 @@ print(f"✅ {num_classes} classes chargées")
 # ── Reconstruire l'architecture EfficientNetB0 ───────────────────
 IMG_SHAPE = (224, 224, 3)
 
-base_model = tf.keras.applications.EfficientNetB0(
-    input_shape=IMG_SHAPE,
-    include_top=False,
-    weights="imagenet"
-)
+model = tf.keras.models.load_model("best_model.keras")
 
-inputs  = tf.keras.Input(shape=IMG_SHAPE)
-x       = base_model(inputs, training=False)
-x       = tf.keras.layers.GlobalAveragePooling2D()(x)
-x       = tf.keras.layers.Dropout(0.3)(x)
-outputs = tf.keras.layers.Dense(num_classes, activation="softmax", dtype="float32")(x)
-model   = tf.keras.Model(inputs, outputs)
-
-model.load_weights("best_weights.weights.h5")
-print("✅ Poids chargés avec succès")
 
 # ── Conseils EN ──────────────────────────────────────────────────
 disease_advice_en = {

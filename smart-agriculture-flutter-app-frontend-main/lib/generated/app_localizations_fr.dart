@@ -506,4 +506,288 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shop => 'Magasin';
+
+  @override
+  String get usernameRequired => 'Le nom d\'utilisateur est requis';
+
+  @override
+  String get nameRequired => 'Le nom complet est requis';
+
+  @override
+  String get phoneInvalid =>
+      'Le numéro de téléphone doit contenir au moins 8 chiffres';
+
+  @override
+  String get anErrorOccurred => 'Une erreur est survenue';
+
+  @override
+  String get invalidCredentials =>
+      'Nom d\'utilisateur ou mot de passe incorrect';
+
+  @override
+  String get invalidEmail => 'Adresse email invalide';
+
+  @override
+  String get forgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get loginWithQr => 'Se connecter avec QR Code';
+
+  @override
+  String get phoneRequired => 'Le numéro de téléphone est requis';
+
+  @override
+  String get addressRequired => 'L\'adresse est requise';
+
+  @override
+  String get emailRequired => 'L\'email est requis';
+
+  @override
+  String get farmNameRequired => 'Le nom de la ferme est requis';
+
+  @override
+  String get regNoRequired => 'Le numéro d\'enregistrement est requis';
+
+  @override
+  String get passwordMin =>
+      'Le mot de passe doit contenir au moins 6 caractères';
+
+  @override
+  String get usernameMin =>
+      'Le nom d\'utilisateur doit contenir au moins 3 caractères';
+
+  @override
+  String get onboardingTitle1 => 'Détection Intelligente';
+
+  @override
+  String get onboardingDesc1 =>
+      'Scannez n\'importe quelle feuille et identifiez instantanément les maladies grâce à l\'IA';
+
+  @override
+  String get onboardingTitle2 => 'Intelligence Fertilisants';
+
+  @override
+  String get onboardingDesc2 =>
+      'Obtenez des recommandations d\'engrais personnalisées selon votre sol et vos cultures';
+
+  @override
+  String get onboardingTitle3 => 'Marché & Planification';
+
+  @override
+  String get onboardingDesc3 =>
+      'Suivez les prix des cultures en temps réel et planifiez votre calendrier agricole';
+
+  @override
+  String get getStarted => 'Commencer';
+
+  @override
+  String get skip => 'Ignorer';
+
+  @override
+  String get next => 'Suivant';
+
+  @override
+  String get cropInformation => 'Informations sur la culture';
+
+  @override
+  String get soilProperties => 'Propriétés du sol';
+
+  @override
+  String get weatherConditions => 'Conditions météorologiques';
+
+  @override
+  String get crop => 'Culture';
+
+  @override
+  String get stage => 'Stade';
+
+  @override
+  String get soilType => 'Type de sol';
+
+  @override
+  String get nitrogenLabel => 'Azote (N) kg/ha';
+
+  @override
+  String get phosphorusLabel => 'Phosphore (P) kg/ha';
+
+  @override
+  String get potassiumLabel => 'Potassium (K) kg/ha';
+
+  @override
+  String get soilPh => 'pH du sol';
+
+  @override
+  String get organicCarbon => 'Carbone organique (%)';
+
+  @override
+  String get temperature => 'Température (°C)';
+
+  @override
+  String get rainfall => 'Précipitations (mm)';
+
+  @override
+  String get getRecommendation => 'Obtenir la recommandation';
+
+  @override
+  String get fertilizerResult => 'Recommandation d\'engrais';
+
+  @override
+  String get fertilizerDesc =>
+      'Entrez les détails de votre sol et de votre culture pour obtenir des recommandations personnalisées.';
+
+  @override
+  String get selectStage => 'Veuillez sélectionner un stade';
+
+  @override
+  String get selectSoil => 'Veuillez sélectionner un type de sol';
+
+  @override
+  String get invalidNumber => 'Nombre invalide';
+
+  @override
+  String get nitrogenRange => 'L\'azote doit être entre 0 et 80 kg/ha';
+
+  @override
+  String get phosphorusRange => 'Le phosphore doit être entre 0 et 50 kg/ha';
+
+  @override
+  String get potassiumRange => 'Le potassium doit être entre 0 et 50 kg/ha';
+
+  @override
+  String get phRange => 'Le pH doit être entre 5,5 et 8,0';
+
+  @override
+  String get carbonRange => 'Le carbone organique doit être entre 0 et 1,5%';
+
+  @override
+  String get tempRange => 'La température doit être entre 18 et 38°C';
+
+  @override
+  String get rainfallRange =>
+      'Les précipitations doivent être entre 0 et 120 mm';
+
+  @override
+  String get failedDropdowns =>
+      'Impossible de charger les données. Vérifiez votre connexion.';
+
+  @override
+  String get failedRecommendation =>
+      'Impossible d\'obtenir la recommandation. Vérifiez votre connexion.';
+
+  @override
+  String get ureaLabel => 'Urée';
+
+  @override
+  String get dapLabel => 'DAP';
+
+  @override
+  String get mopLabel => 'MOP';
+
+  @override
+  String get sspLabel => 'SSP';
+
+  @override
+  String get compostLabel => 'Compost';
+
+  @override
+  String get perAcre => 'par hectare';
+
+  @override
+  String get fertilizerGuide => 'Guide des engrais';
+
+  @override
+  String get abbreviation => 'Abrév.';
+
+  @override
+  String get mainElement => 'Élément principal';
+
+  @override
+  String get usage => 'À quoi sert-il';
+
+  @override
+  String get ureFullName => 'Urée';
+
+  @override
+  String get ureElement => 'Azote N 46%';
+
+  @override
+  String get ureUsage =>
+      'Favorise la croissance des feuilles et la couleur verte. Engrais azoté concentré pour une croissance rapide.';
+
+  @override
+  String get dapFullName => 'Di-Ammonium Phosphate';
+
+  @override
+  String get dapElement => 'Azote N 18% + Phosphore P 46%';
+
+  @override
+  String get dapUsage =>
+      'Engrais de fond pour le démarrage. Le phosphore aide au développement des racines et à la floraison.';
+
+  @override
+  String get mopFullName => 'Muriate of Potash';
+
+  @override
+  String get mopElement => 'Potassium K 60%';
+
+  @override
+  String get mopUsage =>
+      'Améliore le calibre, le goût, la résistance aux maladies et au manque d\'eau. Favorise la fructification.';
+
+  @override
+  String get sspFullName => 'Single Super Phosphate';
+
+  @override
+  String get sspElement => 'Phosphore P 16-20% + Soufre + Calcium';
+
+  @override
+  String get sspUsage =>
+      'Moins concentré que le DAP, mais apporte aussi du soufre et du calcium. Utile pour les sols déficients en soufre.';
+
+  @override
+  String get compostFullName => 'Compost (Matière organique)';
+
+  @override
+  String get compostElement => 'Carbone organique + NPK + micro-nutriments';
+
+  @override
+  String get compostUsage =>
+      'Améliore la structure du sol, la rétention d\'eau et l\'activité microbienne. Santé du sol à long terme.';
+
+  @override
+  String get cropLimitNote =>
+      'Les cultures disponibles sont limitées au dataset d\'entraînement (5 cultures).';
+
+  @override
+  String get chipPlantSpecies => 'Espèces';
+
+  @override
+  String get chipAccuracy => 'Précision IA';
+
+  @override
+  String get chipAnalysis => 'Analyse';
+
+  @override
+  String get chipCustom => 'Personnalisé';
+
+  @override
+  String get chipCropPlans => 'Plans cultures';
+
+  @override
+  String get chipDosing => 'Dosage';
+
+  @override
+  String get chipLive => 'En direct';
+
+  @override
+  String get chipCalendar => 'Calendrier';
+
+  @override
+  String get chipProducts => 'Produits';
+
+  @override
+  String get chipSoilAnalysis => 'Analyse du sol';
+
+  @override
+  String get chipNpk => 'N·P·K';
 }

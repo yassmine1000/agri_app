@@ -1083,6 +1083,540 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shop'**
   String get shop;
+
+  /// No description provided for @usernameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get usernameRequired;
+
+  /// No description provided for @nameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name is required'**
+  String get nameRequired;
+
+  /// No description provided for @phoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number must be at least 8 digits'**
+  String get phoneInvalid;
+
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid username or password'**
+  String get invalidCredentials;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email address'**
+  String get invalidEmail;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @loginWithQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with QR Code'**
+  String get loginWithQr;
+
+  /// No description provided for @phoneRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is required'**
+  String get phoneRequired;
+
+  /// No description provided for @addressRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Address is required'**
+  String get addressRequired;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get emailRequired;
+
+  /// No description provided for @farmNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm name is required'**
+  String get farmNameRequired;
+
+  /// No description provided for @regNoRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration number is required'**
+  String get regNoRequired;
+
+  /// No description provided for @passwordMin.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordMin;
+
+  /// No description provided for @usernameMin.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters'**
+  String get usernameMin;
+
+  /// No description provided for @onboardingTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Disease Detection'**
+  String get onboardingTitle1;
+
+  /// No description provided for @onboardingDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan any plant leaf and instantly identify diseases using advanced AI technology'**
+  String get onboardingDesc1;
+
+  /// No description provided for @onboardingTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fertilizer Intelligence'**
+  String get onboardingTitle2;
+
+  /// No description provided for @onboardingDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Get personalized fertilizer recommendations based on your soil and crop type'**
+  String get onboardingDesc2;
+
+  /// No description provided for @onboardingTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Market & Planning'**
+  String get onboardingTitle3;
+
+  /// No description provided for @onboardingDesc3.
+  ///
+  /// In en, this message translates to:
+  /// **'Track real-time crop prices and plan your agricultural calendar efficiently'**
+  String get onboardingDesc3;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @cropInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop Information'**
+  String get cropInformation;
+
+  /// No description provided for @soilProperties.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil Properties'**
+  String get soilProperties;
+
+  /// No description provided for @weatherConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather Conditions'**
+  String get weatherConditions;
+
+  /// No description provided for @crop.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop'**
+  String get crop;
+
+  /// No description provided for @stage.
+  ///
+  /// In en, this message translates to:
+  /// **'Stage'**
+  String get stage;
+
+  /// No description provided for @soilType.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil Type'**
+  String get soilType;
+
+  /// No description provided for @nitrogenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Nitrogen (N) kg/ha'**
+  String get nitrogenLabel;
+
+  /// No description provided for @phosphorusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phosphorus (P) kg/ha'**
+  String get phosphorusLabel;
+
+  /// No description provided for @potassiumLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Potassium (K) kg/ha'**
+  String get potassiumLabel;
+
+  /// No description provided for @soilPh.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil pH'**
+  String get soilPh;
+
+  /// No description provided for @organicCarbon.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic Carbon (%)'**
+  String get organicCarbon;
+
+  /// No description provided for @temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature (°C)'**
+  String get temperature;
+
+  /// No description provided for @rainfall.
+  ///
+  /// In en, this message translates to:
+  /// **'Rainfall (mm)'**
+  String get rainfall;
+
+  /// No description provided for @getRecommendation.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Recommendation'**
+  String get getRecommendation;
+
+  /// No description provided for @fertilizerResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Fertilizer Recommendation'**
+  String get fertilizerResult;
+
+  /// No description provided for @fertilizerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your soil and crop details to get personalized fertilizer recommendations.'**
+  String get fertilizerDesc;
+
+  /// No description provided for @selectStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a stage'**
+  String get selectStage;
+
+  /// No description provided for @selectSoil.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a soil type'**
+  String get selectSoil;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid number'**
+  String get invalidNumber;
+
+  /// No description provided for @nitrogenRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Nitrogen must be between 0 and 80 kg/ha'**
+  String get nitrogenRange;
+
+  /// No description provided for @phosphorusRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Phosphorus must be between 0 and 50 kg/ha'**
+  String get phosphorusRange;
+
+  /// No description provided for @potassiumRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Potassium must be between 0 and 50 kg/ha'**
+  String get potassiumRange;
+
+  /// No description provided for @phRange.
+  ///
+  /// In en, this message translates to:
+  /// **'pH must be between 5.5 and 8.0'**
+  String get phRange;
+
+  /// No description provided for @carbonRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic carbon must be between 0 and 1.5%'**
+  String get carbonRange;
+
+  /// No description provided for @tempRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature must be between 18 and 38°C'**
+  String get tempRange;
+
+  /// No description provided for @rainfallRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Rainfall must be between 0 and 120 mm'**
+  String get rainfallRange;
+
+  /// No description provided for @failedDropdowns.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load crop data. Check your connection.'**
+  String get failedDropdowns;
+
+  /// No description provided for @failedRecommendation.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get recommendation. Check your connection.'**
+  String get failedRecommendation;
+
+  /// No description provided for @ureaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Urea'**
+  String get ureaLabel;
+
+  /// No description provided for @dapLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'DAP'**
+  String get dapLabel;
+
+  /// No description provided for @mopLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'MOP'**
+  String get mopLabel;
+
+  /// No description provided for @sspLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SSP'**
+  String get sspLabel;
+
+  /// No description provided for @compostLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Compost'**
+  String get compostLabel;
+
+  /// No description provided for @perAcre.
+  ///
+  /// In en, this message translates to:
+  /// **'per hectare'**
+  String get perAcre;
+
+  /// No description provided for @fertilizerGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Fertilizer Guide'**
+  String get fertilizerGuide;
+
+  /// No description provided for @abbreviation.
+  ///
+  /// In en, this message translates to:
+  /// **'Abbrev.'**
+  String get abbreviation;
+
+  /// No description provided for @mainElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Element'**
+  String get mainElement;
+
+  /// No description provided for @usage.
+  ///
+  /// In en, this message translates to:
+  /// **'What it does'**
+  String get usage;
+
+  /// No description provided for @ureFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Urea'**
+  String get ureFullName;
+
+  /// No description provided for @ureElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Nitrogen N 46%'**
+  String get ureElement;
+
+  /// No description provided for @ureUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotes leaf growth and green color. Concentrated nitrogen fertilizer for rapid growth.'**
+  String get ureUsage;
+
+  /// No description provided for @dapFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Di-Ammonium Phosphate'**
+  String get dapFullName;
+
+  /// No description provided for @dapElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Nitrogen N 18% + Phosphorus P 46%'**
+  String get dapElement;
+
+  /// No description provided for @dapUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Starter fertilizer. Phosphorus supports root development and flowering.'**
+  String get dapUsage;
+
+  /// No description provided for @mopFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Muriate of Potash'**
+  String get mopFullName;
+
+  /// No description provided for @mopElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Potassium K 60%'**
+  String get mopElement;
+
+  /// No description provided for @mopUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Improves fruit size, taste, disease resistance and drought tolerance.'**
+  String get mopUsage;
+
+  /// No description provided for @sspFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Single Super Phosphate'**
+  String get sspFullName;
+
+  /// No description provided for @sspElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Phosphorus P 16-20% + Sulfur + Calcium'**
+  String get sspElement;
+
+  /// No description provided for @sspUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Less concentrated than DAP. Also provides sulfur and calcium for sulfur-deficient soils.'**
+  String get sspUsage;
+
+  /// No description provided for @compostFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Compost (Organic Matter)'**
+  String get compostFullName;
+
+  /// No description provided for @compostElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic carbon + NPK micro-nutrients'**
+  String get compostElement;
+
+  /// No description provided for @compostUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Improves soil structure, water retention and microbial activity. Long-term soil health.'**
+  String get compostUsage;
+
+  /// No description provided for @cropLimitNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Available crops are limited to the training dataset (5 crops).'**
+  String get cropLimitNote;
+
+  /// No description provided for @chipPlantSpecies.
+  ///
+  /// In en, this message translates to:
+  /// **'Plant species'**
+  String get chipPlantSpecies;
+
+  /// No description provided for @chipAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'AI accuracy'**
+  String get chipAccuracy;
+
+  /// No description provided for @chipAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis'**
+  String get chipAnalysis;
+
+  /// No description provided for @chipCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get chipCustom;
+
+  /// No description provided for @chipCropPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop plans'**
+  String get chipCropPlans;
+
+  /// No description provided for @chipDosing.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosing'**
+  String get chipDosing;
+
+  /// No description provided for @chipLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get chipLive;
+
+  /// No description provided for @chipCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get chipCalendar;
+
+  /// No description provided for @chipProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get chipProducts;
+
+  /// No description provided for @chipSoilAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil analysis'**
+  String get chipSoilAnalysis;
+
+  /// No description provided for @chipNpk.
+  ///
+  /// In en, this message translates to:
+  /// **'N·P·K'**
+  String get chipNpk;
 }
 
 class _AppLocalizationsDelegate

@@ -57,12 +57,19 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   }
 
   void _onSearch(String query) {
+    final q = query.toLowerCase().trim();
     setState(() {
+      if (q.isEmpty) {
+        _filtered = _users;
+        return;
+      }
       _filtered = _users.where((u) =>
-        (u['username'] ?? '').toLowerCase().contains(query.toLowerCase()) ||
-        (u['name'] ?? '').toLowerCase().contains(query.toLowerCase()) ||
-        (u['email'] ?? '').toLowerCase().contains(query.toLowerCase()) ||
-        (u['role'] ?? '').toLowerCase().contains(query.toLowerCase())
+        (u['id']?.toString() ?? '') == q ||
+        (u['username'] ?? '').toLowerCase().contains(q) ||
+        (u['name'] ?? '').toLowerCase().contains(q) ||
+        (u['email'] ?? '').toLowerCase().contains(q) ||
+        (u['role'] ?? '').toLowerCase().contains(q) ||
+        (u['phone_no'] ?? '').toLowerCase().contains(q)
       ).toList();
     });
   }
@@ -100,7 +107,12 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
         _loadUsers();
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.userDeleted), backgroundColor: primary));
       } catch (e) {
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        final msg = (e is DioException)
+            ? (e.response?.data?['message'] ?? e.response?.data?['error'] ?? l.anErrorOccurred)
+            : l.anErrorOccurred;
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(msg), backgroundColor: Colors.red.shade700),
+        );
       }
     }
   }
@@ -130,13 +142,34 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
       backgroundColor: surface,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setModalState) => Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-          child: SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        builder: (ctx, setModalState) {
+          String? errorMsg;
+          return StatefulBuilder(
+            builder: (ctx, setErr) => Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+            child: SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: border, borderRadius: BorderRadius.circular(2)))),
             const SizedBox(height: 16),
             Text(isEdit ? l.editUser : l.addUser, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: textPrimary)),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+
+            // ── Error banner ─────────────────────────────────────
+            if (errorMsg != null)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.red.shade300),
+                ),
+                child: Row(children: [
+                  Icon(Icons.error_outline, color: Colors.red.shade700, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(errorMsg!, style: TextStyle(color: Colors.red.shade700, fontSize: 13, fontWeight: FontWeight.w600))),
+                ]),
+              ),
 
             DropdownButtonFormField<String>(
               value: role,
@@ -196,7 +229,20 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                       _loadUsers();
                       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.userUpdated), backgroundColor: primary));
                     } else {
-                      if (usernameCtrl.text.isEmpty) return;
+                      if (usernameCtrl.text.trim().isEmpty) {
+                        setErr(() => errorMsg = l.usernameRequired);
+                        return;
+                      }
+                      if (nameCtrl.text.trim().isEmpty) {
+                        setErr(() => errorMsg = l.nameRequired);
+                        return;
+                      }
+                      if (phoneCtrl.text.trim().isNotEmpty &&
+                          phoneCtrl.text.trim().replaceAll(RegExp(r'\D'), '').length < 8) {
+                        setErr(() => errorMsg = l.phoneInvalid);
+                        return;
+                      }
+                      setErr(() => errorMsg = null);
                       await _dio.post(
                         '${Config.baseUrl}/users',
                         data: {
@@ -213,7 +259,10 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.userCreated), backgroundColor: primary));
                     }
                   } catch (e) {
-                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                    final msg = (e is DioException)
+                        ? (e.response?.data?['message'] ?? e.response?.data?['error'] ?? l.anErrorOccurred)
+                        : l.anErrorOccurred;
+                    setErr(() => errorMsg = msg);
                   }
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
@@ -222,7 +271,9 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             ),
             const SizedBox(height: 8),
           ])),
-        ),
+          ),
+        );
+        },
       ),
     );
   }

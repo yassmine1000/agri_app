@@ -505,4 +505,283 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shop => 'Shop';
+
+  @override
+  String get usernameRequired => 'Username is required';
+
+  @override
+  String get nameRequired => 'Full name is required';
+
+  @override
+  String get phoneInvalid => 'Phone number must be at least 8 digits';
+
+  @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
+  String get invalidCredentials => 'Invalid username or password';
+
+  @override
+  String get invalidEmail => 'Invalid email address';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get loginWithQr => 'Sign in with QR Code';
+
+  @override
+  String get phoneRequired => 'Phone number is required';
+
+  @override
+  String get addressRequired => 'Address is required';
+
+  @override
+  String get emailRequired => 'Email is required';
+
+  @override
+  String get farmNameRequired => 'Farm name is required';
+
+  @override
+  String get regNoRequired => 'Registration number is required';
+
+  @override
+  String get passwordMin => 'Password must be at least 6 characters';
+
+  @override
+  String get usernameMin => 'Username must be at least 3 characters';
+
+  @override
+  String get onboardingTitle1 => 'Smart Disease Detection';
+
+  @override
+  String get onboardingDesc1 =>
+      'Scan any plant leaf and instantly identify diseases using advanced AI technology';
+
+  @override
+  String get onboardingTitle2 => 'Fertilizer Intelligence';
+
+  @override
+  String get onboardingDesc2 =>
+      'Get personalized fertilizer recommendations based on your soil and crop type';
+
+  @override
+  String get onboardingTitle3 => 'Market & Planning';
+
+  @override
+  String get onboardingDesc3 =>
+      'Track real-time crop prices and plan your agricultural calendar efficiently';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get cropInformation => 'Crop Information';
+
+  @override
+  String get soilProperties => 'Soil Properties';
+
+  @override
+  String get weatherConditions => 'Weather Conditions';
+
+  @override
+  String get crop => 'Crop';
+
+  @override
+  String get stage => 'Stage';
+
+  @override
+  String get soilType => 'Soil Type';
+
+  @override
+  String get nitrogenLabel => 'Nitrogen (N) kg/ha';
+
+  @override
+  String get phosphorusLabel => 'Phosphorus (P) kg/ha';
+
+  @override
+  String get potassiumLabel => 'Potassium (K) kg/ha';
+
+  @override
+  String get soilPh => 'Soil pH';
+
+  @override
+  String get organicCarbon => 'Organic Carbon (%)';
+
+  @override
+  String get temperature => 'Temperature (°C)';
+
+  @override
+  String get rainfall => 'Rainfall (mm)';
+
+  @override
+  String get getRecommendation => 'Get Recommendation';
+
+  @override
+  String get fertilizerResult => 'Fertilizer Recommendation';
+
+  @override
+  String get fertilizerDesc =>
+      'Enter your soil and crop details to get personalized fertilizer recommendations.';
+
+  @override
+  String get selectStage => 'Please select a stage';
+
+  @override
+  String get selectSoil => 'Please select a soil type';
+
+  @override
+  String get invalidNumber => 'Invalid number';
+
+  @override
+  String get nitrogenRange => 'Nitrogen must be between 0 and 80 kg/ha';
+
+  @override
+  String get phosphorusRange => 'Phosphorus must be between 0 and 50 kg/ha';
+
+  @override
+  String get potassiumRange => 'Potassium must be between 0 and 50 kg/ha';
+
+  @override
+  String get phRange => 'pH must be between 5.5 and 8.0';
+
+  @override
+  String get carbonRange => 'Organic carbon must be between 0 and 1.5%';
+
+  @override
+  String get tempRange => 'Temperature must be between 18 and 38°C';
+
+  @override
+  String get rainfallRange => 'Rainfall must be between 0 and 120 mm';
+
+  @override
+  String get failedDropdowns =>
+      'Failed to load crop data. Check your connection.';
+
+  @override
+  String get failedRecommendation =>
+      'Failed to get recommendation. Check your connection.';
+
+  @override
+  String get ureaLabel => 'Urea';
+
+  @override
+  String get dapLabel => 'DAP';
+
+  @override
+  String get mopLabel => 'MOP';
+
+  @override
+  String get sspLabel => 'SSP';
+
+  @override
+  String get compostLabel => 'Compost';
+
+  @override
+  String get perAcre => 'per hectare';
+
+  @override
+  String get fertilizerGuide => 'Fertilizer Guide';
+
+  @override
+  String get abbreviation => 'Abbrev.';
+
+  @override
+  String get mainElement => 'Main Element';
+
+  @override
+  String get usage => 'What it does';
+
+  @override
+  String get ureFullName => 'Urea';
+
+  @override
+  String get ureElement => 'Nitrogen N 46%';
+
+  @override
+  String get ureUsage =>
+      'Promotes leaf growth and green color. Concentrated nitrogen fertilizer for rapid growth.';
+
+  @override
+  String get dapFullName => 'Di-Ammonium Phosphate';
+
+  @override
+  String get dapElement => 'Nitrogen N 18% + Phosphorus P 46%';
+
+  @override
+  String get dapUsage =>
+      'Starter fertilizer. Phosphorus supports root development and flowering.';
+
+  @override
+  String get mopFullName => 'Muriate of Potash';
+
+  @override
+  String get mopElement => 'Potassium K 60%';
+
+  @override
+  String get mopUsage =>
+      'Improves fruit size, taste, disease resistance and drought tolerance.';
+
+  @override
+  String get sspFullName => 'Single Super Phosphate';
+
+  @override
+  String get sspElement => 'Phosphorus P 16-20% + Sulfur + Calcium';
+
+  @override
+  String get sspUsage =>
+      'Less concentrated than DAP. Also provides sulfur and calcium for sulfur-deficient soils.';
+
+  @override
+  String get compostFullName => 'Compost (Organic Matter)';
+
+  @override
+  String get compostElement => 'Organic carbon + NPK micro-nutrients';
+
+  @override
+  String get compostUsage =>
+      'Improves soil structure, water retention and microbial activity. Long-term soil health.';
+
+  @override
+  String get cropLimitNote =>
+      'Available crops are limited to the training dataset (5 crops).';
+
+  @override
+  String get chipPlantSpecies => 'Plant species';
+
+  @override
+  String get chipAccuracy => 'AI accuracy';
+
+  @override
+  String get chipAnalysis => 'Analysis';
+
+  @override
+  String get chipCustom => 'Custom';
+
+  @override
+  String get chipCropPlans => 'Crop plans';
+
+  @override
+  String get chipDosing => 'Dosing';
+
+  @override
+  String get chipLive => 'Live';
+
+  @override
+  String get chipCalendar => 'Calendar';
+
+  @override
+  String get chipProducts => 'Products';
+
+  @override
+  String get chipSoilAnalysis => 'Soil analysis';
+
+  @override
+  String get chipNpk => 'N·P·K';
 }

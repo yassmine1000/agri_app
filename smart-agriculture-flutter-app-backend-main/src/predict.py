@@ -12,11 +12,52 @@ classes = {int(k): v for k, v in class_indices.items()}
 num_classes = len(classes)
 print(f"✅ {num_classes} classes chargées")
 
-# ── Reconstruire l'architecture EfficientNetB0 ───────────────────
+# ── Modèle ───────────────────────────────────────────────────────
 IMG_SHAPE = (224, 224, 3)
-
 model = tf.keras.models.load_model("best_model.keras")
 
+# ── Noms traduits plantes et maladies ────────────────────────────
+disease_names = {
+    "Apple___Apple_scab":                           {"plant_en": "Apple",        "plant_fr": "Pomme",          "plant_ar": "تفاح",        "disease_en": "Apple Scab",               "disease_fr": "Tavelure du Pommier",          "disease_ar": "جرب التفاح"},
+    "Apple___Black_rot":                            {"plant_en": "Apple",        "plant_fr": "Pomme",          "plant_ar": "تفاح",        "disease_en": "Black Rot",                "disease_fr": "Pourriture Noire",             "disease_ar": "العفن الأسود"},
+    "Apple___Cedar_apple_rust":                     {"plant_en": "Apple",        "plant_fr": "Pomme",          "plant_ar": "تفاح",        "disease_en": "Cedar Apple Rust",         "disease_fr": "Rouille du Pommier",           "disease_ar": "صدأ التفاح"},
+    "Apple___healthy":                              {"plant_en": "Apple",        "plant_fr": "Pomme",          "plant_ar": "تفاح",        "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Background_without_leaves":                    {"plant_en": "Unknown",      "plant_fr": "Inconnu",        "plant_ar": "غير معروف",   "disease_en": "No leaf detected",         "disease_fr": "Aucune feuille détectée",      "disease_ar": "لم يتم الكشف عن ورقة"},
+    "Blueberry___healthy":                          {"plant_en": "Blueberry",    "plant_fr": "Myrtille",       "plant_ar": "توت أزرق",    "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Cherry___Powdery_mildew":                      {"plant_en": "Cherry",       "plant_fr": "Cerise",         "plant_ar": "كرز",         "disease_en": "Powdery Mildew",           "disease_fr": "Oïdium",                       "disease_ar": "البياض الدقيقي"},
+    "Cherry___healthy":                             {"plant_en": "Cherry",       "plant_fr": "Cerise",         "plant_ar": "كرز",         "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Corn___Cercospora_leaf_spot Gray_leaf_spot":   {"plant_en": "Corn",         "plant_fr": "Maïs",           "plant_ar": "ذرة",         "disease_en": "Gray Leaf Spot",           "disease_fr": "Tache Grise des Feuilles",     "disease_ar": "تبقع الأوراق الرمادي"},
+    "Corn___Common_rust":                           {"plant_en": "Corn",         "plant_fr": "Maïs",           "plant_ar": "ذرة",         "disease_en": "Common Rust",              "disease_fr": "Rouille Commune",              "disease_ar": "الصدأ الشائع"},
+    "Corn___Northern_Leaf_Blight":                  {"plant_en": "Corn",         "plant_fr": "Maïs",           "plant_ar": "ذرة",         "disease_en": "Northern Leaf Blight",     "disease_fr": "Brûlure Nordique des Feuilles","disease_ar": "لفحة الأوراق الشمالية"},
+    "Corn___healthy":                               {"plant_en": "Corn",         "plant_fr": "Maïs",           "plant_ar": "ذرة",         "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Grape___Black_rot":                            {"plant_en": "Grape",        "plant_fr": "Vigne",          "plant_ar": "عنب",         "disease_en": "Black Rot",                "disease_fr": "Pourriture Noire",             "disease_ar": "العفن الأسود"},
+    "Grape___Esca_(Black_Measles)":                 {"plant_en": "Grape",        "plant_fr": "Vigne",          "plant_ar": "عنب",         "disease_en": "Esca (Black Measles)",     "disease_fr": "Esca (Rougeot Parasitaire)",   "disease_ar": "مرض الإسكا"},
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)":   {"plant_en": "Grape",        "plant_fr": "Vigne",          "plant_ar": "عنب",         "disease_en": "Leaf Blight",              "disease_fr": "Brûlure Foliaire",             "disease_ar": "لفحة الأوراق"},
+    "Grape___healthy":                              {"plant_en": "Grape",        "plant_fr": "Vigne",          "plant_ar": "عنب",         "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Orange___Haunglongbing_(Citrus_greening)":     {"plant_en": "Orange",       "plant_fr": "Orange",         "plant_ar": "برتقال",      "disease_en": "Citrus Greening",          "disease_fr": "Jaunissement des Agrumes",     "disease_ar": "اخضرار الحمضيات"},
+    "Peach___Bacterial_spot":                       {"plant_en": "Peach",        "plant_fr": "Pêche",          "plant_ar": "خوخ",         "disease_en": "Bacterial Spot",           "disease_fr": "Taches Bactériennes",          "disease_ar": "التبقع البكتيري"},
+    "Peach___healthy":                              {"plant_en": "Peach",        "plant_fr": "Pêche",          "plant_ar": "خوخ",         "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Pepper,_bell___Bacterial_spot":               {"plant_en": "Bell Pepper",  "plant_fr": "Poivron",        "plant_ar": "فلفل حلو",    "disease_en": "Bacterial Spot",           "disease_fr": "Taches Bactériennes",          "disease_ar": "التبقع البكتيري"},
+    "Pepper,_bell___healthy":                      {"plant_en": "Bell Pepper",  "plant_fr": "Poivron",        "plant_ar": "فلفل حلو",    "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Potato___Early_blight":                        {"plant_en": "Potato",       "plant_fr": "Pomme de Terre", "plant_ar": "بطاطا",       "disease_en": "Early Blight",             "disease_fr": "Mildiou Précoce",              "disease_ar": "اللفحة المبكرة"},
+    "Potato___Late_blight":                         {"plant_en": "Potato",       "plant_fr": "Pomme de Terre", "plant_ar": "بطاطا",       "disease_en": "Late Blight",              "disease_fr": "Mildiou Tardif",               "disease_ar": "اللفحة المتأخرة"},
+    "Potato___healthy":                             {"plant_en": "Potato",       "plant_fr": "Pomme de Terre", "plant_ar": "بطاطا",       "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Raspberry___healthy":                          {"plant_en": "Raspberry",    "plant_fr": "Framboise",      "plant_ar": "توت العليق",  "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Soybean___healthy":                            {"plant_en": "Soybean",      "plant_fr": "Soja",           "plant_ar": "فول الصويا",  "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Squash___Powdery_mildew":                      {"plant_en": "Squash",       "plant_fr": "Courge",         "plant_ar": "قرع",         "disease_en": "Powdery Mildew",           "disease_fr": "Oïdium",                       "disease_ar": "البياض الدقيقي"},
+    "Strawberry___Leaf_scorch":                     {"plant_en": "Strawberry",   "plant_fr": "Fraise",         "plant_ar": "فراولة",      "disease_en": "Leaf Scorch",              "disease_fr": "Brûlure des Feuilles",         "disease_ar": "احتراق الأوراق"},
+    "Strawberry___healthy":                         {"plant_en": "Strawberry",   "plant_fr": "Fraise",         "plant_ar": "فراولة",      "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+    "Tomato___Bacterial_spot":                      {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Bacterial Spot",           "disease_fr": "Taches Bactériennes",          "disease_ar": "التبقع البكتيري"},
+    "Tomato___Early_blight":                        {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Early Blight",             "disease_fr": "Mildiou Précoce",              "disease_ar": "اللفحة المبكرة"},
+    "Tomato___Late_blight":                         {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Late Blight",              "disease_fr": "Mildiou Tardif",               "disease_ar": "اللفحة المتأخرة"},
+    "Tomato___Leaf_Mold":                           {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Leaf Mold",                "disease_fr": "Moisissure des Feuilles",      "disease_ar": "عفن الأوراق"},
+    "Tomato___Septoria_leaf_spot":                  {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Septoria Leaf Spot",       "disease_fr": "Septoriose",                   "disease_ar": "تبقع سبتوريا"},
+    "Tomato___Spider_mites Two-spotted_spider_mite":{"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Spider Mites",             "disease_fr": "Acariens Tétranyques",         "disease_ar": "العناكب الحمراء"},
+    "Tomato___Target_Spot":                         {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Target Spot",              "disease_fr": "Tache Cible",                  "disease_ar": "التبقع الدائري"},
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus":       {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Yellow Leaf Curl Virus",   "disease_fr": "Virus de l'Enroulement Jaune", "disease_ar": "فيروس تجعد الأوراق الأصفر"},
+    "Tomato___Tomato_mosaic_virus":                 {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Mosaic Virus",             "disease_fr": "Virus de la Mosaïque",         "disease_ar": "فيروس الفسيفساء"},
+    "Tomato___healthy":                             {"plant_en": "Tomato",       "plant_fr": "Tomate",         "plant_ar": "طماطم",       "disease_en": "Healthy",                  "disease_fr": "Saine",                        "disease_ar": "سليمة"},
+}
 
 # ── Conseils EN ──────────────────────────────────────────────────
 disease_advice_en = {
@@ -362,7 +403,7 @@ disease_advice_fr = {
     "Strawberry___healthy": [
         "Les plants de fraisiers sont en excellent état ! Appliquez un engrais équilibré après la rénovation et maintenez une humidité constante.",
         "Très bon état ! Paillez avec de la paille pour garder les fruits propres et réduire les éclaboussures de terre qui propagent les maladies.",
-        "Plants sains détectés. Surveillez l'acarien tétranyque par temps chaud et sec. Retirez les stolons pour concentrer l'énergie sur les fruits."
+        "Plants sains détectés. Surveillez l'acarien tétranyque par temps chaud et sec."
     ],
     "Tomato___Bacterial_spot": [
         "Appliquer un spray bactéricide cuivre + mancozèbe toutes les 5-7 jours. Éviter de travailler dans les champs quand les plants sont mouillés.",
@@ -416,6 +457,205 @@ disease_advice_fr = {
     ],
 }
 
+# ── Conseils AR ──────────────────────────────────────────────────
+disease_advice_ar = {
+    "Apple___Apple_scab": [
+        "ضع مبيدات فطرية (ميكلوبوتانيل أو كابتان) عند بداية تطور الأوراق. أزل أوراق السقوط ودمّرها للحد من الجراثيم الشتوية.",
+        "قلّم الأشجار لتحسين تهوية الهواء. ضع مبيدات فطرية وقائية قبل وبعد هطول الأمطار خلال الربيع.",
+        "استخدم أصناف تفاح مقاومة عند إعادة الزراعة. أزل الأوراق المصابة بعيداً عن البستان."
+    ],
+    "Apple___Black_rot": [
+        "أزل الثمار المحنطة والخشب الميت على الفور. ضع مبيداً فطرياً نحاسياً خلال موسم النمو.",
+        "قلّم القرح والفروع الميتة. عقّم أدوات التقليم بين كل قطع. ضع مبيد كابتان عند سقوط البتلات.",
+        "حافظ على قوة الشجرة بالتغذية والري المناسبين. أزل الثمار المصابة فوراً قبل انتشار الجراثيم."
+    ],
+    "Apple___Cedar_apple_rust": [
+        "أزل أشجار العرعر/الأرز القريبة إن أمكن. ضع مبيد ميكلوبوتانيل أو مانكوزيب عند مرحلة البرعم الوردي.",
+        "ضع رشات مبيد فطري وقائية من مرحلة البرعم الوردي حتى سقوط البتلات. استخدم أصناف مقاومة للصدأ في الزراعات الجديدة.",
+        "راقب كتل الجراثيم البرتقالية على الأشجار المجاورة في الربيع. ضع المبيد قبل هطول الأمطار خلال فترة الإصابة."
+    ],
+    "Apple___healthy": [
+        "شجرة التفاح تبدو بصحة جيدة! حافظ على التقليم المنتظم لتحسين تدوير الهواء واختراق الضوء.",
+        "حالة ممتازة! ضع سماداً متوازناً في بداية الربيع وتأكد من الري المنتظم خلال الفترات الجافة.",
+        "الشجرة بصحة جيدة. استمر في مراقبة العلامات الأولى للمرض وحافظ على نظافة البستان."
+    ],
+    "Background_without_leaves": [
+        "لم يتم الكشف عن نبات في الصورة. يرجى التقاط صورة واضحة لورقة نبات للكشف الدقيق عن الأمراض.",
+        "الصورة لا تحتوي على ورقة يمكن التعرف عليها. تأكد من الإضاءة الجيدة ووجّه الكاميرا مباشرة على الورقة.",
+        "يرجى إعادة التقاط الصورة مع ورقة واحدة تملأ معظم الإطار للحصول على نتائج تحليل أفضل."
+    ],
+    "Blueberry___healthy": [
+        "نبات العنب البري يبدو بصحة جيدة! حافظ على درجة حموضة التربة بين 4.5-5.5 للامتصاص الأمثل للمغذيات.",
+        "حالة ممتازة! غطّ التربة بلحاء الصنوبر للحفاظ على الحموضة والرطوبة. قلّم القصبات القديمة سنوياً.",
+        "النبات مزدهر. تأكد من الري الكافي أثناء تطور الثمار وسمّد بأسمدة مُكوِّنة للحموضة."
+    ],
+    "Cherry___Powdery_mildew": [
+        "ضع مبيداً فطرياً كبريتياً أو بيكربونات البوتاسيوم عند أول علامة لطبقة بيضاء مسحوقية على الأوراق.",
+        "حسّن تهوية الهواء بالتقليم. تجنب الري بالرش. ضع زيت النيم في الصباح الباكر.",
+        "أزل ودمّر البراعم المصابة بشدة. ضع مبيد ميكلوبوتانيل وتجنب التسميد الآزوتي المفرط."
+    ],
+    "Cherry___healthy": [
+        "شجرة الكرز بصحة ممتازة! قلّم بعد الحصاد للحفاظ على الشكل وإزالة الفروع المتشابكة.",
+        "يبدو رائعاً! ضع سماداً متوازناً في الربيع وتأكد من الري العميق غير المتكرر خلال الفترات الجافة.",
+        "تم الكشف عن شجرة سليمة. راقب تبقع الأوراق والعفن البني مع تغير الفصول."
+    ],
+    "Corn___Cercospora_leaf_spot Gray_leaf_spot": [
+        "ضع مبيد فطري ستروبيلورين أو ترايازول في بداية مرحلة النضج. دوّر المحاصيل — تجنب زراعة الذرة بعد الذرة.",
+        "استخدم أصناف هجينة مقاومة. الحراثة لدفن البقايا المصابة تقلل بشكل كبير من مصادر العدوى الشتوية.",
+        "ضع مبيداً فطرياً (أزوكسيستروبين أو بروبيكونازول) عند ظهور الآفات لأول مرة. حافظ على التباعد المناسب بين النباتات."
+    ],
+    "Corn___Common_rust": [
+        "ضع مبيداً فطرياً ورقياً (بروبيكونازول أو أزوكسيستروبين) عند ظهور بثرات الصدأ على الأوراق السفلية.",
+        "ازرع أصناف ذرة هجينة مقاومة للصدأ. افحص الحقول بانتظام وضع المبيد قبل انتشار المرض.",
+        "تطبيق المبيد الفطري فعّال قبل مرحلة الإزهار. استخدم مانكوزيب أو منتجات ترايازول عند أول علامة."
+    ],
+    "Corn___Northern_Leaf_Blight": [
+        "ضع مبيداً فطرياً (أزوكسيستروبين، بروبيكونازول) عند الإزهار إذا ظهر اللفحة على الأوراق السفلية.",
+        "دوّر المحاصيل واحرث البقايا المصابة. استخدم أصناف هجينة مقاومة للفحة الشمالية.",
+        "افحص الحقول من مرحلة V8 فما فوق. ضع المبيد إذا وصلت اللفحة للورقة الثالثة من السنبلة قبل التلقيح."
+    ],
+    "Corn___healthy": [
+        "الذرة تبدو بصحة جيدة! تأكد من التسميد الآزوتي الكافي في مرحلة V6 للحصول على أفضل تطور للسنبلة.",
+        "صحة نباتية ممتازة! راقب أضرار الآفات وحافظ على رطوبة تربة ثابتة خلال التلقيح.",
+        "تم الكشف عن محصول سليم. استمر في مراقبة العلامات الأولى للمرض وحافظ على الكثافة النباتية الموصى بها."
+    ],
+    "Grape___Black_rot": [
+        "ضع مبيد مانكوزيب أو ميكلوبوتانيل بدءاً من انفتاح البراعم. أزل التوت المحنط والكروم المصابة.",
+        "قلّم بكثافة لتحسين تهوية الهواء. ضع مبيداً فطرياً وقائياً كل 7-10 أيام خلال الطقس الممطر.",
+        "أزل جميع المواد النباتية المصابة من الكرم. ضع مبيد ترايازول عند تشكل الثمار."
+    ],
+    "Grape___Esca_(Black_Measles)": [
+        "لا يوجد علاج شافٍ. أزل الخشب المصاب ودمّره. دهن جروح التقليم بمعجون فطري.",
+        "أخّر التقليم إلى آخر الشتاء لتقليل خطر الإصابة. ضع مستحضرات Trichoderma البيولوجية على جروح التقليم.",
+        "حسّن تغذية الكرم وقلل الإجهاد المائي. أزل الكروم المصابة بشدة لمنع الانتشار إلى النباتات السليمة."
+    ],
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": [
+        "ضع مبيداً فطرياً نحاسياً أو مانكوزيب عند أول علامة لآفات بنية زاوية على الأوراق.",
+        "حسّن إدارة المظلة من خلال إزالة الأوراق وتوجيه البراعم لزيادة تدوير الهواء في الكرم.",
+        "ضع رشات مبيد بعد هطول الأمطار. أزل الأوراق المصابة بشدة لإبطاء تطور المرض."
+    ],
+    "Grape___healthy": [
+        "الكرم يبدو في حالة ممتازة! حافظ على تغذية متوازنة بالبوتاسيوم والمغنيسيوم لأفضل جودة للثمار.",
+        "تم الكشف عن كرم سليم. استمر في إدارة المظلة وراقب البياض الدقيقي والعفن الزغبي خلال الفترات الرطبة.",
+        "حالة ممتازة! تأكد من تقليم البراعم وإزالة الأوراق حول منطقة الثمار لمنع الأمراض."
+    ],
+    "Orange___Haunglongbing_(Citrus_greening)": [
+        "لا يوجد علاج. أزل الأشجار المصابة ودمّرها فوراً لمنع الانتشار إلى الحمضيات السليمة.",
+        "تحكم في حشرة الجسيد الآسيوي (ناقل المرض) بمبيدات حشرية جهازية. افحص الشتلات الجديدة من مشاتل معتمدة فقط.",
+        "استخدم مصائد مراقبة الجسيد في جميع أنحاء البستان. ضع مبيدات لمكافحة أعداد الجسيد. أبلغ السلطات المحلية."
+    ],
+    "Peach___Bacterial_spot": [
+        "ضع هيدروكسيد النحاس أو أوكسيتتراسايكلين خلال الإزهار. تجنب الري بالرش لتقليل فترات ترطيب الأوراق.",
+        "ازرع أصناف خوخ مقاومة. ضع جراثيم النحاس عند انشقاق الغلاف واستمر كل 7-14 يوم.",
+        "قلّم لتحسين تهوية الهواء. ضع رشات نحاس ثابتة قبل هطول الأمطار خلال موسم النمو."
+    ],
+    "Peach___healthy": [
+        "شجرة الخوخ بصحة جيدة! أزل الثمار الزائدة على مسافة 15-20 سم للحصول على ثمار أكبر وأجود.",
+        "صحة ممتازة! ضع سماداً متوازناً في بداية الربيع. راقب تجعد أوراق الخوخ عند ظهور الأوراق.",
+        "تم الكشف عن شجرة سليمة. حافظ على مكافحة الأعشاب تحت المظلة وتأكد من الري الكافي أثناء تطور الثمار."
+    ],
+    "Pepper,_bell___Bacterial_spot": [
+        "ضع خليط نحاس + مانكوزيب عند أول علامة لآفات مشبعة بالماء. تجنب العمل في الحقول المبللة.",
+        "استخدم شتلات معتمدة خالية من الأمراض. ضع جراثيم النحاس كل 5-7 أيام خلال الطقس الحار والرطب.",
+        "أزل ودمّر النباتات المصابة بشدة. دوّر مع محاصيل غير باذنجانية لمدة سنتين على الأقل."
+    ],
+    "Pepper,_bell___healthy": [
+        "الفلفل الحلو يبدو رائعاً! حافظ على رطوبة تربة ثابتة وسمّد بالكالسيوم لمنع تعفن الزهرة.",
+        "نبات سليم! دعّم النباتات لتحسين تهوية الهواء. ضع سماداً متوازناً عند أول تشكل للثمار.",
+        "حالة ممتازة. راقب حشرات المن والتربس التي يمكنها نقل الأمراض الفيروسية إلى النباتات السليمة."
+    ],
+    "Potato___Early_blight": [
+        "ضع كلوروثالونيل أو مانكوزيب عند ظهور الآفة الأولى. أزل الأوراق السفلية الملامسة للتربة.",
+        "حافظ على مستويات بوتاسيوم كافية — النقص يزيد الحساسية. ضع مبيداً فطرياً كل 7 أيام خلال الطقس الرطب.",
+        "دوّر المحاصيل 3 سنوات على الأقل. ضع رشات مبيد وقائية بدءاً من مرحلة إغلاق الصفوف."
+    ],
+    "Potato___Late_blight": [
+        "ضع مبيداً جهازياً (ميتالاكسيل + مانكوزيب) فوراً. دمّر المواد النباتية المصابة — لا تضعها في السماد.",
+        "تجنب الري بالرش. ضع مبيداً واقياً قبل المطر وجهازياً بعد تأكيد الإصابة.",
+        "أزل ودمّر النباتات المصابة كاملة بما فيها الدرنات. ضع مبيداً فطرياً كل 5-7 أيام خلال الطقس البارد الرطب."
+    ],
+    "Potato___healthy": [
+        "نبات البطاطا يبدو بصحة جيدة! ردم التربة حول الجذوع لمنع اخضرار الدرنات وتحسين الإنتاج.",
+        "حالة ممتازة! تأكد من الرطوبة الثابتة — الري غير المنتظم يسبب الجرب الشائع واضطرابات القلب الأجوف.",
+        "محصول سليم! راقب خنفساء البطاطا وحشرات المن بانتظام. ضع مجفف الأوراق قبل أسبوعين من الحصاد."
+    ],
+    "Raspberry___healthy": [
+        "قصبات التوت بصحة جيدة! أزل قصبات الإثمار المستهلكة بعد الحصاد لتشجيع نمو قصبات جديدة.",
+        "صحة ممتازة! ضع سماداً متوازناً في بداية الربيع وغطّ التربة بكثافة لقمع الأعشاب والحفاظ على الرطوبة.",
+        "تم الكشف عن نبات سليم. دعّم القصبات بشكل صحيح لتهوية الهواء. راقب أضرار حفّار القصبات."
+    ],
+    "Soybean___healthy": [
+        "محصول فول الصويا يبدو ممتازاً! تأكد من توفر الفسفور والبوتاسيوم الكافيين لأفضل حشو للقرون.",
+        "تم الكشف عن محصول سليم. راقب متلازمة الموت المفاجئ والعفن الأبيض خلال مراحل R3-R5.",
+        "حالة ممتازة! راقب حشرة المن وخنفساء البقول. حافظ على الكثافة النباتية المناسبة لإغلاق المظلة."
+    ],
+    "Squash___Powdery_mildew": [
+        "ضع بيكربونات البوتاسيوم أو مبيداً كبريتياً عند أول علامة لبقع بيضاء مسحوقية على الأوراق.",
+        "ضع زيت النيم أو الزيت الزراعي في الصباح الباكر. أزل الأوراق المصابة بشدة فوراً.",
+        "حسّن تهوية الهواء بالتباعد المناسب. ضع مبيد ميكلوبوتانيل أو ترايفلوكسيستروبين بشكل وقائي."
+    ],
+    "Strawberry___Leaf_scorch": [
+        "ضع كابتان أو ميكلوبوتانيل عند أول علامة للبقع البنفسجية. أزل ودمّر الأوراق المصابة.",
+        "تجنب الري بالرش. ضع مبيداً فطرياً نحاسياً خلال فترة التجديد بعد الحصاد.",
+        "جدّد أسرة الفراولة بعد الحصاد — احصد الأوراق، ضيّق الصفوف، ضع مبيداً فطرياً لتشجيع النمو الصحي."
+    ],
+    "Strawberry___healthy": [
+        "نباتات الفراولة في صحة ممتازة! ضع سماداً متوازناً بعد التجديد وحافظ على رطوبة ثابتة.",
+        "حالة ممتازة! غطّ التربة بالقش للحفاظ على نظافة الثمار وتقليل رذاذ التربة الذي ينشر الأمراض.",
+        "تم الكشف عن نباتات سليمة. راقب أكاروس العنكبوت ذو البقعتين خلال الطقس الحار الجاف."
+    ],
+    "Tomato___Bacterial_spot": [
+        "ضع رشة جراثيم نحاس + مانكوزيب كل 5-7 أيام. تجنب العمل في الحقل عندما تكون النباتات مبللة.",
+        "استخدم شتلات خالية من الأمراض وأصناف مقاومة. أزل الأوراق المصابة وضع هيدروكسيد النحاس وقائياً.",
+        "دوّر الطماطم مع محاصيل غير باذنجانية. ضع مبيد جراثيم بعد عمليات التقليم والعواصف."
+    ],
+    "Tomato___Early_blight": [
+        "غطّ التربة بكثافة لمنع رذاذ التربة. ضع كلوروثالونيل أو مانكوزيب عند الآفة الأولى. أزل الأوراق السفلية المصابة.",
+        "ضع مبيداً فطرياً كل 7-10 أيام خلال الطقس الدافئ الرطب. دعّم النباتات لتحسين تدفق الهواء.",
+        "دوّر المحاصيل 2-3 سنوات. حافظ على التسميد الكافي بالبوتاسيوم لتعزيز مقاومة النباتات."
+    ],
+    "Tomato___Late_blight": [
+        "ضع ميتالاكسيل + مانكوزيب فوراً. أزل وحزّم جميع المواد النباتية المصابة — لا تضعها في السماد.",
+        "ضع مبيداً واقياً قبل هطول الأمطار. تجنب الري بالرش واعمل في الحقول فقط عندما تكون جافة.",
+        "دمّر النباتات المصابة لمنع الانتشار. ضع مبيداً فطرياً نحاسياً كإجراء وقائي على النباتات المجاورة."
+    ],
+    "Tomato___Leaf_Mold": [
+        "قلل رطوبة البيت المحمي إلى أقل من 85%. ضع مبيداً فطرياً نحاسياً أو كلوروثالونيل عند ظهور الأعراض الأولى.",
+        "حسّن التهوية في البيوت المحمية. أزل الأوراق المصابة فوراً. ضع مانكوزيب أو ثيرام وقائياً.",
+        "باعد بين النباتات بشكل كافٍ للتهوية. تجنب ترطيب الأوراق باستخدام الري بالتنقيط."
+    ],
+    "Tomato___Septoria_leaf_spot": [
+        "ضع كلوروثالونيل أو مانكوزيب عند أول ظهور للبقع. أزل الأوراق السفلية المصابة لإبطاء صعود المرض.",
+        "غطّ التربة لمنع الرذاذ. ضع مبيداً فطرياً نحاسياً كل 7-10 أيام خلال الطقس الرطب.",
+        "دعّم النباتات وأزل البراعم الجانبية لتحسين تدوير الهواء. دوّر المحاصيل وتجنب الري بالرش."
+    ],
+    "Tomato___Spider_mites Two-spotted_spider_mite": [
+        "رش الجانب السفلي للأوراق بقوة بالماء لإزالة العث. ضع زيتاً زراعياً أو صابوناً حشرياً.",
+        "استخدم مبيد عث (أباميكتين أو بيفيناذيت) وبدّل آليات العمل. أزل الأوراق المصابة بشدة.",
+        "حافظ على رطوبة تربة كافية — النباتات المجهدة بالجفاف أكثر عرضة للإصابة. أدخل عثاً مفترساً كمكافحة بيولوجية."
+    ],
+    "Tomato___Target_Spot": [
+        "ضع مبيداً فطرياً ستروبيلورين أو ترايازول (أزوكسيستروبين، ديفينوكونازول) عند ظهور الآفة الأولى.",
+        "حسّن تدوير الهواء بالدعم والتقليم والتباعد المناسب. ضع مانكوزيب كرشة واقية.",
+        "أزل الأوراق المصابة. ضع مبيداً كل 7-14 يوماً خلال الأحوال الرطبة. دوّر مع محاصيل غير باذنجانية."
+    ],
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": [
+        "تحكم في أعداد الذبابة البيضاء بمبيدات جهازية (إيميداكلوبريد). استخدم مصائد لاصقة صفراء للمراقبة.",
+        "أزل ودمّر النباتات المصابة فوراً. استخدم مهشة عاكسة لطرد الذبابة البيضاء من الشتلات الصغيرة.",
+        "ازرع أصناف مقاومة (مقاومة TYLCV). ضع مبيداً حشرياً عند الزراعة واستخدم شاشات واقية في المشاتل."
+    ],
+    "Tomato___Tomato_mosaic_virus": [
+        "عقّم اليدين والأدوات بالصابون أو محلول مبيض 10% قبل التعامل مع النباتات. أزل النباتات المصابة.",
+        "تحكم في أعداد المن والتربس التي تنقل الفيروس. استخدم أصناف طماطم مقاومة إن توفرت.",
+        "تجنب منتجات التبغ بالقرب من نباتات الطماطم — يمكن نقل TMV ميكانيكياً. أزل ودمّر جميع المواد المصابة."
+    ],
+    "Tomato___healthy": [
+        "نبات الطماطم في صحة ممتازة! حافظ على الري المنتظم عند مستوى التربة لمنع تعفن الزهرة.",
+        "حالة ممتازة! قلّم البراعم الجانبية بانتظام للأصناف غير المحددة. ضع سماداً متوازناً كل 2-3 أسابيع.",
+        "تم الكشف عن نبات سليم. راقب العلامات الأولى للفحة وتأكد من توفر الكالسيوم لمنع اضطرابات الثمار."
+    ],
+}
+
 app = Flask(__name__)
 CORS(app)
 
@@ -438,31 +678,43 @@ def predict():
     img_bytes = file.read()
     img = preprocess_image(img_bytes)
 
-    prediction   = model.predict(img, verbose=0)
-    class_idx    = int(np.argmax(prediction[0]))
-    confidence   = float(np.max(prediction[0]))
-    disease_name = classes.get(class_idx, "Unknown")
+    prediction  = model.predict(img, verbose=0)
+    class_idx   = int(np.argmax(prediction[0]))
+    confidence  = float(np.max(prediction[0]))
+    disease_key = classes.get(class_idx, "Unknown")
 
-    # Détecter la langue depuis le header
+    # ── Langue ────────────────────────────────────────────────────
     lang = request.args.get('lang', request.form.get('lang', 'EN')).upper()
-    print(f"→ {disease_name} ({confidence:.2%}) — Lang: {lang}")
+    print(f"→ {disease_key} ({confidence:.2%}) — Lang: {lang}")
 
-    # Choisir le bon dictionnaire
+    # ── Conseils selon la langue ──────────────────────────────────
     if lang == 'FR':
         advice_dict = disease_advice_fr
+    elif lang == 'AR':
+        advice_dict = disease_advice_ar
     else:
         advice_dict = disease_advice_en
 
-    advice_list = advice_dict.get(disease_name, [
+    advice_list = advice_dict.get(disease_key, [
+        "يُرجى استشارة مهندس زراعي للحصول على تشخيص وعلاج مناسبين." if lang == 'AR' else
         "Consultez un agronome pour un diagnostic et un traitement appropriés." if lang == 'FR' else
         "Please consult a local agronomist for proper diagnosis and treatment advice."
     ])
     advice = random.choice(advice_list)
 
+    # ── Noms traduits ─────────────────────────────────────────────
+    names   = disease_names.get(disease_key, {})
+    lang_lc = lang.lower() if lang.lower() in ('en', 'fr', 'ar') else 'en'
+
+    plant_name    = names.get(f"plant_{lang_lc}",   disease_key.split("___")[0].replace("_", " "))
+    disease_label = names.get(f"disease_{lang_lc}", disease_key.split("___")[-1].replace("_", " "))
+
     return jsonify({
-        "disease":    disease_name,
-        "confidence": confidence,
-        "advice":     advice
+        "disease":       disease_key,     # clé brute — conservée pour l'historique
+        "plant_name":    plant_name,       # traduit
+        "disease_label": disease_label,    # traduit
+        "confidence":    confidence,
+        "advice":        advice,
     })
 
 @app.route("/health", methods=["GET"])

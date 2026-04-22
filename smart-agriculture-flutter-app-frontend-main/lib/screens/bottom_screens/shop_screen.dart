@@ -100,6 +100,7 @@ class _ShopScreenState extends State<ShopScreen> {
   String _displayDescription(dynamic p) {
     if (_lang == 'FR' && p['description_fr'] != null) return p['description_fr'];
     if (_lang == 'AR' && p['description_ar'] != null) return p['description_ar'];
+    if (_lang == 'EN' && p['description_en'] != null) return p['description_en'];
     return p['description'] ?? '';
   }
 

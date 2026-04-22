@@ -89,23 +89,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _card(surface, border, child: Row(
                   children: ['EN', 'FR', 'AR'].map((lang) {
                     final selected = _selectedLanguage == lang;
-                    final flag = lang == 'EN' ? '🇬🇧' : lang == 'FR' ? '🇫🇷' : '🇹🇳';
                     final name = lang == 'EN' ? 'English' : lang == 'FR' ? 'Français' : 'العربية';
                     return Expanded(
                       child: GestureDetector(
                         onTap: () => _saveLanguage(lang),
                         child: Container(
                           margin: const EdgeInsets.all(4),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
                             color: selected ? primary.withOpacity(0.15) : Colors.transparent,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: selected ? primary : border),
                           ),
                           child: Column(children: [
-                            Text(flag, style: const TextStyle(fontSize: 20)),
-                            const SizedBox(height: 4),
-                            Text(name, style: TextStyle(fontSize: 11, color: selected ? primary : textSecondary, fontWeight: selected ? FontWeight.w700 : FontWeight.normal)),
+                            Text(lang, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: selected ? primary : textSecondary)),
+                            const SizedBox(height: 3),
+                            Text(name, style: TextStyle(fontSize: 10, color: selected ? primary : textSecondary, fontWeight: selected ? FontWeight.w600 : FontWeight.normal)),
                           ]),
                         ),
                       ),

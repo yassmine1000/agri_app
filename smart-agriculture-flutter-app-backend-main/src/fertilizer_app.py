@@ -32,14 +32,23 @@ def predict():
         stage_encoded = label_encoders['Stage'].transform([stage])[0]
         soil_type_encoded = label_encoders['Soil_Type'].transform([soil_type])[0]
 
-        # Prepare the feature array
-        features = np.array([[crop_encoded, stage_encoded, soil_type_encoded, N, P, K, pH, organic_carbon, temp, rainfall]])
+        # Prepare the feature array — order must match training column order:
+        # ['Crop', 'Stage', 'N (kg/ha)', 'P (kg/ha)', 'K (kg/ha)', 'pH', 'Organic_Carbon', 'Temp (°C)', 'Rainfall (mm)', 'Soil_Type']
+        features = np.array([[crop_encoded, stage_encoded, N, P, K, pH, organic_carbon, temp, rainfall, soil_type_encoded]])
 
         # Predict fertilizer recommendation
         prediction = model.predict(features)
 
-        # Format the prediction as a string
-        response = f"{round(prediction[0][1], 2)}kg DAP + {round(prediction[0][2], 2)}kg MOP + {round(prediction[0][0], 2)}kg Urea/acre + {round(prediction[0][3], 2)}kg SSP + {round(prediction[0][4], 2)}kg Compost"
+        # Convert from kg/acre to kg/ha (1 acre = 0.4047 ha, so kg/ha = kg/acre / 0.4047)
+        ACRE_TO_HA = 1 / 0.4047  # = 2.471
+        urea_ha    = round(prediction[0][0] * ACRE_TO_HA, 1)
+        dap_ha     = round(prediction[0][1] * ACRE_TO_HA, 1)
+        mop_ha     = round(prediction[0][2] * ACRE_TO_HA, 1)
+        ssp_ha     = round(prediction[0][3] * ACRE_TO_HA, 1)
+        compost_ha = round(prediction[0][4] * ACRE_TO_HA, 1)
+
+        # Format the prediction as a string (kg/ha)
+        response = f"{dap_ha}kg DAP + {mop_ha}kg MOP + {urea_ha}kg Urea + {ssp_ha}kg SSP + {compost_ha}kg Compost"
 
         return jsonify({"recommendation": response})
     except Exception as e:

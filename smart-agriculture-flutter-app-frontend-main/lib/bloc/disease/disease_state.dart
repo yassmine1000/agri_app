@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 abstract class DiseaseState {
@@ -15,16 +14,22 @@ class DiseaseLoading extends DiseaseState {
 }
 
 class DiseaseSuccess extends DiseaseState {
-  final String disease;
+  final String disease;       // clé brute dataset — utilisée pour l'historique et les produits
+  final String plantName;     // nom de la plante traduit selon la langue
+  final String diseaseLabel;  // nom de la maladie traduit selon la langue
   final double confidence;
   final String advice;
+  final String lang;          // 'EN' | 'FR' | 'AR' — pour les widgets de résultat
 
   const DiseaseSuccess(
-      File selectedImage,
-      this.disease,
-      this.confidence,
-      this.advice)
-      : super(selectedImage: selectedImage);
+    File selectedImage,
+    this.disease,
+    this.plantName,
+    this.diseaseLabel,
+    this.confidence,
+    this.advice,
+    this.lang,
+  ) : super(selectedImage: selectedImage);
 }
 
 class DiseaseError extends DiseaseState {

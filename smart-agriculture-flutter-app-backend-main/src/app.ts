@@ -108,7 +108,18 @@ app.post("/predict_fertilizer", async (req: Request, res: Response) => {
     // Validate the request body
     const { crop, stage, soil_type, N, P, K, pH, organic_carbon, temp, rainfall } = req.body;
 
-    if (!crop || !stage || !soil_type || !N || !P || !K || !pH || !organic_carbon || !temp || !rainfall) {
+    if (
+        crop === undefined || crop === null || crop === '' ||
+        stage === undefined || stage === null || stage === '' ||
+        soil_type === undefined || soil_type === null || soil_type === '' ||
+        N === undefined || N === null ||
+        P === undefined || P === null ||
+        K === undefined || K === null ||
+        pH === undefined || pH === null ||
+        organic_carbon === undefined || organic_carbon === null ||
+        temp === undefined || temp === null ||
+        rainfall === undefined || rainfall === null
+    ) {
         return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -128,7 +139,7 @@ app.post("/predict_fertilizer", async (req: Request, res: Response) => {
         };
 
         // Send POST request to Flask API running on http://127.0.0.1:5000/predict_fertilizer
-        const response = await axios.post("http://192.168.100.35:5000/predict_fertilizer", payload, {
+        const response = await axios.post("http://127.0.0.1:5000/predict_fertilizer", payload, {
             headers: { "Content-Type": "application/json" },
         });
 

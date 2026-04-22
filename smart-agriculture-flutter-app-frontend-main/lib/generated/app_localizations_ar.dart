@@ -506,4 +506,281 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get shop => 'المتجر';
+
+  @override
+  String get usernameRequired => 'اسم المستخدم مطلوب';
+
+  @override
+  String get nameRequired => 'الاسم الكامل مطلوب';
+
+  @override
+  String get phoneInvalid => 'يجب أن يحتوي رقم الهاتف على 8 أرقام على الأقل';
+
+  @override
+  String get anErrorOccurred => 'حدث خطأ ما';
+
+  @override
+  String get invalidCredentials => 'اسم المستخدم أو كلمة المرور غير صحيحة';
+
+  @override
+  String get invalidEmail => 'عنوان البريد الإلكتروني غير صالح';
+
+  @override
+  String get forgotPassword => 'نسيت كلمة المرور؟';
+
+  @override
+  String get loginWithQr => 'تسجيل الدخول برمز QR';
+
+  @override
+  String get phoneRequired => 'رقم الهاتف مطلوب';
+
+  @override
+  String get addressRequired => 'العنوان مطلوب';
+
+  @override
+  String get emailRequired => 'البريد الإلكتروني مطلوب';
+
+  @override
+  String get farmNameRequired => 'اسم المزرعة مطلوب';
+
+  @override
+  String get regNoRequired => 'رقم التسجيل مطلوب';
+
+  @override
+  String get passwordMin => 'يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل';
+
+  @override
+  String get usernameMin => 'يجب أن يحتوي اسم المستخدم على 3 أحرف على الأقل';
+
+  @override
+  String get onboardingTitle1 => 'كشف ذكي للأمراض';
+
+  @override
+  String get onboardingDesc1 =>
+      'امسح أي ورقة نبات وحدد الأمراض فوراً باستخدام تقنية الذكاء الاصطناعي';
+
+  @override
+  String get onboardingTitle2 => 'ذكاء الأسمدة';
+
+  @override
+  String get onboardingDesc2 =>
+      'احصل على توصيات أسمدة مخصصة بناءً على تربتك ونوع محاصيلك';
+
+  @override
+  String get onboardingTitle3 => 'السوق والتخطيط';
+
+  @override
+  String get onboardingDesc3 =>
+      'تتبع أسعار المحاصيل في الوقت الفعلي وخطط لتقويمك الزراعي بكفاءة';
+
+  @override
+  String get getStarted => 'ابدأ الآن';
+
+  @override
+  String get skip => 'تخطي';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get cropInformation => 'معلومات المحصول';
+
+  @override
+  String get soilProperties => 'خصائص التربة';
+
+  @override
+  String get weatherConditions => 'الأحوال الجوية';
+
+  @override
+  String get crop => 'المحصول';
+
+  @override
+  String get stage => 'المرحلة';
+
+  @override
+  String get soilType => 'نوع التربة';
+
+  @override
+  String get nitrogenLabel => 'النيتروجين (N) كغ/هكتار';
+
+  @override
+  String get phosphorusLabel => 'الفسفور (P) كغ/هكتار';
+
+  @override
+  String get potassiumLabel => 'البوتاسيوم (K) كغ/هكتار';
+
+  @override
+  String get soilPh => 'الحموضة pH';
+
+  @override
+  String get organicCarbon => 'الكربون العضوي (%)';
+
+  @override
+  String get temperature => 'درجة الحرارة (°م)';
+
+  @override
+  String get rainfall => 'هطول الأمطار (مم)';
+
+  @override
+  String get getRecommendation => 'الحصول على التوصية';
+
+  @override
+  String get fertilizerResult => 'توصية الأسمدة';
+
+  @override
+  String get fertilizerDesc =>
+      'أدخل تفاصيل تربتك ومحصولك للحصول على توصيات أسمدة مخصصة.';
+
+  @override
+  String get selectStage => 'يرجى اختيار المرحلة';
+
+  @override
+  String get selectSoil => 'يرجى اختيار نوع التربة';
+
+  @override
+  String get invalidNumber => 'رقم غير صالح';
+
+  @override
+  String get nitrogenRange => 'يجب أن يكون النيتروجين بين 0 و 80 كغ/هكتار';
+
+  @override
+  String get phosphorusRange => 'يجب أن يكون الفسفور بين 0 و 50 كغ/هكتار';
+
+  @override
+  String get potassiumRange => 'يجب أن يكون البوتاسيوم بين 0 و 50 كغ/هكتار';
+
+  @override
+  String get phRange => 'يجب أن يكون الـ pH بين 5.5 و 8.0';
+
+  @override
+  String get carbonRange => 'يجب أن يكون الكربون العضوي بين 0 و 1.5%';
+
+  @override
+  String get tempRange => 'يجب أن تكون درجة الحرارة بين 18 و 38 درجة';
+
+  @override
+  String get rainfallRange => 'يجب أن يكون هطول الأمطار بين 0 و 120 مم';
+
+  @override
+  String get failedDropdowns => 'فشل تحميل بيانات المحاصيل. تحقق من اتصالك.';
+
+  @override
+  String get failedRecommendation => 'فشل الحصول على التوصية. تحقق من اتصالك.';
+
+  @override
+  String get ureaLabel => 'يوريا (46% نيتروجين)';
+
+  @override
+  String get dapLabel => 'DAP (فوسفات الأمونيوم الثنائي)';
+
+  @override
+  String get mopLabel => 'MOP (كلوريد البوتاسيوم)';
+
+  @override
+  String get sspLabel => 'SSP (سوبر فوسفات بسيط)';
+
+  @override
+  String get compostLabel => 'سماد عضوي (كومبوست)';
+
+  @override
+  String get perAcre => 'لكل هكتار';
+
+  @override
+  String get fertilizerGuide => 'دليل الأسمدة';
+
+  @override
+  String get abbreviation => 'الاختصار';
+
+  @override
+  String get mainElement => 'العنصر الرئيسي';
+
+  @override
+  String get usage => 'ما الفائدة منه';
+
+  @override
+  String get ureFullName => 'يوريا';
+
+  @override
+  String get ureElement => 'نيتروجين N 46%';
+
+  @override
+  String get ureUsage =>
+      'يعزز نمو الأوراق ويمنحها اللون الأخضر. سماد آزوتي مركز للنمو السريع.';
+
+  @override
+  String get dapFullName => 'فوسفات الأمونيوم الثنائي';
+
+  @override
+  String get dapElement => 'نيتروجين N 18% + فوسفور P 46%';
+
+  @override
+  String get dapUsage =>
+      'سماد أساسي للبداية. الفوسفور يدعم تطور الجذور والإزهار.';
+
+  @override
+  String get mopFullName => 'كلوريد البوتاسيوم';
+
+  @override
+  String get mopElement => 'بوتاسيوم K 60%';
+
+  @override
+  String get mopUsage =>
+      'يحسن حجم الثمار وطعمها ومقاومتها للأمراض والجفاف. يعزز الإثمار والتدرين.';
+
+  @override
+  String get sspFullName => 'سوبر فوسفات بسيط';
+
+  @override
+  String get sspElement => 'فوسفور P 16-20% + كبريت + كالسيوم';
+
+  @override
+  String get sspUsage =>
+      'أقل تركيزاً من DAP لكنه يوفر الكبريت والكالسيوم. مفيد للتربة الناقصة في الكبريت.';
+
+  @override
+  String get compostFullName => 'سماد عضوي (كومبوست)';
+
+  @override
+  String get compostElement => 'كربون عضوي + NPK + عناصر صغرى';
+
+  @override
+  String get compostUsage =>
+      'يحسن بنية التربة واحتباس الماء والنشاط الميكروبي. صحة التربة على المدى البعيد.';
+
+  @override
+  String get cropLimitNote =>
+      'المحاصيل المتاحة محدودة ببيانات التدريب (5 محاصيل).';
+
+  @override
+  String get chipPlantSpecies => 'أنواع النباتات';
+
+  @override
+  String get chipAccuracy => 'دقة الذكاء';
+
+  @override
+  String get chipAnalysis => 'تحليل';
+
+  @override
+  String get chipCustom => 'مخصص';
+
+  @override
+  String get chipCropPlans => 'خطط الزراعة';
+
+  @override
+  String get chipDosing => 'الجرعات';
+
+  @override
+  String get chipLive => 'مباشر';
+
+  @override
+  String get chipCalendar => 'التقويم';
+
+  @override
+  String get chipProducts => 'المنتجات';
+
+  @override
+  String get chipSoilAnalysis => 'تحليل التربة';
+
+  @override
+  String get chipNpk => 'N·P·K';
 }

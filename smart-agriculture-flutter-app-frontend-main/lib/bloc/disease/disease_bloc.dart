@@ -34,7 +34,8 @@ class DiseaseBloc extends Bloc<DiseaseEvent, DiseaseState> {
     return prefs.getString('language') ?? 'EN';
   }
 
-  Future<void> _onPickImageFromGallery(PickImageEvent event, Emitter<DiseaseState> emit) async {
+  Future<void> _onPickImageFromGallery(
+      PickImageEvent event, Emitter<DiseaseState> emit) async {
     final quality = await _getImageQuality();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -49,7 +50,8 @@ class DiseaseBloc extends Bloc<DiseaseEvent, DiseaseState> {
     }
   }
 
-  Future<void> _onPickImageFromCamera(PickImageFromCameraEvent event, Emitter<DiseaseState> emit) async {
+  Future<void> _onPickImageFromCamera(
+      PickImageFromCameraEvent event, Emitter<DiseaseState> emit) async {
     final quality = await _getImageQuality();
     final pickedFile = await picker.pickImage(
       source: ImageSource.camera,
@@ -64,42 +66,57 @@ class DiseaseBloc extends Bloc<DiseaseEvent, DiseaseState> {
     }
   }
 
-  Future<void> _onUploadImage(UploadImageEvent event, Emitter<DiseaseState> emit) async {
+  Future<void> _onUploadImage(
+      UploadImageEvent event, Emitter<DiseaseState> emit) async {
     emit(DiseaseLoading(event.image));
     try {
       final lang = await _getLanguage();
       print("LANGUE DETECTEE: '$lang'");
+
       final baseUrl = Config.baseUrl.replaceAll('/api', '');
-      final apiUrl = baseUrl + '/predict?lang=' + lang;
+      final apiUrl = '$baseUrl/predict?lang=$lang';
 
       final formData = FormData();
-formData.files.add(MapEntry(
-  "image",
-  await MultipartFile.fromFile(event.image.path, filename: "image.jpg"),
-));
-formData.fields.add(MapEntry("lang", lang));
+      formData.files.add(MapEntry(
+        "image",
+        await MultipartFile.fromFile(event.image.path, filename: "image.jpg"),
+      ));
+      formData.fields.add(MapEntry("lang", lang));
 
-final response = await Dio().post(
-  apiUrl,
-  data: formData,
-  options: Options(
-    headers: {
-      'ngrok-skip-browser-warning': 'true',
-      'Accept-Language': lang,
-    },
-  ),
-);
+      final response = await Dio().post(
+        apiUrl,
+        data: formData,
+        options: Options(
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+            'Accept-Language': lang,
+          },
+        ),
+      );
 
-      final disease    = response.data['disease'] as String;
+      // ── Clé brute dataset (pour l'historique) ───────────────────
+      final disease = response.data['disease'] as String;
+
+      // ── Noms traduits retournés par l'API Python ─────────────────
+      // Fallback : parser la clé brute si l'API ne les retourne pas encore
+      final plantName = (response.data['plant_name'] as String?) ??
+          _fallbackPlant(disease);
+      final diseaseLabel = (response.data['disease_label'] as String?) ??
+          _fallbackDisease(disease);
+
       final confidence = (response.data['confidence'] as num).toDouble();
-      final advice     = response.data['advice'] as String;
+      final advice = response.data['advice'] as String;
 
-      // Sauvegarder dans l'historique
+      // ── Sauvegarder dans l'historique ────────────────────────────
       try {
         final token = await PrefHelper.getToken();
         await Dio().post(
           '${Config.baseUrl}/history',
-          data: {'disease': disease, 'confidence': confidence, 'advice': advice},
+          data: {
+            'disease': disease,
+            'confidence': confidence,
+            'advice': advice,
+          },
           options: Options(headers: {
             'Authorization': 'Bearer $token',
             'ngrok-skip-browser-warning': 'true',
@@ -109,11 +126,31 @@ final response = await Dio().post(
         print('History save error: $e');
       }
 
-      emit(DiseaseSuccess(event.image, disease, confidence, advice));
+      emit(DiseaseSuccess(
+        event.image,
+        disease,
+        plantName,
+        diseaseLabel,
+        confidence,
+        advice,
+        lang,
+      ));
     } catch (e) {
       print("ERREUR DETECTION: $e");
       emit(DiseaseError("Échec de l'analyse: $e", selectedImage: event.image));
     }
   }
-  
+
+  /// Fallback local si l'API n'a pas encore été mise à jour
+  String _fallbackPlant(String disease) {
+    final parts = disease.split('___');
+    return parts.isNotEmpty ? parts[0].replaceAll('_', ' ') : disease;
+  }
+
+  String _fallbackDisease(String disease) {
+    final parts = disease.split('___');
+    return parts.length > 1
+        ? parts[1].replaceAll('_', ' ')
+        : disease.replaceAll('_', ' ');
+  }
 }

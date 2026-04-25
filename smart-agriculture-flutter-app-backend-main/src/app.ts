@@ -76,7 +76,7 @@ app.use((err: any, req: any, res: any, next: any) => {
 
 // API to fetch crop, stage and soil types names from CSV
 app.get("/api/dropdowns", async (req: Request, res: Response) => {
-    const csvFilePath = path.resolve(__dirname, "fertilizer_recommendation_dataset.csv");
+  const csvFilePath = path.resolve(__dirname, "../src/fertilizer_recommendation_dataset.csv");
 
     const crops: Set<string> = new Set();
     const stages: Set<string> = new Set();

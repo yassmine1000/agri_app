@@ -14,7 +14,7 @@ print(f"✅ {num_classes} classes chargées")
 
 # ── Modèle ───────────────────────────────────────────────────────
 IMG_SHAPE = (224, 224, 3)
-model = tf.keras.models.load_model("best_model.h5")
+model = tf.keras.models.load_model("best_model_v2.keras")
 
 # ── Noms traduits plantes et maladies ────────────────────────────
 disease_names = {

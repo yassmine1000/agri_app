@@ -32,7 +32,7 @@ export const updatePrice = async (req: Request, res: Response, next: NextFunctio
         return res.status(400).json({ status: 400, message: "Valid price is required" });
     }
     try {
-        const updated = await updatePriceService(parseInt(id), parseFloat(priceStr));
+        const updated = await updatePriceService(parseInt(id as string), parseFloat(priceStr));
         res.status(200).json({ status: 200, message: "Price updated", data: updated });
     } catch (error) { next(error); }
 };
@@ -40,7 +40,7 @@ export const updatePrice = async (req: Request, res: Response, next: NextFunctio
 export const deletePrice = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
-        await deletePriceService(parseInt(id));
+        await deletePriceService(parseInt(id as string));
         res.status(200).json({ status: 200, message: "Price deleted" });
     } catch (error) { next(error); }
 };

@@ -14,7 +14,29 @@ print(f"✅ {num_classes} classes chargées")
 
 # ── Modèle ───────────────────────────────────────────────────────
 IMG_SHAPE = (224, 224, 3)
-model = tf.keras.models.load_model("best_model_v2.keras")
+NUM_CLASSES = 39
+
+def build_model():
+    base = tf.keras.applications.EfficientNetB2(
+        include_top=False,
+        weights=None,
+        input_shape=IMG_SHAPE
+    )
+    inputs = tf.keras.Input(shape=IMG_SHAPE)
+    augment = tf.keras.Sequential([
+        tf.keras.layers.RandomFlip("horizontal"),
+        tf.keras.layers.RandomRotation(0.05),
+    ])(inputs)
+    x = base(augment, training=False)
+    x = tf.keras.layers.GlobalAveragePooling2D()(x)
+    x = tf.keras.layers.Dense(128, activation="relu")(x)
+    x = tf.keras.layers.Dropout(0.3)(x)
+    outputs = tf.keras.layers.Dense(NUM_CLASSES, activation="softmax")(x)
+    return tf.keras.Model(inputs, outputs)
+
+model = build_model()
+model.load_weights("weights.weights.h5")
+print("✅ Model loaded from weights")
 
 # ── Noms traduits plantes et maladies ────────────────────────────
 disease_names = {

@@ -56,7 +56,7 @@ app.post("/predict", upload.single("image"), async (req: Request, res: Response)
       formData.append("image", fileStream);
 
       const response = await axios.post(
-          `http://127.0.0.1:4000/predict?lang=${lang}`, // ← ajoute lang dans l'URL
+          `https://agriscan-cnn.onrender.com/predict?lang=${lang}`, // ← ajoute lang dans l'URL
           formData,
           { headers: formData.getHeaders() }
       );
@@ -138,7 +138,7 @@ app.post("/predict_fertilizer", async (req: Request, res: Response) => {
         };
 
         // Send POST request to Flask API running on http://127.0.0.1:5000/predict_fertilizer
-        const response = await axios.post("http://127.0.0.1:5000/predict_fertilizer", payload, {
+        const response = await axios.post(`https://agriscan-fertilizer.onrender.com/predict_fertilizer`, payload, {
             headers: { "Content-Type": "application/json" },
         });
 

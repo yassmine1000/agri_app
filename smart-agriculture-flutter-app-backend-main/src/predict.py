@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import tensorflow as tf
+import os
+os.environ['KERAS_BACKEND'] = 'tensorflow'
+import keras
 import numpy as np
 from PIL import Image
 import io, json, random
@@ -14,7 +16,7 @@ print(f"✅ {num_classes} classes chargées")
 
 # ── Modèle ───────────────────────────────────────────────────────
 IMG_SHAPE = (224, 224, 3)
-model = tf.keras.models.load_model("best_model.keras")
+model = keras.models.load_model("best_model.keras")
 
 # ── Noms traduits plantes et maladies ────────────────────────────
 disease_names = {
@@ -662,7 +664,7 @@ CORS(app)
 def preprocess_image(image_bytes):
     img = Image.open(io.BytesIO(image_bytes)).convert("RGB").resize((224, 224))
     img_array = np.array(img, dtype=np.float32)
-    img_array = tf.keras.applications.efficientnet.preprocess_input(img_array)
+    img_array = keras.applications.efficientnet.preprocess_input(img_array)
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 

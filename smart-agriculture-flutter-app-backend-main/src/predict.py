@@ -17,21 +17,40 @@ IMG_SHAPE = (224, 224, 3)
 NUM_CLASSES = 39
 
 def build_model():
+    # Input
+    inputs = tf.keras.Input(shape=IMG_SHAPE)
+    
+    # Augmentation
+    x = tf.keras.Sequential([
+        tf.keras.layers.RandomFlip("horizontal"),
+        tf.keras.layers.RandomRotation(0.05),
+    ], name="sequential")(inputs)
+    
+    # EfficientNetB2 backbone
     base = tf.keras.applications.EfficientNetB2(
         include_top=False,
         weights=None,
-        input_shape=IMG_SHAPE
+        input_shape=IMG_SHAPE,
+        name="efficientnetb2"
     )
-    inputs = tf.keras.Input(shape=IMG_SHAPE)
-    augment = tf.keras.Sequential([
-        tf.keras.layers.RandomFlip("horizontal"),
-        tf.keras.layers.RandomRotation(0.05),
-    ])(inputs)
-    x = base(augment, training=False)
-    x = tf.keras.layers.GlobalAveragePooling2D()(x)
-    x = tf.keras.layers.Dense(128, activation="relu")(x)
-    x = tf.keras.layers.Dropout(0.3)(x)
-    outputs = tf.keras.layers.Dense(NUM_CLASSES, activation="softmax")(x)
+    x = base(x, training=False)  # (None, 7, 7, 1408)
+    
+    # Reshape for LSTM
+    x = tf.keras.layers.Reshape((49, 1408), name="reshape")(x)
+    
+    # Bidirectional LSTM
+    x = tf.keras.layers.Bidirectional(
+        tf.keras.layers.LSTM(128), name="bidirectional"
+    )(x)  # (None, 256)
+    
+    # BatchNorm
+    x = tf.keras.layers.BatchNormalization()(x)
+    
+    # Dense layers
+    x = tf.keras.layers.Dense(128, activation="relu", name="dense")(x)
+    x = tf.keras.layers.Dropout(0.3, name="dropout")(x)
+    outputs = tf.keras.layers.Dense(NUM_CLASSES, activation="softmax", name="dense_1")(x)
+    
     return tf.keras.Model(inputs, outputs)
 
 model = build_model()

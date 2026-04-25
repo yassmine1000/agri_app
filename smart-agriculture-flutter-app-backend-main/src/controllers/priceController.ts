@@ -19,7 +19,7 @@ export const createPrice = async (req: Request, res: Response, next: NextFunctio
         return res.status(400).json({ status: 400, message: "All fields are required" });
     }
     try {
-        const newPrice = await createPriceService(plant_name, category, parseFloat(price), unit);
+        const newPrice = await createPriceService(plant_name, category, parseFloat(Array.isArray(price) ? price[0] : String(price)), unit);
         res.status(201).json({ status: 201, message: "Price added", data: newPrice });
     } catch (error) { next(error); }
 };
@@ -27,11 +27,12 @@ export const createPrice = async (req: Request, res: Response, next: NextFunctio
 export const updatePrice = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { price } = req.body;
-    if (!price || isNaN(parseFloat(price))) {
+    const priceStr = Array.isArray(price) ? price[0] : String(price);
+    if (!priceStr || isNaN(parseFloat(priceStr))) {
         return res.status(400).json({ status: 400, message: "Valid price is required" });
     }
     try {
-        const updated = await updatePriceService(parseInt(id), parseFloat(price));
+        const updated = await updatePriceService(parseInt(id), parseFloat(priceStr));
         res.status(200).json({ status: 200, message: "Price updated", data: updated });
     } catch (error) { next(error); }
 };

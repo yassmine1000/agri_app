@@ -107,7 +107,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     if (parseInt(id) === adminId) {
       return res.status(400).json({ message: "Cannot delete your own account" });
     }
-    const result = await pool.query("DELETE FROM users WHERE id = $1 RETURNING id", [id]);
+    const result = await pool.query("DELETE FROM users WHERE id = $1 RETURNING id", [Array.isArray(id) ? id[0] : String(id)]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }

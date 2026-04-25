@@ -23,7 +23,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
     const token = header.split(" ")[1];
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret123") as JwtPayload;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "agriscan_fallback_secret") as JwtPayload;
         req.user = decoded;
         next();
     } catch {
@@ -33,14 +33,14 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
 export const farmerOnly = (req: Request, res: Response, next: NextFunction) => {
   if (req.user?.role !== "farmer" && req.user?.role !== "admin") {
-      return res.status(403).json({ message: "Farmer access only" });
+      return res.status(403).json({ message: "farmer_access_only" });
   }
   next();
 };
 
 export const adminOnly = (req: Request, res: Response, next: NextFunction) => {
   if (req.user?.role !== "admin") {
-      return res.status(403).json({ message: "Admin access only" });
+      return res.status(403).json({ message: "admin_access_only" });
   }
   next();
 };

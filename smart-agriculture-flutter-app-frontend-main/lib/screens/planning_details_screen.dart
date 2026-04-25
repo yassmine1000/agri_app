@@ -64,7 +64,7 @@ class _PlanningDetailsScreenState extends State<PlanningDetailsScreen> {
     try {
       await _cropService.updateTaskStatus(task.id, status);
       _refreshTasks();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Task marked as $status')));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_localizeStatus(status))));
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
     }
@@ -90,7 +90,7 @@ class _PlanningDetailsScreenState extends State<PlanningDetailsScreen> {
       try {
         await _cropService.deleteTask(task.id);
         _refreshTasks();
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Task deleted')));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.taskDeleted)));
       } catch (e) {
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
       }
@@ -98,7 +98,19 @@ class _PlanningDetailsScreenState extends State<PlanningDetailsScreen> {
   }
 
   String _formatDate(String d) {
-    try { return DateFormat('MMM dd, yyyy').format(DateTime.parse(d)); } catch (e) { return d; }
+    try {
+      final date = DateTime.parse(d);
+      if (widget.lang == 'AR') {
+        const months = ['جانفي','فيفري','مارس','أفريل','ماي','جوان','جويلية','أوت','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+        return '${date.day} ${months[date.month - 1]} ${date.year}';
+      }
+      if (widget.lang == 'FR') {
+        const months = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+        return '${date.day} ${months[date.month - 1]} ${date.year}';
+      }
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return '${months[date.month - 1]} ${date.day}, ${date.year}';
+    } catch (e) { return d; }
   }
 
   @override
@@ -118,7 +130,7 @@ class _PlanningDetailsScreenState extends State<PlanningDetailsScreen> {
       backgroundColor: bg,
       appBar: AppBar(
         backgroundColor: bg,
-        title: Text(p.cropName ?? (widget.lang == 'FR' ? 'Détails du planning' : 'Planning Details')),
+        title: Text(p.localizedName(widget.lang).isNotEmpty ? p.localizedName(widget.lang) : (widget.lang == 'FR' ? 'Détails du planning' : widget.lang == 'AR' ? 'تفاصيل التخطيط' : 'Planning Details')),
         bottom: PreferredSize(preferredSize: const Size.fromHeight(1), child: Container(height: 1, color: border)),
       ),
       body: Column(children: [
@@ -127,18 +139,18 @@ class _PlanningDetailsScreenState extends State<PlanningDetailsScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(color: surface, borderRadius: BorderRadius.circular(16), border: Border.all(color: primary.withOpacity(0.2))),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(p.cropName ?? (widget.lang == 'FR' ? 'Culture inconnue' : 'Unknown Crop'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: textPrimary)),
+            Text(p.localizedName(widget.lang).isNotEmpty ? p.localizedName(widget.lang) : (widget.lang == 'FR' ? 'Culture inconnue' : widget.lang == 'AR' ? 'محصول غير معروف' : 'Unknown Crop'), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: textPrimary)),
             const SizedBox(height: 10),
             Row(children: [
               Icon(Icons.play_circle_outline, size: 14, color: textSecondary),
               const SizedBox(width: 6),
-              Text('${widget.lang == 'FR' ? 'Début' : 'Start'}: ${_formatDate(p.startDate)}', style: TextStyle(color: textSecondary, fontSize: 13)),
+              Text('${widget.lang == 'FR' ? 'Début' : widget.lang == 'AR' ? 'البداية' : 'Start'}: ${_formatDate(p.startDate)}', style: TextStyle(color: textSecondary, fontSize: 13)),
             ]),
             const SizedBox(height: 4),
             Row(children: [
               Icon(Icons.calendar_month, size: 14, color: textSecondary),
               const SizedBox(width: 6),
-              Text('${widget.lang == 'FR' ? 'Récolte' : 'Harvest'}: ${_formatDate(p.expectedHarvestDate)}', style: TextStyle(color: textSecondary, fontSize: 13)),
+              Text('${widget.lang == 'FR' ? 'Récolte' : widget.lang == 'AR' ? 'الحصاد' : 'Harvest'}: ${_formatDate(p.expectedHarvestDate)}', style: TextStyle(color: textSecondary, fontSize: 13)),
             ]),
             if (p.notes != null && p.notes!.isNotEmpty) ...[
               const SizedBox(height: 6),
@@ -147,8 +159,8 @@ class _PlanningDetailsScreenState extends State<PlanningDetailsScreen> {
             if (p.irrigationReminder || p.fertilizerReminder) ...[
               const SizedBox(height: 10),
               Wrap(spacing: 8, children: [
-                if (p.irrigationReminder) _badge('💧 ${widget.lang == 'FR' ? 'Irrigation' : 'Irrigation'}', cyan),
-                if (p.fertilizerReminder) _badge('🌿 ${widget.lang == 'FR' ? 'Engrais' : 'Fertilizer'}', primary),
+                if (p.irrigationReminder) _badge('💧 ${widget.lang == 'FR' ? 'Irrigation' : widget.lang == 'AR' ? 'ري' : 'Irrigation'}', cyan),
+                if (p.fertilizerReminder) _badge('🌿 ${widget.lang == 'FR' ? 'Engrais' : widget.lang == 'AR' ? 'تسميد' : 'Fertilizer'}', primary),
               ]),
             ],
           ]),
@@ -205,15 +217,15 @@ class _PlanningDetailsScreenState extends State<PlanningDetailsScreen> {
         Container(width: 40, height: 40, decoration: BoxDecoration(color: (widget.isDarkMode ? AppColors.surfaceAlt : AppColorsLight.surfaceAlt), borderRadius: BorderRadius.circular(10)), child: Center(child: _getTaskIcon(task.taskType, primary))),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(task.taskType, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary, decoration: isCompleted ? TextDecoration.lineThrough : null)),
+          Text(_localizeTaskType(task.taskType), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary, decoration: isCompleted ? TextDecoration.lineThrough : null)),
           const SizedBox(height: 4),
           Row(children: [
             Icon(Icons.calendar_today, size: 11, color: textSecondary),
             const SizedBox(width: 4),
-            Text('${widget.lang == 'FR' ? 'Échéance' : 'Due'}: ${_formatDate(task.taskDate)}', style: TextStyle(color: textSecondary, fontSize: 12)),
+            Text('${widget.lang == 'FR' ? 'Échéance' : widget.lang == 'AR' ? 'الموعد' : 'Due'}: ${_formatDate(task.taskDate)}', style: TextStyle(color: textSecondary, fontSize: 12)),
           ]),
           const SizedBox(height: 4),
-          Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: statusColor.withOpacity(0.12), borderRadius: BorderRadius.circular(6)), child: Text(task.status, style: TextStyle(fontSize: 11, color: statusColor, fontWeight: FontWeight.w600))),
+          Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: statusColor.withOpacity(0.12), borderRadius: BorderRadius.circular(6)), child: Text(_localizeStatus(task.status), style: TextStyle(fontSize: 11, color: statusColor, fontWeight: FontWeight.w600))),
         ])),
         PopupMenuButton<String>(
           color: widget.isDarkMode ? AppColors.surfaceAlt : AppColorsLight.surfaceAlt,
@@ -227,6 +239,31 @@ class _PlanningDetailsScreenState extends State<PlanningDetailsScreen> {
         ),
       ]),
     );
+  }
+
+  String _localizeTaskType(String taskType) {
+    final t = taskType.toLowerCase();
+    if (widget.lang == 'FR') {
+      const map = {'sowing': 'Semis', 'irrigation': 'Irrigation', 'fertilizing': 'Fertilisation', 'weeding': 'Désherbage', 'pruning': 'Taille', 'harvesting': 'Récolte', 'inspection': 'Inspection'};
+      return map[t] ?? taskType;
+    }
+    if (widget.lang == 'AR') {
+      const map = {'sowing': 'البذر', 'irrigation': 'الري', 'fertilizing': 'التسميد', 'weeding': 'إزالة الأعشاب', 'pruning': 'التقليم', 'harvesting': 'الحصاد', 'inspection': 'الفحص'};
+      return map[t] ?? taskType;
+    }
+    return taskType;
+  }
+
+  String _localizeStatus(String status) {
+    if (widget.lang == 'FR') {
+      if (status == 'pending') return 'En attente';
+      if (status == 'completed') return 'Terminé';
+    }
+    if (widget.lang == 'AR') {
+      if (status == 'pending') return 'قيد الانتظار';
+      if (status == 'completed') return 'مكتمل';
+    }
+    return status;
   }
 
   Icon _getTaskIcon(String taskType, Color primary) {

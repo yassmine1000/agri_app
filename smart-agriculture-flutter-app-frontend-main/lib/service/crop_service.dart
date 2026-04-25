@@ -219,7 +219,7 @@ class CropService {
       );
       if(response.statusCode == 200){
         final data = response.data;
-        return data['data'] == 'success';
+        return data['status'] == 'success';
       } else {
         throw Exception('Failed to delete task: ${response.statusCode}');
       }
@@ -247,24 +247,3 @@ class CropService {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

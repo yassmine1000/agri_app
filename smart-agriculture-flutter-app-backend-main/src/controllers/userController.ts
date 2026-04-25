@@ -44,6 +44,12 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     if (existing.rows.length > 0) {
       return res.status(400).json({ message: "Username already exists" });
     }
+    if (email && email.trim() !== '') {
+      const emailCheck = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
+      if (emailCheck.rows.length > 0) {
+        return res.status(400).json({ message: "This email address is already associated with an account" });
+      }
+    }
     const hashedPassword = await bcrypt.hash(password || "agriscan123", 10);
     const qrToken = crypto.randomBytes(32).toString('hex');
 

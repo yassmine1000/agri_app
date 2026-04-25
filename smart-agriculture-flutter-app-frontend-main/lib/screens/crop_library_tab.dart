@@ -43,6 +43,15 @@ class _CropLibraryTabState extends State<CropLibraryTab> {
     _initWithLang();
   }
 
+  String _localizeError(String error, AppLocalizations l) {
+    final msg = error.toLowerCase();
+    if (msg.contains('farmer') || msg.contains('access only') || msg.contains('403')) {
+      return l.farmerAccessOnly;
+    }
+    if (msg.contains('admin')) return l.adminAccessOnly;
+    return l.anErrorOccurred;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -67,9 +76,9 @@ class _CropLibraryTabState extends State<CropLibraryTab> {
               return Center(child: CircularProgressIndicator(color: primary));
             } else if (snapshot.hasError) {
               return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(Icons.error_outline, color: textSecondary, size: 48),
+                Icon(Icons.lock_outline, color: textSecondary, size: 48),
                 const SizedBox(height: 12),
-                Text('${snapshot.error}', style: TextStyle(color: textSecondary, fontSize: 13), textAlign: TextAlign.center),
+                Text(_localizeError('${snapshot.error}', l), style: TextStyle(color: textSecondary, fontSize: 13), textAlign: TextAlign.center),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _refreshCrops,
@@ -148,4 +157,4 @@ class _CropLibraryTabState extends State<CropLibraryTab> {
       ),
     );
   }
-}         
+}

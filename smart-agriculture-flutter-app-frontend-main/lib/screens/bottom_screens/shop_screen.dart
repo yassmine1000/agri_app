@@ -100,7 +100,6 @@ class _ShopScreenState extends State<ShopScreen> {
   String _displayDescription(dynamic p) {
     if (_lang == 'FR' && p['description_fr'] != null) return p['description_fr'];
     if (_lang == 'AR' && p['description_ar'] != null) return p['description_ar'];
-    if (_lang == 'EN' && p['description_en'] != null) return p['description_en'];
     return p['description'] ?? '';
   }
 
@@ -159,6 +158,33 @@ class _ShopScreenState extends State<ShopScreen> {
       } catch (e) {
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
+    }
+  }
+
+  Future<void> _toggleStock(dynamic product) async {
+    try {
+      final token = await PrefHelper.getToken();
+      final newStatus = !(product['stock_available'] == true);
+      await _dio.put(
+        '${Config.baseUrl}/products/${product["id"]}',
+        data: {
+          'name':           product['name'],
+          'name_fr':        product['name_fr'],
+          'name_ar':        product['name_ar'],
+          'price':          product['price'],
+          'category':       product['category'],
+          'category_fr':    product['category_fr'],
+          'category_ar':    product['category_ar'],
+          'description':    product['description'],
+          'description_fr': product['description_fr'],
+          'description_ar': product['description_ar'],
+          'stock_available': newStatus,
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true'}),
+      );
+      _loadProducts();
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: \$e')));
     }
   }
 
@@ -242,6 +268,39 @@ class _ShopScreenState extends State<ShopScreen> {
                   ),
                 ]),
               ),
+              const SizedBox(height: 20),
+
+              // Admin: toggle stock button
+              if (_isAdmin)
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _toggleStock(p);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: p['stock_available'] == true ? errorColor : primary),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: Icon(
+                      p['stock_available'] == true ? Icons.remove_shopping_cart_outlined : Icons.add_shopping_cart_outlined,
+                      color: p['stock_available'] == true ? errorColor : primary,
+                      size: 18,
+                    ),
+                    label: Text(
+                      p['stock_available'] == true
+                          ? (_lang == 'AR' ? 'تحديد كـ: غير متوفر' : _lang == 'FR' ? 'Marquer comme épuisé' : 'Mark as out of stock')
+                          : (_lang == 'AR' ? 'تحديد كـ: متوفر' : _lang == 'FR' ? 'Marquer comme en stock' : 'Mark as in stock'),
+                      style: TextStyle(
+                        color: p['stock_available'] == true ? errorColor : primary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ),
               const SizedBox(height: 20),
             ]),
           ),

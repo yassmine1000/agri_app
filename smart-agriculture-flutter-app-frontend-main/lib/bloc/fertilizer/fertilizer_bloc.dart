@@ -16,9 +16,8 @@ class FertilizerBloc extends Bloc<FertilizerEvent, FertilizerState> {
       FetchDropdowns event, Emitter<FertilizerState> emit) async {
     emit(FertilizerLoading());
     try {
-      final baseUrl = Config.baseUrl.replaceAll('/api', '');
       final response = await dio.get(
-        '$baseUrl/api/dropdowns',
+        '${Config.baseUrl}/dropdowns',
         options: Options(headers: {'ngrok-skip-browser-warning': 'true'}),
       );
       emit(FertilizerDropdownsLoaded(
@@ -38,9 +37,8 @@ class FertilizerBloc extends Bloc<FertilizerEvent, FertilizerState> {
       GetRecommendation event, Emitter<FertilizerState> emit) async {
     emit(FertilizerLoading());
     try {
-      final baseUrl = Config.baseUrl.replaceAll('/api', '');
       final response = await dio.post(
-        '$baseUrl/predict_fertilizer',
+        '${Config.serverUrl}/predict_fertilizer',
         data: event.formData,
         options: Options(
           headers: {

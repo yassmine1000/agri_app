@@ -237,6 +237,22 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                         setErr(() => errorMsg = l.nameRequired);
                         return;
                       }
+                      if (emailCtrl.text.trim().isEmpty) {
+                        setErr(() => errorMsg = l.emailRequired);
+                        return;
+                      }
+                      if (!emailCtrl.text.trim().contains('@') ||
+                          !emailCtrl.text.trim().contains('.') ||
+                          emailCtrl.text.trim().indexOf('@') == 0 ||
+                          emailCtrl.text.trim().endsWith('.') ||
+                          emailCtrl.text.trim().endsWith('@')) {
+                        setErr(() => errorMsg = l.invalidEmail);
+                        return;
+                      }
+                      if (addressCtrl.text.trim().isEmpty) {
+                        setErr(() => errorMsg = l.addressRequired);
+                        return;
+                      }
                       if (phoneCtrl.text.trim().isNotEmpty &&
                           phoneCtrl.text.trim().replaceAll(RegExp(r'\D'), '').length < 8) {
                         setErr(() => errorMsg = l.phoneInvalid);
@@ -259,9 +275,10 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.userCreated), backgroundColor: primary));
                     }
                   } catch (e) {
-                    final msg = (e is DioException)
-                        ? (e.response?.data?['message'] ?? e.response?.data?['error'] ?? l.anErrorOccurred)
+                    final rawMsg = (e is DioException)
+                        ? (e.response?.data?['message'] ?? e.response?.data?['error'] ?? l.anErrorOccurred).toString()
                         : l.anErrorOccurred;
+                    final msg = _localizeServerError(rawMsg, l);
                     setErr(() => errorMsg = msg);
                   }
                 },
@@ -301,6 +318,21 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primary, width: 1.5)),
       ),
     );
+  }
+
+  /// Traduit les messages d'erreur backend selon la langue active
+  String _localizeServerError(String serverMsg, AppLocalizations l) {
+    final msg = serverMsg.toLowerCase();
+    if (msg.contains('email') && (msg.contains('already') || msg.contains('exist') || msg.contains('associated'))) {
+      return l.emailAlreadyExists;
+    }
+    if (msg.contains('username') && (msg.contains('already') || msg.contains('exist') || msg.contains('taken'))) {
+      return l.usernameAlreadyExists;
+    }
+    if (msg.contains('something went wrong') || msg.contains('internal server') || msg.contains('missing required') || msg.isEmpty) {
+      return l.anErrorOccurred;
+    }
+    return serverMsg;
   }
 
   Color _roleColor(String role, Color primary, Color cyan, Color gold) {

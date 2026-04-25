@@ -343,7 +343,7 @@ abstract class AppLocalizations {
   /// No description provided for @diseaseDetection.
   ///
   /// In en, this message translates to:
-  /// **'Disease Detection'**
+  /// **'Diseases Detection'**
   String get diseaseDetection;
 
   /// No description provided for @diseaseDetectionDesc.
@@ -355,7 +355,7 @@ abstract class AppLocalizations {
   /// No description provided for @fertilizerRecommendation.
   ///
   /// In en, this message translates to:
-  /// **'Fertilizer Recommendation'**
+  /// **'Fertilizer Recommendations'**
   String get fertilizerRecommendation;
 
   /// No description provided for @fertilizerRecommendationDesc.
@@ -379,7 +379,7 @@ abstract class AppLocalizations {
   /// No description provided for @available.
   ///
   /// In en, this message translates to:
-  /// **'Available'**
+  /// **'Availability'**
   String get available;
 
   /// No description provided for @leafAnalysis.
@@ -567,6 +567,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// No description provided for @priceUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Price updated successfully'**
+  String get priceUpdated;
 
   /// No description provided for @searchCity.
   ///
@@ -853,7 +859,7 @@ abstract class AppLocalizations {
   /// No description provided for @appNameLabel.
   ///
   /// In en, this message translates to:
-  /// **'App Name'**
+  /// **'Application Name'**
   String get appNameLabel;
 
   /// No description provided for @version.
@@ -1465,7 +1471,7 @@ abstract class AppLocalizations {
   /// No description provided for @ureElement.
   ///
   /// In en, this message translates to:
-  /// **'Nitrogen N 46%'**
+  /// **'Nitrogen (N) 46%'**
   String get ureElement;
 
   /// No description provided for @ureUsage.
@@ -1483,7 +1489,7 @@ abstract class AppLocalizations {
   /// No description provided for @dapElement.
   ///
   /// In en, this message translates to:
-  /// **'Nitrogen N 18% + Phosphorus P 46%'**
+  /// **'Nitrogen (N) 18% + Phosphorus (P) 46%'**
   String get dapElement;
 
   /// No description provided for @dapUsage.
@@ -1501,7 +1507,7 @@ abstract class AppLocalizations {
   /// No description provided for @mopElement.
   ///
   /// In en, this message translates to:
-  /// **'Potassium K 60%'**
+  /// **'Potassium (K) 60%'**
   String get mopElement;
 
   /// No description provided for @mopUsage.
@@ -1519,7 +1525,7 @@ abstract class AppLocalizations {
   /// No description provided for @sspElement.
   ///
   /// In en, this message translates to:
-  /// **'Phosphorus P 16-20% + Sulfur + Calcium'**
+  /// **'Phosphorus (P) 16-20% + Sulfur + Calcium'**
   String get sspElement;
 
   /// No description provided for @sspUsage.
@@ -1617,6 +1623,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'N·P·K'**
   String get chipNpk;
+
+  /// No description provided for @myQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'My QR Code'**
+  String get myQrCode;
+
+  /// No description provided for @scanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanner'**
+  String get scanner;
+
+  /// No description provided for @yourPersonalQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Your personal QR Code'**
+  String get yourPersonalQr;
+
+  /// No description provided for @scanToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Have someone scan this code to log in'**
+  String get scanToLogin;
+
+  /// No description provided for @saveToGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to Gallery'**
+  String get saveToGallery;
+
+  /// No description provided for @qrSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code saved to gallery!'**
+  String get qrSaved;
+
+  /// No description provided for @qrSaveError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving QR code'**
+  String get qrSaveError;
+
+  /// No description provided for @pointCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Point the camera at an AgriScan QR code'**
+  String get pointCamera;
+
+  /// No description provided for @importFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from Gallery'**
+  String get importFromGallery;
+
+  /// No description provided for @noQrFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No QR code found in this image'**
+  String get noQrFound;
+
+  /// No description provided for @invalidQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid QR code'**
+  String get invalidQr;
+
+  /// No description provided for @qrSecurityNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This QR code is unique to your account. Do not share it with strangers.'**
+  String get qrSecurityNote;
+
+  /// No description provided for @retryLoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryLoad;
+
+  /// No description provided for @loginRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in to see your QR code'**
+  String get loginRequired;
+
+  /// No description provided for @qrLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load QR code'**
+  String get qrLoadError;
+
+  /// No description provided for @yourQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Your QR Code'**
+  String get yourQrCode;
+
+  /// No description provided for @accountCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created successfully!'**
+  String get accountCreated;
+
+  /// No description provided for @saveYourQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your personal QR code'**
+  String get saveYourQr;
+
+  /// No description provided for @qrWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This QR code is shown only once. Download it now to use it for login.'**
+  String get qrWarning;
+
+  /// No description provided for @downloadToGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Download to Gallery'**
+  String get downloadToGallery;
+
+  /// No description provided for @qrDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code saved!'**
+  String get qrDownloaded;
+
+  /// No description provided for @continueToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to login'**
+  String get continueToLogin;
+
+  /// No description provided for @qrProfileNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You can find this QR code in your profile after logging in.'**
+  String get qrProfileNote;
+
+  /// No description provided for @stockAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'In stock'**
+  String get stockAvailable;
+
+  /// No description provided for @stockUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of stock'**
+  String get stockUnavailable;
+
+  /// No description provided for @toggleStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle stock status'**
+  String get toggleStock;
+
+  /// No description provided for @taskDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Task deleted successfully'**
+  String get taskDeleted;
+
+  /// No description provided for @planDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan deleted successfully'**
+  String get planDeleted;
+
+  /// No description provided for @emailAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address is already associated with an account'**
+  String get emailAlreadyExists;
+
+  /// No description provided for @usernameAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This username is already taken'**
+  String get usernameAlreadyExists;
+
+  /// No description provided for @failedToLoadProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load products'**
+  String get failedToLoadProducts;
+
+  /// No description provided for @failedToLoadPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load prices'**
+  String get failedToLoadPrices;
+
+  /// No description provided for @failedToLoadUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load users'**
+  String get failedToLoadUsers;
+
+  /// No description provided for @failedToLoadProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load profile'**
+  String get failedToLoadProfile;
+
+  /// No description provided for @failedToLoadHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load history'**
+  String get failedToLoadHistory;
+
+  /// No description provided for @farmerAccessOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Access reserved for farmers'**
+  String get farmerAccessOnly;
+
+  /// No description provided for @adminAccessOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Access reserved for administrators'**
+  String get adminAccessOnly;
+
+  /// No description provided for @planName.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan name'**
+  String get planName;
 }
 
 class _AppLocalizationsDelegate

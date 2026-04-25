@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_agri_app/generated/app_localizations.dart';
 import 'package:smart_agri_app/utils/app_theme.dart';
 import '../models/planning/crop.dart';
+import '../service/notification_service.dart';
 import '../models/planning/crop_planning.dart';
 import '../service/crop_service.dart';
 
@@ -28,11 +29,14 @@ class _CreatePlanningDialogState extends State<CreatePlanningDialog> {
   final _formKey = GlobalKey<FormState>();
   late Future<List<Crop>> futureCrops;
   int? _selectedCropId;
+  String? _selectedCropName;
   DateTime? _startDate;
   DateTime? _expectedHarvestDate;
   String _notes = '';
   bool _irrigationReminder = false;
   bool _fertilizerReminder = false;
+  DateTime? _irrigationReminderDate;
+  DateTime? _fertilizerReminderDate;
   bool _isSubmitting = false;
 
   @override
@@ -54,6 +58,19 @@ class _CreatePlanningDialogState extends State<CreatePlanningDialog> {
         ]),
       ),
     );
+  }
+
+  String _formatPlanDate(DateTime date) {
+    if (widget.lang == 'AR') {
+      const months = ['جانفي','فيفري','مارس','أفريل','ماي','جوان','جويلية','أوت','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+      return '${date.day} ${months[date.month - 1]} ${date.year}';
+    }
+    if (widget.lang == 'FR') {
+      const months = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+      return '${date.day} ${months[date.month - 1]} ${date.year}';
+    }
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
   @override
@@ -98,20 +115,34 @@ class _CreatePlanningDialogState extends State<CreatePlanningDialog> {
                     focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primary, width: 1.5)),
                   ),
                   items: snapshot.data!.map((c) => DropdownMenuItem<int>(value: c.id, child: Text(c.displayName(widget.lang)))).toList(),
-                  onChanged: (v) => setState(() => _selectedCropId = v),
+                  onChanged: (v) {
+                    setState(() {
+                      _selectedCropId = v;
+                      _selectedCropName = snapshot.data!.firstWhere((c) => c.id == v).displayName('EN');
+                    });
+                  },
                   validator: (v) => v == null ? l.required : null,
                 ),
                 const SizedBox(height: 12),
                 _dateTile(Icons.play_circle_outline, cyan,
-                  _startDate == null ? l.selectStartDate : '${widget.lang == 'FR' ? 'Début' : 'Start'}: ${DateFormat('dd/MM/yyyy').format(_startDate!)}',
+                  _startDate == null ? l.selectStartDate : '${widget.lang == 'FR' ? 'Début' : widget.lang == 'AR' ? 'بداية' : 'Start'}: ${_formatPlanDate(_startDate!)}',
                   () async {
-                    final d = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
-                    if (d != null) setState(() => _startDate = d);
+                    final d = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2100));
+                    if (d != null) {
+                    if (d.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
+                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(widget.lang == 'AR' ? 'تاريخ البداية لا يمكن أن يكون في الماضي' : widget.lang == 'FR' ? 'La date de début ne peut pas être dans le passé' : 'Start date cannot be in the past'),
+                        backgroundColor: Colors.red,
+                      ));
+                    } else {
+                      setState(() => _startDate = d);
+                    }
+                  }
                   }, surfaceAlt, border, textPrimary,
                 ),
                 const SizedBox(height: 8),
                 _dateTile(Icons.agriculture, gold,
-                  _expectedHarvestDate == null ? l.selectHarvestDate : '${widget.lang == 'FR' ? 'Récolte' : 'Harvest'}: ${DateFormat('dd/MM/yyyy').format(_expectedHarvestDate!)}',
+                  _expectedHarvestDate == null ? l.selectHarvestDate : '${widget.lang == 'FR' ? 'Récolte' : widget.lang == 'AR' ? 'حصاد' : 'Harvest'}: ${_formatPlanDate(_expectedHarvestDate!)}',
                   () async {
                     final d = await showDatePicker(context: context, initialDate: DateTime.now().add(const Duration(days: 30)), firstDate: DateTime.now(), lastDate: DateTime(2100));
                     if (d != null) setState(() => _expectedHarvestDate = d);
@@ -130,8 +161,76 @@ class _CreatePlanningDialogState extends State<CreatePlanningDialog> {
                   onChanged: (v) => _notes = v,
                 ),
                 const SizedBox(height: 8),
-                SwitchListTile(title: Text('💧 ${l.irrigationReminder}', style: TextStyle(color: textPrimary, fontSize: 13)), value: _irrigationReminder, activeColor: cyan, onChanged: (v) => setState(() => _irrigationReminder = v)),
-                SwitchListTile(title: Text('🌿 ${l.fertilizerReminder}', style: TextStyle(color: textPrimary, fontSize: 13)), value: _fertilizerReminder, activeColor: primary, onChanged: (v) => setState(() => _fertilizerReminder = v)),
+                SwitchListTile(
+                  title: Text('💧 ${l.irrigationReminder}', style: TextStyle(color: textPrimary, fontSize: 13)),
+                  value: _irrigationReminder,
+                  activeColor: cyan,
+                  onChanged: (v) => setState(() {
+                    _irrigationReminder = v;
+                    if (!v) _irrigationReminderDate = null;
+                  }),
+                ),
+                if (_irrigationReminder)
+                  ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    leading: Icon(Icons.alarm, color: cyan, size: 20),
+                    title: Text(
+                      _irrigationReminderDate == null
+                          ? (widget.lang == 'AR' ? 'اختر تاريخ ووقت الري' : widget.lang == 'FR' ? "Choisir date et heure d'irrigation" : 'Pick irrigation date & time')
+                          : _formatReminderDate(_irrigationReminderDate!),
+                      style: TextStyle(color: _irrigationReminderDate == null ? textSecondary : cyan, fontSize: 13),
+                    ),
+                    onTap: () async {
+                      final date = await showDatePicker(context: context, initialDate: DateTime.now().add(const Duration(days: 1)), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
+                      if (date == null || !mounted) return;
+                      final time = await showTimePicker(context: context, initialTime: const TimeOfDay(hour: 8, minute: 0));
+                      if (time == null || !mounted) return;
+                      final chosen = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+                      if (chosen.isBefore(DateTime.now())) {
+                        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(widget.lang == 'AR' ? 'لا يمكن اختيار تاريخ في الماضي' : widget.lang == 'FR' ? 'Impossible de choisir une date passée' : 'Cannot choose a past date'),
+                          backgroundColor: Colors.red,
+                        ));
+                        return;
+                      }
+                      setState(() => _irrigationReminderDate = chosen);
+                    },
+                  ),
+                SwitchListTile(
+                  title: Text('🌿 ${l.fertilizerReminder}', style: TextStyle(color: textPrimary, fontSize: 13)),
+                  value: _fertilizerReminder,
+                  activeColor: primary,
+                  onChanged: (v) => setState(() {
+                    _fertilizerReminder = v;
+                    if (!v) _fertilizerReminderDate = null;
+                  }),
+                ),
+                if (_fertilizerReminder)
+                  ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    leading: Icon(Icons.alarm, color: primary, size: 20),
+                    title: Text(
+                      _fertilizerReminderDate == null
+                          ? (widget.lang == 'AR' ? 'اختر تاريخ ووقت التسميد' : widget.lang == 'FR' ? "Choisir date et heure d'engrais" : 'Pick fertilizer date & time')
+                          : _formatReminderDate(_fertilizerReminderDate!),
+                      style: TextStyle(color: _fertilizerReminderDate == null ? textSecondary : primary, fontSize: 13),
+                    ),
+                    onTap: () async {
+                      final date = await showDatePicker(context: context, initialDate: DateTime.now().add(const Duration(days: 1)), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 365)));
+                      if (date == null || !mounted) return;
+                      final time = await showTimePicker(context: context, initialTime: const TimeOfDay(hour: 8, minute: 0));
+                      if (time == null || !mounted) return;
+                      final chosen = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+                      if (chosen.isBefore(DateTime.now())) {
+                        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(widget.lang == 'AR' ? 'لا يمكن اختيار تاريخ في الماضي' : widget.lang == 'FR' ? 'Impossible de choisir une date passée' : 'Cannot choose a past date'),
+                          backgroundColor: Colors.red,
+                        ));
+                        return;
+                      }
+                      setState(() => _fertilizerReminderDate = chosen);
+                    },
+                  ),
               ]),
             ),
           );
@@ -153,18 +252,66 @@ class _CreatePlanningDialogState extends State<CreatePlanningDialog> {
     );
   }
 
+  String _formatReminderDate(DateTime date) {
+    if (widget.lang == 'AR') {
+      const months = ['جانفي','فيفري','مارس','أفريل','ماي','جوان','جويلية','أوت','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+      return '${date.day} ${months[date.month-1]} ${date.year}  ${date.hour.toString().padLeft(2,'0')}:${date.minute.toString().padLeft(2,'0')}';
+    }
+    if (widget.lang == 'FR') {
+      const months = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+      return '${date.day} ${months[date.month-1]} ${date.year}  ${date.hour.toString().padLeft(2,'0')}:${date.minute.toString().padLeft(2,'0')}';
+    }
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return '${months[date.month-1]} ${date.day}, ${date.year}  ${date.hour.toString().padLeft(2,'0')}:${date.minute.toString().padLeft(2,'0')}';
+  }
+
   void _submitForm() async {
     final l = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
     if (_startDate == null) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.selectStartDate))); return; }
+    if (_startDate!.isBefore(DateTime.now().subtract(const Duration(days: 1)))) {
+      final msg = widget.lang == 'AR' ? 'تاريخ البداية لا يمكن أن يكون في الماضي' : widget.lang == 'FR' ? 'La date de début ne peut pas être dans le passé' : 'Start date cannot be in the past';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red));
+      return;
+    }
     if (_expectedHarvestDate == null) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.selectHarvestDate))); return; }
+    if (_expectedHarvestDate!.isBefore(_startDate!)) {
+      final msg = widget.lang == 'AR' ? 'تاريخ الحصاد يجب أن يكون بعد تاريخ البداية' : widget.lang == 'FR' ? 'La date de récolte doit être après la date de début' : 'Harvest date must be after start date';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red));
+      return;
+    }
     setState(() => _isSubmitting = true);
-    final planning = CropPlanning(id: 0, userId: 0, cropId: _selectedCropId!, startDate: _startDate!.toIso8601String(), expectedHarvestDate: _expectedHarvestDate!.toIso8601String(), notes: _notes.isNotEmpty ? _notes : null, irrigationReminder: _irrigationReminder, fertilizerReminder: _fertilizerReminder, cropName: '');
+    final planning = CropPlanning(id: 0, userId: 0, cropId: _selectedCropId!, planName: _selectedCropName, startDate: _startDate!.toIso8601String(), expectedHarvestDate: _expectedHarvestDate!.toIso8601String(), notes: _notes.isNotEmpty ? _notes : null, irrigationReminder: _irrigationReminder, fertilizerReminder: _fertilizerReminder, cropName: '');
     try {
-      await widget.cropService.createCropPlanning(planning);
+      final created = await widget.cropService.createCropPlanning(planning);
+      // Schedule notifications if reminder dates chosen
+      await NotificationService().requestPermissions();
+      if (_irrigationReminder && _irrigationReminderDate != null) {
+        await NotificationService().scheduleIrrigationReminder(
+          planningId: created.id,
+          scheduledDate: _irrigationReminderDate!,
+          cropName: _selectedCropName ?? '',
+          lang: widget.lang,
+        );
+      }
+      if (_fertilizerReminder && _fertilizerReminderDate != null) {
+        await NotificationService().scheduleFertilizerReminder(
+          planningId: created.id,
+          scheduledDate: _fertilizerReminderDate!,
+          cropName: _selectedCropName ?? '',
+          lang: widget.lang,
+        );
+      }
       if (mounted) { Navigator.pop(context); widget.onPlanningCreated(); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.planCreated))); }
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
+      final errStr = e.toString().toLowerCase();
+      String errMsg;
+      if (errStr.contains('farmer_access_only') || errStr.contains('farmer access')) {
+        errMsg = widget.lang == 'AR' ? 'الوصول مخصص للمزارعين فقط' : widget.lang == 'FR' ? 'Accès réservé aux agriculteurs' : 'Access reserved for farmers';
+      } else {
+        errMsg = l.anErrorOccurred;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errMsg)));
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }

@@ -31,6 +31,25 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
     'Sowing': 'Semis', 'Irrigation': 'Irrigation', 'Fertilizing': 'Fertilisation',
     'Weeding': 'Désherbage', 'Pruning': 'Taille', 'Harvesting': 'Récolte', 'Inspection': 'Inspection',
   };
+  final Map<String, String> _taskTypesAr = {
+    'Sowing': 'البذر', 'Irrigation': 'الري', 'Fertilizing': 'التسميد',
+    'Weeding': 'إزالة الأعشاب', 'Pruning': 'التقليم', 'Harvesting': 'الحصاد', 'Inspection': 'الفحص',
+  };
+
+  String _getTaskLabel(String taskKey) {
+    if (widget.lang == 'FR') return _taskTypesFr[taskKey] ?? taskKey;
+    if (widget.lang == 'AR') return _taskTypesAr[taskKey] ?? taskKey;
+    return taskKey;
+  }
+
+  String _formatSelectedDate(DateTime date) {
+    if (widget.lang == 'AR') {
+      const months = ['جانفي','فيفري','مارس','أفريل','ماي','جوان','جويلية','أوت','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+      return '${date.day} ${months[date.month - 1]} ${date.year}';
+    }
+    if (widget.lang == 'FR') return DateFormat('dd MMM yyyy', 'fr').format(date);
+    return DateFormat('MMM dd, yyyy').format(date);
+  }
 
   String? _selectedTaskType;
   DateTime? _selectedDate;
@@ -72,7 +91,7 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
               enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: border)),
               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primary, width: 1.5)),
             ),
-            items: _taskTypes.map((t) => DropdownMenuItem(value: t, child: Text(widget.lang == 'FR' ? (_taskTypesFr[t] ?? t) : t))).toList(),
+            items: _taskTypes.map((t) => DropdownMenuItem(value: t, child: Text(_getTaskLabel(t)))).toList(),
             onChanged: (v) => setState(() => _selectedTaskType = v),
             validator: (v) => v == null ? l.required : null,
           ),
@@ -89,7 +108,7 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
                 Icon(Icons.calendar_today, color: primary, size: 16),
                 const SizedBox(width: 10),
                 Text(
-                  _selectedDate == null ? l.selectDate : DateFormat('MMM dd, yyyy').format(_selectedDate!),
+                  _selectedDate == null ? l.selectDate : _formatSelectedDate(_selectedDate!),
                   style: TextStyle(color: _selectedDate == null ? textSecondary : textPrimary, fontSize: 13),
                 ),
               ]),

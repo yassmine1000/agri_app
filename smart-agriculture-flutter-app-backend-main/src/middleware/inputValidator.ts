@@ -29,10 +29,8 @@ const loginSchema = Joi.object({
 });
 
 export const validateRegister = (req: Request, res: Response, next: NextFunction) => {
-  console.log("VALIDATOR BODY:", JSON.stringify(req.body)); // ← AJOUTE
   const { error } = registerSchema.validate(req.body);
   if (error) {
-      console.log("JOI ERROR:", error.details[0].message); // ← AJOUTE
       return res.status(400).json({
           status: 400,
           message: error.details[0].message,

@@ -7,8 +7,11 @@ class CropPlanning {
   final String? notes;
   final bool irrigationReminder;
   final bool fertilizerReminder;
-  final String? cropName; // Make this nullable
-  final String? createdAt; // Add this field
+  final String? planName;     // Custom plan name
+  final String? cropName;     // English — fallback
+  final String? cropNameFr;   // French
+  final String? cropNameAr;   // Arabic
+  final String? createdAt;
 
   CropPlanning({
     required this.id,
@@ -19,9 +22,19 @@ class CropPlanning {
     this.notes,
     required this.irrigationReminder,
     required this.fertilizerReminder,
-    this.cropName, // Make this optional
-    this.createdAt, // Make this optional
+    this.planName,
+    this.cropName,
+    this.cropNameFr,
+    this.cropNameAr,
+    this.createdAt,
   });
+
+  /// Returns the crop name in the given language code ('EN', 'FR', 'AR')
+  String localizedName(String lang) {
+    if (lang == 'FR' && cropNameFr != null && cropNameFr!.isNotEmpty) return cropNameFr!;
+    if (lang == 'AR' && cropNameAr != null && cropNameAr!.isNotEmpty) return cropNameAr!;
+    return cropName ?? '';
+  }
 
   factory CropPlanning.fromJson(Map<String, dynamic> json) {
     return CropPlanning(
@@ -33,14 +46,18 @@ class CropPlanning {
       notes: json['notes'],
       irrigationReminder: json['irrigation_reminder'],
       fertilizerReminder: json['fertilizer_reminder'],
-      cropName: json['crop_name'], // This can be null now
-      createdAt: json['created_at'], // This can be null
+      planName:   json['plan_name'],
+      cropName:   json['crop_name'],
+      cropNameFr: json['crop_name_fr'],
+      cropNameAr: json['crop_name_ar'],
+      createdAt:  json['created_at'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'crop_id': cropId,
+      'plan_name': planName,
       'start_date': startDate,
       'expected_harvest_date': expectedHarvestDate,
       'notes': notes,

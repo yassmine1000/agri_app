@@ -130,14 +130,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tools => 'TOOLS';
 
   @override
-  String get diseaseDetection => 'Disease Detection';
+  String get diseaseDetection => 'Diseases Detection';
 
   @override
   String get diseaseDetectionDesc =>
       'Upload or capture a leaf image to identify diseases and get treatment advice instantly.';
 
   @override
-  String get fertilizerRecommendation => 'Fertilizer Recommendation';
+  String get fertilizerRecommendation => 'Fertilizer Recommendations';
 
   @override
   String get fertilizerRecommendationDesc =>
@@ -150,7 +150,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diseases => 'Diseases';
 
   @override
-  String get available => 'Available';
+  String get available => 'Availability';
 
   @override
   String get leafAnalysis => 'Leaf Analysis';
@@ -246,6 +246,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get priceUpdated => 'Price updated successfully';
 
   @override
   String get searchCity => 'Search city...';
@@ -389,7 +392,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about => 'ABOUT';
 
   @override
-  String get appNameLabel => 'App Name';
+  String get appNameLabel => 'Application Name';
 
   @override
   String get version => 'Version';
@@ -702,7 +705,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ureFullName => 'Urea';
 
   @override
-  String get ureElement => 'Nitrogen N 46%';
+  String get ureElement => 'Nitrogen (N) 46%';
 
   @override
   String get ureUsage =>
@@ -712,7 +715,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dapFullName => 'Di-Ammonium Phosphate';
 
   @override
-  String get dapElement => 'Nitrogen N 18% + Phosphorus P 46%';
+  String get dapElement => 'Nitrogen (N) 18% + Phosphorus (P) 46%';
 
   @override
   String get dapUsage =>
@@ -722,7 +725,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mopFullName => 'Muriate of Potash';
 
   @override
-  String get mopElement => 'Potassium K 60%';
+  String get mopElement => 'Potassium (K) 60%';
 
   @override
   String get mopUsage =>
@@ -732,7 +735,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sspFullName => 'Single Super Phosphate';
 
   @override
-  String get sspElement => 'Phosphorus P 16-20% + Sulfur + Calcium';
+  String get sspElement => 'Phosphorus (P) 16-20% + Sulfur + Calcium';
 
   @override
   String get sspUsage =>
@@ -784,4 +787,122 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chipNpk => 'N·P·K';
+
+  @override
+  String get myQrCode => 'My QR Code';
+
+  @override
+  String get scanner => 'Scanner';
+
+  @override
+  String get yourPersonalQr => 'Your personal QR Code';
+
+  @override
+  String get scanToLogin => 'Have someone scan this code to log in';
+
+  @override
+  String get saveToGallery => 'Save to Gallery';
+
+  @override
+  String get qrSaved => 'QR code saved to gallery!';
+
+  @override
+  String get qrSaveError => 'Error saving QR code';
+
+  @override
+  String get pointCamera => 'Point the camera at an AgriScan QR code';
+
+  @override
+  String get importFromGallery => 'Import from Gallery';
+
+  @override
+  String get noQrFound => 'No QR code found in this image';
+
+  @override
+  String get invalidQr => 'Invalid QR code';
+
+  @override
+  String get qrSecurityNote =>
+      'This QR code is unique to your account. Do not share it with strangers.';
+
+  @override
+  String get retryLoad => 'Retry';
+
+  @override
+  String get loginRequired => 'Please log in to see your QR code';
+
+  @override
+  String get qrLoadError => 'Unable to load QR code';
+
+  @override
+  String get yourQrCode => 'Your QR Code';
+
+  @override
+  String get accountCreated => 'Account created successfully!';
+
+  @override
+  String get saveYourQr => 'Save your personal QR code';
+
+  @override
+  String get qrWarning =>
+      'This QR code is shown only once. Download it now to use it for login.';
+
+  @override
+  String get downloadToGallery => 'Download to Gallery';
+
+  @override
+  String get qrDownloaded => 'QR code saved!';
+
+  @override
+  String get continueToLogin => 'Continue to login';
+
+  @override
+  String get qrProfileNote =>
+      'You can find this QR code in your profile after logging in.';
+
+  @override
+  String get stockAvailable => 'In stock';
+
+  @override
+  String get stockUnavailable => 'Out of stock';
+
+  @override
+  String get toggleStock => 'Toggle stock status';
+
+  @override
+  String get taskDeleted => 'Task deleted successfully';
+
+  @override
+  String get planDeleted => 'Plan deleted successfully';
+
+  @override
+  String get emailAlreadyExists =>
+      'This email address is already associated with an account';
+
+  @override
+  String get usernameAlreadyExists => 'This username is already taken';
+
+  @override
+  String get failedToLoadProducts => 'Failed to load products';
+
+  @override
+  String get failedToLoadPrices => 'Failed to load prices';
+
+  @override
+  String get failedToLoadUsers => 'Failed to load users';
+
+  @override
+  String get failedToLoadProfile => 'Failed to load profile';
+
+  @override
+  String get failedToLoadHistory => 'Failed to load history';
+
+  @override
+  String get farmerAccessOnly => 'Access reserved for farmers';
+
+  @override
+  String get adminAccessOnly => 'Access reserved for administrators';
+
+  @override
+  String get planName => 'Plan name';
 }

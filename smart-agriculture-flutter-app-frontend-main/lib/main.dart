@@ -11,9 +11,11 @@ import 'package:smart_agri_app/screens/splash_screen.dart';
 import 'package:smart_agri_app/service/agmarknet_service.dart';
 import 'package:smart_agri_app/service/weather_api_service.dart';
 import 'package:smart_agri_app/utils/app_theme.dart';
+import 'package:smart_agri_app/service/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
   final prefs = await SharedPreferences.getInstance();
   final savedLang = prefs.getString('language') ?? 'EN';
   final isDark = prefs.getBool('is_dark_mode') ?? true;

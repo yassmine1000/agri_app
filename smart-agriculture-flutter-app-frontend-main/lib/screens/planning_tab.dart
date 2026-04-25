@@ -5,6 +5,7 @@ import 'package:smart_agri_app/utils/app_theme.dart';
 import 'package:smart_agri_app/screens/planning_details_screen.dart';
 import '../models/planning/crop_planning.dart';
 import '../service/crop_service.dart';
+import '../local/pref_helper.dart';
 import '../utils/create_planning_dialog.dart';
 
 class PlanningTab extends StatefulWidget {
@@ -24,6 +25,7 @@ class PlanningTab extends StatefulWidget {
 class _PlanningTabState extends State<PlanningTab> {
   Future<List<CropPlanning>>? futurePlanning;
   String _lang = 'EN';
+  String _userRole = 'customer';
 
   @override
   void initState() {
@@ -33,9 +35,11 @@ class _PlanningTabState extends State<PlanningTab> {
 
   Future<void> _initWithLang() async {
     final prefs = await SharedPreferences.getInstance();
+    final user = await PrefHelper.getUser();
     if (!mounted) return;
     setState(() {
       _lang = prefs.getString('language') ?? 'EN';
+      _userRole = user?['role'] ?? 'customer';
       futurePlanning = widget.cropService.getCropPlannings();
     });
   }
@@ -44,6 +48,14 @@ class _PlanningTabState extends State<PlanningTab> {
     if (!mounted) return;
     _initWithLang();
   }
+  String _localizeError(String error, AppLocalizations l) {
+  final msg = error.toLowerCase();
+  if (msg.contains('farmer') || msg.contains('access only') || msg.contains('403')) {
+    return l.farmerAccessOnly;
+  }
+  if (msg.contains('admin')) return l.adminAccessOnly;
+  return l.anErrorOccurred;
+}
 
   void _showCreatePlanningDialog() {
     showDialog(
@@ -84,7 +96,7 @@ class _PlanningTabState extends State<PlanningTab> {
       try {
         await widget.cropService.deletePlanning(p.id);
         _refreshPlanning();
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_lang == 'FR' ? 'Plan supprimé' : 'Plan deleted')));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.planDeleted)));
       } catch (e) {
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
       }
@@ -123,9 +135,13 @@ class _PlanningTabState extends State<PlanningTab> {
               return Center(child: CircularProgressIndicator(color: primary));
             } else if (snapshot.hasError) {
               return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(Icons.error_outline, color: textSecondary, size: 48),
+                Icon(Icons.lock_outline, color: textSecondary, size: 48),
+
                 const SizedBox(height: 12),
-                Text('${snapshot.error}', style: TextStyle(color: textSecondary, fontSize: 13)),
+                Text(_localizeError('${snapshot.error}', l),
+                  style: TextStyle(color: textSecondary, fontSize: 13),
+              ),
+
                 const SizedBox(height: 16),
                 ElevatedButton(onPressed: _refreshPlanning, style: ElevatedButton.styleFrom(backgroundColor: primary), child: Text(l.retry, style: TextStyle(color: bg))),
               ]));
@@ -159,7 +175,7 @@ class _PlanningTabState extends State<PlanningTab> {
                         Container(width: 36, height: 36, decoration: BoxDecoration(color: primary.withOpacity(0.1), borderRadius: BorderRadius.circular(10)), child: Icon(Icons.eco_outlined, color: primary, size: 18)),
                         const SizedBox(width: 10),
                         Expanded(child: Text(
-                          p.cropName ?? (_lang == 'FR' ? 'Culture inconnue' : 'Unknown Crop'),
+                          p.localizedName(_lang).isNotEmpty ? p.localizedName(_lang) : (_lang == 'FR' ? 'Culture inconnue' : _lang == 'AR' ? 'محصول غير معروف' : 'Unknown Crop'),
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary),
                         )),
                         // 3 points menu
@@ -188,11 +204,11 @@ class _PlanningTabState extends State<PlanningTab> {
                       Row(children: [
                         Icon(Icons.play_circle_outline, size: 11, color: textSecondary),
                         const SizedBox(width: 4),
-                        Text('${_lang == 'FR' ? 'Début' : 'Start'}: ${_formatDate(p.startDate)}', style: TextStyle(color: textSecondary, fontSize: 11)),
+                        Text('${_lang == 'FR' ? 'Début' : _lang == 'AR' ? 'البداية' : 'Start'}: ${_formatDate(p.startDate)}', style: TextStyle(color: textSecondary, fontSize: 11)),
                         const SizedBox(width: 12),
                         Icon(Icons.calendar_month, size: 11, color: textSecondary),
                         const SizedBox(width: 4),
-                        Text('${_lang == 'FR' ? 'Récolte' : 'Harvest'}: ${_formatDate(p.expectedHarvestDate)}', style: TextStyle(color: textSecondary, fontSize: 11)),
+                        Text('${_lang == 'FR' ? 'Récolte' : _lang == 'AR' ? 'الحصاد' : 'Harvest'}: ${_formatDate(p.expectedHarvestDate)}', style: TextStyle(color: textSecondary, fontSize: 11)),
                       ]),
                       if (p.notes != null && p.notes!.isNotEmpty) ...[
                         const SizedBox(height: 8),
@@ -201,8 +217,8 @@ class _PlanningTabState extends State<PlanningTab> {
                       if (p.irrigationReminder || p.fertilizerReminder) ...[
                         const SizedBox(height: 10),
                         Wrap(spacing: 8, children: [
-                          if (p.irrigationReminder) _badge('💧 Irrigation', cyan),
-                          if (p.fertilizerReminder) _badge('🌿 ${_lang == 'FR' ? 'Engrais' : 'Fertilizer'}', primary),
+                          if (p.irrigationReminder) _badge('💧 ${_lang == 'FR' ? 'Irrigation' : _lang == 'AR' ? 'ري' : 'Irrigation'}', cyan),
+                          if (p.fertilizerReminder) _badge('🌿 ${_lang == 'FR' ? 'Engrais' : _lang == 'AR' ? 'تسميد' : 'Fertilizer'}', primary),
                         ]),
                       ],
                     ]),
@@ -213,13 +229,14 @@ class _PlanningTabState extends State<PlanningTab> {
           },
         ),
       ),
-      Positioned(
-        bottom: 16, right: 16,
-        child: Container(
-          decoration: BoxDecoration(gradient: LinearGradient(colors: [primary, cyan]), borderRadius: BorderRadius.circular(16)),
-          child: FloatingActionButton(onPressed: _showCreatePlanningDialog, backgroundColor: Colors.transparent, elevation: 0, child: Icon(Icons.add, color: bg)),
+      if (_userRole == 'farmer' || _userRole == 'admin')
+        Positioned(
+          bottom: 16, right: 16,
+          child: Container(
+            decoration: BoxDecoration(gradient: LinearGradient(colors: [primary, cyan]), borderRadius: BorderRadius.circular(16)),
+            child: FloatingActionButton(onPressed: _showCreatePlanningDialog, backgroundColor: Colors.transparent, elevation: 0, child: Icon(Icons.add, color: bg)),
+          ),
         ),
-      ),
     ]);
   }
 

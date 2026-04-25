@@ -75,6 +75,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     super.dispose();
   }
 
+  String _formatDobDisplay(DateTime date, String lang) {
+    if (lang == 'AR') {
+      const months = ['جانفي','فيفري','مارس','أفريل','ماي','جوان','جويلية','أوت','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+      return '${date.day} ${months[date.month - 1]} ${date.year}';
+    }
+    if (lang == 'FR') {
+      const months = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+      return '${date.day} ${months[date.month - 1]} ${date.year}';
+    }
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
   Future<void> _pickDOB() async {
     final picked = await showDatePicker(
       context: context,
@@ -91,7 +104,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (picked != null) {
       setState(() {
         _dob = '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
-        _dobCtrl.text = '${picked.day}/${picked.month}/${picked.year}';
+        final lang = Localizations.localeOf(context).languageCode.toUpperCase();
+        _dobCtrl.text = _formatDobDisplay(picked, lang);
       });
     }
   }

@@ -6,13 +6,13 @@ import crypto from "crypto";
 import pool from "../config/database";
 
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+const JWT_SECRET = process.env.JWT_SECRET || "agriscan_fallback_secret";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "agriscan2026@gmail.com",
-    pass: "sfyb onja eznx dszn",
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
   },
 });
 
@@ -133,7 +133,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
     const expiry = new Date(Date.now() + 15 * 60 * 1000);
     await pool.query("UPDATE users SET reset_token = $1, reset_token_expiry = $2 WHERE id = $3", [resetCode, expiry, user.id]);
     await transporter.sendMail({
-      from: '"AgriScan 🌿" <agriscan2026@gmail.com>',
+      from: `"AgriScan 🌿" <${process.env.MAIL_USER}>`,
       to: email,
       subject: "AgriScan — Code de réinitialisation",
       html: `

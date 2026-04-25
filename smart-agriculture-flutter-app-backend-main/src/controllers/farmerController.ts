@@ -21,14 +21,14 @@ export const getCropLibrary = async (_req: Request, res: Response, next: NextFun
 // Create crop planning for a farmer
 export const createCropPlanning = async (req: Request, res: Response, next: NextFunction) => {
     const userId = (req.user as any).userId;
-    const { crop_id, start_date, expected_harvest_date, notes, irrigation_reminder, fertilizer_reminder } = req.body;
+    const { crop_id, plan_name, start_date, expected_harvest_date, notes, irrigation_reminder, fertilizer_reminder } = req.body;
 
     try {
         const result = await pool.query(
             `INSERT INTO crop_planning 
-            (user_id, crop_id, start_date, expected_harvest_date, notes, irrigation_reminder, fertilizer_reminder)
-            VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-            [userId, crop_id, start_date, expected_harvest_date, notes || null,
+            (user_id, crop_id, plan_name, start_date, expected_harvest_date, notes, irrigation_reminder, fertilizer_reminder)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+            [userId, crop_id, plan_name || null, start_date, expected_harvest_date, notes || null,
                 irrigation_reminder || false, fertilizer_reminder || false]
         );
         res.status(201).json({ status: "success", data: result.rows[0] });
@@ -42,7 +42,7 @@ export const getCropPlanning = async (req: Request, res: Response, next: NextFun
     const userId = (req.user as any).userId;
     try {
         const result = await pool.query(
-            `SELECT cp.*, c.name AS crop_name FROM crop_planning cp
+            `SELECT cp.*, c.name AS crop_name, c.name_fr AS crop_name_fr, c.name_ar AS crop_name_ar FROM crop_planning cp
              JOIN crop_library c ON cp.crop_id = c.id
              WHERE cp.user_id = $1 ORDER BY cp.start_date`,
             [userId]
@@ -60,15 +60,16 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
 
     try {
         const planningCheck = await pool.query(
-            `SELECT id FROM crop_planning WHERE id=$1 AND user_id=$2`,
+            `SELECT id, plan_name FROM crop_planning WHERE id=$1 AND user_id=$2`,
             [planning_id, userId]
         );
         if (planningCheck.rowCount === 0) {
             return res.status(403).json({ status: "fail", message: "Unauthorized or invalid planning" });
         }
+        const plan_name = planningCheck.rows[0].plan_name || null;
         const result = await pool.query(
-            `INSERT INTO crop_tasks (planning_id, task_type, task_date) VALUES ($1, $2, $3) RETURNING *`,
-            [planning_id, task_type, task_date]
+            `INSERT INTO crop_tasks (planning_id, task_type, task_date, plan_name) VALUES ($1, $2, $3, $4) RETURNING *`,
+            [planning_id, task_type, task_date, plan_name]
         );
         res.status(201).json({ status: "success", data: result.rows[0] });
     } catch (error) {
@@ -81,7 +82,7 @@ export const getTasksCalendar = async (req: Request, res: Response, next: NextFu
     const userId = (req.user as any).userId;
     try {
         const result = await pool.query(
-            `SELECT t.id, t.task_type, t.task_date, t.status, cp.crop_id, c.name AS crop_name
+            `SELECT t.id, t.task_type, t.task_date, t.status, cp.crop_id, c.name AS crop_name, c.name_fr AS crop_name_fr, c.name_ar AS crop_name_ar
              FROM crop_tasks t
              JOIN crop_planning cp ON t.planning_id = cp.id
              JOIN crop_library c ON cp.crop_id = c.id
@@ -109,7 +110,7 @@ export const getTasksByPlanningId = async (req: Request, res: Response, next: Ne
             return res.status(404).json({ status: "fail", message: "Planning not found or unauthorized" });
         }
         const result = await pool.query(
-            `SELECT t.*, c.name AS crop_name
+            `SELECT t.*, c.name AS crop_name, c.name_fr AS crop_name_fr, c.name_ar AS crop_name_ar
              FROM crop_tasks t
              JOIN crop_planning cp ON t.planning_id = cp.id
              JOIN crop_library c ON cp.crop_id = c.id

@@ -73,8 +73,7 @@ class DiseaseBloc extends Bloc<DiseaseEvent, DiseaseState> {
       final lang = await _getLanguage();
       print("LANGUE DETECTEE: '$lang'");
 
-      final baseUrl = Config.baseUrl.replaceAll('/api', '');
-      final apiUrl = '$baseUrl/predict?lang=$lang';
+      final apiUrl = '${Config.serverUrl}/predict?lang=$lang';
 
       final formData = FormData();
       formData.files.add(MapEntry(

@@ -248,6 +248,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get retry => 'إعادة المحاولة';
 
   @override
+  String get priceUpdated => 'تم تحديث السعر بنجاح';
+
+  @override
   String get searchCity => 'البحث عن مدينة...';
 
   @override
@@ -514,7 +517,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nameRequired => 'الاسم الكامل مطلوب';
 
   @override
-  String get phoneInvalid => 'يجب أن يحتوي رقم الهاتف على 8 أرقام على الأقل';
+  String get phoneInvalid => 'رقم هاتف أقل من 8 أرقام';
 
   @override
   String get anErrorOccurred => 'حدث خطأ ما';
@@ -547,10 +550,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get regNoRequired => 'رقم التسجيل مطلوب';
 
   @override
-  String get passwordMin => 'يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل';
+  String get passwordMin => 'كلمة مرور أقل من 6 أحرف';
 
   @override
-  String get usernameMin => 'يجب أن يحتوي اسم المستخدم على 3 أحرف على الأقل';
+  String get usernameMin => 'اسم المستخدم أقل من 3 أحرف';
 
   @override
   String get onboardingTitle1 => 'كشف ذكي للأمراض';
@@ -701,7 +704,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ureFullName => 'يوريا';
 
   @override
-  String get ureElement => 'نيتروجين N 46%';
+  String get ureElement => 'نيتروجين (N) 46%';
 
   @override
   String get ureUsage =>
@@ -711,7 +714,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dapFullName => 'فوسفات الأمونيوم الثنائي';
 
   @override
-  String get dapElement => 'نيتروجين N 18% + فوسفور P 46%';
+  String get dapElement => 'نيتروجين (N) 18% + فوسفور (P) 46%';
 
   @override
   String get dapUsage =>
@@ -721,7 +724,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mopFullName => 'كلوريد البوتاسيوم';
 
   @override
-  String get mopElement => 'بوتاسيوم K 60%';
+  String get mopElement => 'بوتاسيوم (K) 60%';
 
   @override
   String get mopUsage =>
@@ -731,7 +734,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sspFullName => 'سوبر فوسفات بسيط';
 
   @override
-  String get sspElement => 'فوسفور P 16-20% + كبريت + كالسيوم';
+  String get sspElement => 'فوسفور (P) 16-20% + كبريت + كالسيوم';
 
   @override
   String get sspUsage =>
@@ -783,4 +786,121 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chipNpk => 'N·P·K';
+
+  @override
+  String get myQrCode => 'رمز QR الخاص بي';
+
+  @override
+  String get scanner => 'مسح';
+
+  @override
+  String get yourPersonalQr => 'رمز QR الشخصي الخاص بك';
+
+  @override
+  String get scanToLogin => 'اطلب من شخص ما مسح هذا الرمز لتسجيل الدخول';
+
+  @override
+  String get saveToGallery => 'حفظ في المعرض';
+
+  @override
+  String get qrSaved => 'تم حفظ رمز QR في المعرض!';
+
+  @override
+  String get qrSaveError => 'خطأ في حفظ رمز QR';
+
+  @override
+  String get pointCamera => 'وجّه الكاميرا نحو رمز QR الخاص بـ AgriScan';
+
+  @override
+  String get importFromGallery => 'استيراد من المعرض';
+
+  @override
+  String get noQrFound => 'لم يتم العثور على رمز QR في هذه الصورة';
+
+  @override
+  String get invalidQr => 'رمز QR غير صالح';
+
+  @override
+  String get qrSecurityNote => 'رمز QR هذا خاص بحسابك. لا تشاركه مع الغرباء.';
+
+  @override
+  String get retryLoad => 'إعادة المحاولة';
+
+  @override
+  String get loginRequired => 'يرجى تسجيل الدخول لعرض رمز QR الخاص بك';
+
+  @override
+  String get qrLoadError => 'تعذر تحميل رمز QR';
+
+  @override
+  String get yourQrCode => 'رمز QR الخاص بك';
+
+  @override
+  String get accountCreated => 'تم إنشاء الحساب بنجاح!';
+
+  @override
+  String get saveYourQr => 'احفظ رمز QR الشخصي الخاص بك';
+
+  @override
+  String get qrWarning =>
+      'يظهر رمز QR هذا مرة واحدة فقط. قم بتنزيله الآن لاستخدامه في تسجيل الدخول.';
+
+  @override
+  String get downloadToGallery => 'تنزيل في المعرض';
+
+  @override
+  String get qrDownloaded => 'تم حفظ رمز QR!';
+
+  @override
+  String get continueToLogin => 'المتابعة إلى تسجيل الدخول';
+
+  @override
+  String get qrProfileNote =>
+      'يمكنك العثور على رمز QR هذا في ملفك الشخصي بعد تسجيل الدخول.';
+
+  @override
+  String get stockAvailable => 'متوفر في المخزون';
+
+  @override
+  String get stockUnavailable => 'غير متوفر';
+
+  @override
+  String get toggleStock => 'تغيير حالة المخزون';
+
+  @override
+  String get taskDeleted => 'تم حذف المهمة بنجاح';
+
+  @override
+  String get planDeleted => 'تم حذف الخطة بنجاح';
+
+  @override
+  String get emailAlreadyExists =>
+      'هذا البريد الإلكتروني مرتبط بحساب موجود مسبقاً';
+
+  @override
+  String get usernameAlreadyExists => 'اسم المستخدم هذا مأخوذ مسبقاً';
+
+  @override
+  String get failedToLoadProducts => 'تعذّر تحميل المنتجات';
+
+  @override
+  String get failedToLoadPrices => 'تعذّر تحميل الأسعار';
+
+  @override
+  String get failedToLoadUsers => 'تعذّر تحميل المستخدمين';
+
+  @override
+  String get failedToLoadProfile => 'تعذّر تحميل الملف الشخصي';
+
+  @override
+  String get failedToLoadHistory => 'تعذّر تحميل السجل';
+
+  @override
+  String get farmerAccessOnly => 'الوصول مخصص للمزارعين فقط';
+
+  @override
+  String get adminAccessOnly => 'الوصول مخصص للمسؤولين فقط';
+
+  @override
+  String get planName => 'اسم الخطة';
 }

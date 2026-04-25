@@ -137,7 +137,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Prenez ou importez une photo de feuille pour identifier les maladies et obtenir des conseils instantanément.';
 
   @override
-  String get fertilizerRecommendation => 'Recommandation d\'engrais';
+  String get fertilizerRecommendation => 'Recommandations d\'engrais';
 
   @override
   String get fertilizerRecommendationDesc =>
@@ -150,14 +150,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get diseases => 'Maladies';
 
   @override
-  String get available => 'Disponible';
+  String get available => 'Disponibilité';
 
   @override
-  String get leafAnalysis => 'Analyse de feuille';
+  String get leafAnalysis => 'Analyse de la feuille';
 
   @override
   String get leafAnalysisDesc =>
-      'Prenez ou importez une photo de feuille pour détecter les maladies des plantes par IA.';
+      'Prenez ou importez une photo de feuille pour détecter les maladies des plantes grâce à l\'IA.';
 
   @override
   String get takePhoto => 'Prendre une photo';
@@ -188,7 +188,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tipText =>
-      'Pour de meilleurs résultats, prenez une photo nette d\'une seule feuille avec un bon éclairage.';
+      'Pour de meilleurs résultats, photographiez une seule feuille de façon nette et sous un bon éclairage.';
 
   @override
   String get detectionResults => 'Résultats de détection';
@@ -246,6 +246,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get retry => 'Réessayer';
+
+  @override
+  String get priceUpdated => 'Prix mis à jour avec succès';
 
   @override
   String get searchCity => 'Rechercher une ville...';
@@ -353,7 +356,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get darkMode => 'Mode sombre';
 
   @override
-  String get darkModeDesc => 'Basculer entre le thème sombre et clair';
+  String get darkModeDesc => 'Basculer entre les thèmes sombre et clair';
 
   @override
   String get imageQuality => 'QUALITÉ D\'IMAGE';
@@ -362,13 +365,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get low => 'Faible';
 
   @override
-  String get lowDesc => 'Upload plus rapide, moins de détails';
+  String get lowDesc => 'Télechargement plus rapide, moins de détails';
 
   @override
   String get medium => 'Moyenne';
 
   @override
-  String get mediumDesc => 'Équilibre vitesse et qualité';
+  String get mediumDesc => 'Équilibre entre vitesse et qualité';
 
   @override
   String get high => 'Haute';
@@ -389,7 +392,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get about => 'À PROPOS';
 
   @override
-  String get appNameLabel => 'Nom de l\'app';
+  String get appNameLabel => 'Nom de l\'application';
 
   @override
   String get version => 'Version';
@@ -581,7 +584,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get getStarted => 'Commencer';
 
   @override
-  String get skip => 'Ignorer';
+  String get skip => 'Passer';
 
   @override
   String get next => 'Suivant';
@@ -632,8 +635,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fertilizerResult => 'Recommandation d\'engrais';
 
   @override
-  String get fertilizerDesc =>
-      'Entrez les détails de votre sol et de votre culture pour obtenir des recommandations personnalisées.';
+  String get fertilizerDesc => 'Saisissez les caractéristiques de votre sol.';
 
   @override
   String get selectStage => 'Veuillez sélectionner un stade';
@@ -708,7 +710,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ureFullName => 'Urée';
 
   @override
-  String get ureElement => 'Azote N 46%';
+  String get ureElement => 'Azote (N) 46%';
 
   @override
   String get ureUsage =>
@@ -718,7 +720,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dapFullName => 'Di-Ammonium Phosphate';
 
   @override
-  String get dapElement => 'Azote N 18% + Phosphore P 46%';
+  String get dapElement => 'Azote (N) 18% + Phosphore (P) 46%';
 
   @override
   String get dapUsage =>
@@ -728,7 +730,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get mopFullName => 'Muriate of Potash';
 
   @override
-  String get mopElement => 'Potassium K 60%';
+  String get mopElement => 'Potassium (K) 60%';
 
   @override
   String get mopUsage =>
@@ -738,7 +740,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sspFullName => 'Single Super Phosphate';
 
   @override
-  String get sspElement => 'Phosphore P 16-20% + Soufre + Calcium';
+  String get sspElement => 'Phosphore (P) 16-20% + Soufre + Calcium';
 
   @override
   String get sspUsage =>
@@ -790,4 +792,122 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chipNpk => 'N·P·K';
+
+  @override
+  String get myQrCode => 'Mon QR Code';
+
+  @override
+  String get scanner => 'Scanner';
+
+  @override
+  String get yourPersonalQr => 'Votre QR Code personnel';
+
+  @override
+  String get scanToLogin => 'Faites scanner ce code pour vous connecter';
+
+  @override
+  String get saveToGallery => 'Sauvegarder dans la galerie';
+
+  @override
+  String get qrSaved => 'QR code sauvegardé dans la galerie !';
+
+  @override
+  String get qrSaveError => 'Erreur lors de la sauvegarde';
+
+  @override
+  String get pointCamera => 'Pointez la caméra vers un QR code AgriScan';
+
+  @override
+  String get importFromGallery => 'Importer depuis la galerie';
+
+  @override
+  String get noQrFound => 'Aucun QR code trouvé dans cette image';
+
+  @override
+  String get invalidQr => 'QR code invalide';
+
+  @override
+  String get qrSecurityNote =>
+      'Ce QR code est unique à votre compte. Ne le partagez pas avec des inconnus.';
+
+  @override
+  String get retryLoad => 'Réessayer';
+
+  @override
+  String get loginRequired => 'Connectez-vous pour voir votre QR code';
+
+  @override
+  String get qrLoadError => 'Impossible de charger le QR code';
+
+  @override
+  String get yourQrCode => 'Votre QR Code';
+
+  @override
+  String get accountCreated => 'Compte créé avec succès !';
+
+  @override
+  String get saveYourQr => 'Sauvegardez votre QR code personnel';
+
+  @override
+  String get qrWarning =>
+      'Ce QR code ne s\'affiche qu\'une seule fois. Téléchargez-le maintenant.';
+
+  @override
+  String get downloadToGallery => 'Télécharger dans la galerie';
+
+  @override
+  String get qrDownloaded => 'QR code sauvegardé !';
+
+  @override
+  String get continueToLogin => 'Continuer vers la connexion';
+
+  @override
+  String get qrProfileNote =>
+      'Vous retrouverez ce QR code dans votre profil après connexion.';
+
+  @override
+  String get stockAvailable => 'En stock';
+
+  @override
+  String get stockUnavailable => 'Rupture de stock';
+
+  @override
+  String get toggleStock => 'Changer le statut du stock';
+
+  @override
+  String get taskDeleted => 'Tâche supprimée avec succès';
+
+  @override
+  String get planDeleted => 'Plan supprimé avec succès';
+
+  @override
+  String get emailAlreadyExists =>
+      'Cette adresse email est déjà associée à un compte';
+
+  @override
+  String get usernameAlreadyExists => 'Ce nom d\'utilisateur est déjà pris';
+
+  @override
+  String get failedToLoadProducts => 'Impossible de charger les produits';
+
+  @override
+  String get failedToLoadPrices => 'Impossible de charger les prix';
+
+  @override
+  String get failedToLoadUsers => 'Impossible de charger les utilisateurs';
+
+  @override
+  String get failedToLoadProfile => 'Impossible de charger le profil';
+
+  @override
+  String get failedToLoadHistory => 'Impossible de charger l\'historique';
+
+  @override
+  String get farmerAccessOnly => 'Accès réservé aux agriculteurs';
+
+  @override
+  String get adminAccessOnly => 'Accès réservé aux administrateurs';
+
+  @override
+  String get planName => 'Nom du plan';
 }

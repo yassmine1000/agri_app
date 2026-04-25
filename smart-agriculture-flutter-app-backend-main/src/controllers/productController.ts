@@ -36,7 +36,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
       `INSERT INTO products (name, name_fr, name_ar, price, category, category_fr, category_ar, description, description_fr, description_ar, image_url, stock_available)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
       [name, name_fr || name, name_ar || name, parseFloat(price), category, category_fr || category, category_ar || category,
-       description || null, description_fr || null, description_ar || null, imageUrl, stock_available !== 'false']
+       description || null, description_fr || null, description_ar || null, imageUrl, stock_available === true || stock_available === 'true']
     );
     res.status(201).json({ status: "success", data: result.rows[0] });
   } catch (error) {
@@ -71,8 +71,8 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
         ${imageUrl ? ', image_url=$13' : ''}
        WHERE id=$12 RETURNING *`,
       imageUrl
-        ? [name, name_fr, name_ar, parseFloat(price), category, category_fr, category_ar, description, description_fr, description_ar, stock_available !== 'false', id, imageUrl]
-        : [name, name_fr, name_ar, parseFloat(price), category, category_fr, category_ar, description, description_fr, description_ar, stock_available !== 'false', id]
+        ? [name, name_fr, name_ar, parseFloat(price), category, category_fr, category_ar, description, description_fr, description_ar, stock_available === true || stock_available === 'true', id, imageUrl]
+        : [name, name_fr, name_ar, parseFloat(price), category, category_fr, category_ar, description, description_fr, description_ar, stock_available === true || stock_available === 'true', id]
     );
     if (result.rows.length === 0) return res.status(404).json({ message: "Product not found" });
     res.json({ status: "success", data: result.rows[0] });

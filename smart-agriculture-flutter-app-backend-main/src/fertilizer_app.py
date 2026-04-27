@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify
 import joblib
 import numpy as np
 
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok'}), 200
+
 # Initialize the Flask app
 app = Flask(__name__)
 

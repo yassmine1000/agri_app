@@ -23,6 +23,8 @@ import productRoute from "./routes/productRoute";
 dotenv.config();
 
 const app = express();
+
+app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 const port = process.env.PORT || 6070;
 
 const upload = multer({ dest: "uploads/" });

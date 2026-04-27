@@ -5,6 +5,10 @@ import numpy as np
 from PIL import Image
 import io, json, random
 
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok'}), 200
+
 # ── Charger les classes ──────────────────────────────────────────
 with open("class_indices.json", "r") as f:
     class_indices = json.load(f)

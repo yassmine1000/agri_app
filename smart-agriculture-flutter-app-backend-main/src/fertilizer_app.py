@@ -2,12 +2,15 @@ from flask import Flask, request, jsonify
 import joblib
 import numpy as np
 
+
+# Initialize the Flask app
+app = Flask(__name__)
+
 @app.route('/health')
 def health():
     return jsonify({'status': 'ok'}), 200
 
-# Initialize the Flask app
-app = Flask(__name__)
+
 
 # Load the trained model and label encoders
 model = joblib.load('fertilizer_model.pkl')

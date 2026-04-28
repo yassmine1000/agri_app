@@ -8,9 +8,10 @@ export const getCropLibrary = async (_req: Request, res: Response, next: NextFun
             SELECT id, name, name_fr, name_ar,
                    ideal_season, ideal_season_fr, ideal_season_ar,
                    duration_days, duration_label_en, duration_label_fr, duration_label_ar,
-                   ideal_sowing_period, ideal_sowing_period_fr, ideal_sowing_period_ar
+                   ideal_sowing_period, ideal_sowing_period_fr, ideal_sowing_period_ar,
+                   category
             FROM crop_library 
-            ORDER BY id ASC
+            ORDER BY category ASC, id ASC
         `);
         res.json({ status: "success", data: result.rows });
     } catch (error) {

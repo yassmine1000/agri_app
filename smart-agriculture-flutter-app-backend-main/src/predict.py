@@ -1,13 +1,20 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
+import urllib.request
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 import io, json, random
 
-@app.route('/health')
-def health():
-    return jsonify({'status': 'ok'}), 200
+def download_file(file_id, dest):
+    if not os.path.exists(dest):
+        print(f"Downloading {dest}...")
+        url = f"https://drive.google.com/uc?export=download&id={file_id}&confirm=t"
+        urllib.request.urlretrieve(url, dest)
+        print(f"Downloaded {dest} ({os.path.getsize(dest)} bytes)")
+
+download_file("1UVDI00BUp001MKjm5m12SvID8aM9oBE4", "weights.weights.h5")
 
 # ── Charger les classes ──────────────────────────────────────────
 with open("class_indices.json", "r") as f:

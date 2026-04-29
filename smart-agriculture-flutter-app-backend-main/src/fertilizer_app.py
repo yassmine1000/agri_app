@@ -1,16 +1,21 @@
 from flask import Flask, request, jsonify
 import joblib
 import numpy as np
+import os
+import urllib.request
 
+def download_file(file_id, dest):
+    if not os.path.exists(dest):
+        print(f"Downloading {dest}...")
+        url = f"https://drive.google.com/uc?export=download&id={file_id}&confirm=t"
+        urllib.request.urlretrieve(url, dest)
+        print(f"Downloaded {dest} ({os.path.getsize(dest)} bytes)")
+
+download_file("1V6j2D_OkZc1EGdXAJPWiojPkhBYhSHck", "fertilizer_model.pkl")
+download_file("1BFVHeFKzFOKJ4uW-S6uBOhmEN0na8pLF", "label_encoders.pkl")
 
 # Initialize the Flask app
 app = Flask(__name__)
-
-@app.route('/health')
-def health():
-    return jsonify({'status': 'ok'}), 200
-
-
 
 # Load the trained model and label encoders
 model = joblib.load('fertilizer_model.pkl')

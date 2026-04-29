@@ -12,10 +12,16 @@ import 'package:smart_agri_app/service/agmarknet_service.dart';
 import 'package:smart_agri_app/service/weather_api_service.dart';
 import 'package:smart_agri_app/utils/app_theme.dart';
 import 'package:smart_agri_app/service/notification_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService().init();
+  await NotificationService().requestPermissions();
+  // Disable battery optimization for reliable notifications
+  if (await Permission.ignoreBatteryOptimizations.isDenied) {
+    await Permission.ignoreBatteryOptimizations.request();
+  }
   final prefs = await SharedPreferences.getInstance();
   final savedLang = prefs.getString('language') ?? 'EN';
   final isDark = prefs.getBool('is_dark_mode') ?? true;

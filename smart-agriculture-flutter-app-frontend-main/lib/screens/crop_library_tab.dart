@@ -5,6 +5,51 @@ import 'package:smart_agri_app/utils/app_theme.dart';
 import '../models/planning/crop.dart';
 import '../service/crop_service.dart';
 
+// ── Category enum ────────────────────────────────────────────
+enum CropCategory { vegetable, fruit, cereal, herb }
+
+extension CropCategoryExtension on CropCategory {
+  String get key {
+    switch (this) {
+      case CropCategory.vegetable: return 'vegetable';
+      case CropCategory.fruit:     return 'fruit';
+      case CropCategory.cereal:    return 'cereal';
+      case CropCategory.herb:      return 'herb';
+    }
+  }
+
+  String label(String lang) {
+    switch (this) {
+      case CropCategory.vegetable:
+        if (lang == 'FR') return 'Légumes';
+        if (lang == 'AR') return 'خضروات';
+        return 'Vegetables';
+      case CropCategory.fruit:
+        if (lang == 'FR') return 'Fruits';
+        if (lang == 'AR') return 'فواكه';
+        return 'Fruits';
+      case CropCategory.cereal:
+        if (lang == 'FR') return 'Céréales';
+        if (lang == 'AR') return 'حبوب';
+        return 'Cereals';
+      case CropCategory.herb:
+        if (lang == 'FR') return 'Herbes';
+        if (lang == 'AR') return 'أعشاب';
+        return 'Herbs';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case CropCategory.vegetable: return Icons.eco;
+      case CropCategory.fruit:     return Icons.park;
+      case CropCategory.cereal:    return Icons.grain;
+      case CropCategory.herb:      return Icons.spa;
+    }
+  }
+}
+
+// ── Widget ───────────────────────────────────────────────────
 class CropLibraryTab extends StatefulWidget {
   final CropService cropService;
   final bool isDarkMode;
@@ -19,14 +64,23 @@ class CropLibraryTab extends StatefulWidget {
   State<CropLibraryTab> createState() => _CropLibraryTabState();
 }
 
-class _CropLibraryTabState extends State<CropLibraryTab> {
+class _CropLibraryTabState extends State<CropLibraryTab>
+    with SingleTickerProviderStateMixin {
   Future<List<Crop>>? futureCrops;
   String _lang = 'EN';
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: CropCategory.values.length, vsync: this);
     _initWithLang();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<void> _initWithLang() async {
@@ -52,109 +106,258 @@ class _CropLibraryTabState extends State<CropLibraryTab> {
     return l.anErrorOccurred;
   }
 
+  List<Crop> _filterByCategory(List<Crop> crops, CropCategory cat) {
+    return crops.where((c) => c.category == cat.key).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l    = AppLocalizations.of(context)!;
     final isDark = widget.isDarkMode;
-    final isAr = _lang == 'AR';
-    final bg = isDark ? AppColors.background : AppColorsLight.background;
-    final surface = isDark ? AppColors.surface : AppColorsLight.surface;
-    final border = isDark ? AppColors.border : AppColorsLight.border;
-    final primary = isDark ? AppColors.primary : AppColorsLight.primary;
-    final textPrimary = isDark ? AppColors.textPrimary : AppColorsLight.textPrimary;
-    final textSecondary = isDark ? AppColors.textSecondary : AppColorsLight.textSecondary;
+    final isAr   = _lang == 'AR';
+
+    final bg          = isDark ? AppColors.background       : AppColorsLight.background;
+    final surface     = isDark ? AppColors.surface          : AppColorsLight.surface;
+    final border      = isDark ? AppColors.border           : AppColorsLight.border;
+    final primary     = isDark ? AppColors.primary          : AppColorsLight.primary;
+    final textPrimary = isDark ? AppColors.textPrimary      : AppColorsLight.textPrimary;
+    final textSecondary = isDark ? AppColors.textSecondary  : AppColorsLight.textSecondary;
+    final surfaceAlt  = isDark ? AppColors.surfaceAlt       : AppColorsLight.surfaceAlt;
 
     return Directionality(
       textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
-      child: RefreshIndicator(
-        color: primary,
-        onRefresh: () async { _refreshCrops(); },
-        child: FutureBuilder<List<Crop>>(
-          future: futureCrops ?? Future.value([]),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator(color: primary));
-            } else if (snapshot.hasError) {
-              return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(Icons.lock_outline, color: textSecondary, size: 48),
-                const SizedBox(height: 12),
-                Text(_localizeError('${snapshot.error}', l), style: TextStyle(color: textSecondary, fontSize: 13), textAlign: TextAlign.center),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _refreshCrops,
-                  style: ElevatedButton.styleFrom(backgroundColor: primary),
-                  child: Text(l.retry, style: TextStyle(color: bg)),
+      child: Column(
+        children: [
+          // ── Tab bar ────────────────────────────────────────
+          Container(
+            color: bg,
+            child: TabBar(
+              controller: _tabController,
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              indicatorColor: primary,
+              indicatorWeight: 2.5,
+              labelColor: primary,
+              unselectedLabelColor: textSecondary,
+              labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              unselectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              dividerColor: border,
+              tabs: CropCategory.values.map((cat) => Tab(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(cat.icon, size: 14),
+                    const SizedBox(width: 5),
+                    Text(cat.label(_lang)),
+                  ],
                 ),
-              ]));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text(l.noCropsAvailable, style: TextStyle(color: textSecondary)));
-            }
+              )).toList(),
+            ),
+          ),
+          // ── Content ────────────────────────────────────────
+          Expanded(
+            child: FutureBuilder<List<Crop>>(
+              future: futureCrops ?? Future.value([]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator(color: primary));
+                }
 
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final crop = snapshot.data![index];
-                final name = crop.displayName(_lang);
-                final season = crop.displaySeason(_lang);
-                final sowingPeriod = crop.displaySowingPeriod(_lang);
-                final duration = crop.displayDuration(_lang);
+                if (snapshot.hasError) {
+                  return Center(child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.lock_outline, color: textSecondary, size: 48),
+                      const SizedBox(height: 12),
+                      Text(
+                        _localizeError('${snapshot.error}', l),
+                        style: TextStyle(color: textSecondary, fontSize: 13),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: _refreshCrops,
+                        style: ElevatedButton.styleFrom(backgroundColor: primary),
+                        child: Text(l.retry, style: TextStyle(color: bg)),
+                      ),
+                    ],
+                  ));
+                }
 
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: surface,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: border),
-                  ),
-                  child: Row(children: [
-                    Container(
-                      width: 44, height: 44,
-                      decoration: BoxDecoration(color: primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-                      child: Center(child: Text(
-                        name[0].toUpperCase(),
-                        style: TextStyle(color: primary, fontWeight: FontWeight.w800, fontSize: 20),
-                      )),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(child: Column(crossAxisAlignment: isAr ? CrossAxisAlignment.end : CrossAxisAlignment.start, children: [
-                      Text(name, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary)),
-                      const SizedBox(height: 6),
-                      Row(
-                        mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.calendar_today, size: 11, color: textSecondary),
-                          const SizedBox(width: 4),
-                          Flexible(child: Text(season, style: TextStyle(color: textSecondary, fontSize: 11))),
-                        ],
+                final allCrops = snapshot.data ?? [];
+
+                return TabBarView(
+                  controller: _tabController,
+                  children: CropCategory.values.map((cat) {
+                    final filtered = _filterByCategory(allCrops, cat);
+
+                    if (filtered.isEmpty) {
+                      return Center(
+                        child: Text(
+                          l.noCropsAvailable,
+                          style: TextStyle(color: textSecondary),
+                        ),
+                      );
+                    }
+
+                    return RefreshIndicator(
+                      color: primary,
+                      onRefresh: () async { _refreshCrops(); },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: filtered.length,
+                        itemBuilder: (context, index) {
+                          final crop        = filtered[index];
+                          final name        = crop.displayName(_lang);
+                          final season      = crop.displaySeason(_lang);
+                          final sowingPeriod = crop.displaySowingPeriod(_lang);
+                          final duration    = crop.displayDuration(_lang);
+
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: surface,
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(color: border),
+                            ),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  // ── Colored left accent bar ──
+                                  Container(
+                                    width: 4,
+                                    decoration: BoxDecoration(
+                                      color: primary.withOpacity(0.7),
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(14),
+                                        bottomLeft: Radius.circular(14),
+                                      ),
+                                    ),
+                                  ),
+                                  // ── Icon ──
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                                    child: Container(
+                                      width: 44, height: 44,
+                                      decoration: BoxDecoration(
+                                        color: primary.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Center(
+                                        child: Icon(cat.icon, color: primary, size: 20),
+                                      ),
+                                    ),
+                                  ),
+                                  // ── Info ──
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                                      child: Column(
+                                        crossAxisAlignment: isAr
+                                            ? CrossAxisAlignment.end
+                                            : CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            name,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w700,
+                                              color: textPrimary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 7),
+                                          _InfoRow(
+                                            icon: Icons.wb_sunny_outlined,
+                                            text: season,
+                                            textSecondary: textSecondary,
+                                            isAr: isAr,
+                                          ),
+                                          const SizedBox(height: 3),
+                                          _InfoRow(
+                                            icon: Icons.timelapse,
+                                            text: duration,
+                                            textSecondary: textSecondary,
+                                            isAr: isAr,
+                                          ),
+                                          const SizedBox(height: 3),
+                                          _InfoRow(
+                                            icon: Icons.grass,
+                                            text: sowingPeriod,
+                                            textSecondary: textSecondary,
+                                            isAr: isAr,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  // ── Category chip ──
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 12, top: 12),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: surfaceAlt,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(color: border),
+                                      ),
+                                      child: Text(
+                                        cat.label(_lang),
+                                        style: TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w600,
+                                          color: textSecondary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      const SizedBox(height: 3),
-                      Row(
-                        mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.timelapse, size: 11, color: textSecondary),
-                          const SizedBox(width: 4),
-                          Text(duration, style: TextStyle(color: textSecondary, fontSize: 11)),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      Row(
-                        mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.grass, size: 11, color: textSecondary),
-                          const SizedBox(width: 4),
-                          Flexible(child: Text(sowingPeriod, style: TextStyle(color: textSecondary, fontSize: 11))),
-                        ],
-                      ),
-                    ])),
-                  ]),
+                    );
+                  }).toList(),
                 );
               },
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+// ── Reusable info row ─────────────────────────────────────────
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color textSecondary;
+  final bool isAr;
+
+  const _InfoRow({
+    required this.icon,
+    required this.text,
+    required this.textSecondary,
+    required this.isAr,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: isAr ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        Icon(icon, size: 11, color: textSecondary),
+        const SizedBox(width: 4),
+        Flexible(
+          child: Text(
+            text,
+            style: TextStyle(color: textSecondary, fontSize: 11),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }

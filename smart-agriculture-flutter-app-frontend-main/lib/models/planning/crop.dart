@@ -13,6 +13,7 @@ class Crop {
   final String idealSowingPeriod;
   final String? idealSowingPeriodFr;
   final String? idealSowingPeriodAr;
+  final String? category;
 
   Crop({
     required this.id,
@@ -29,6 +30,7 @@ class Crop {
     required this.idealSowingPeriod,
     this.idealSowingPeriodFr,
     this.idealSowingPeriodAr,
+    this.category,
   });
 
   factory Crop.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class Crop {
       idealSowingPeriod: json['ideal_sowing_period'] ?? '',
       idealSowingPeriodFr: json['ideal_sowing_period_fr'],
       idealSowingPeriodAr: json['ideal_sowing_period_ar'],
+      category: json['category'],
     );
   }
 

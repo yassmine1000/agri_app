@@ -284,25 +284,30 @@ class _CreatePlanningDialogState extends State<CreatePlanningDialog> {
     final planning = CropPlanning(id: 0, userId: 0, cropId: _selectedCropId!, planName: _selectedCropName, startDate: _startDate!.toIso8601String(), expectedHarvestDate: _expectedHarvestDate!.toIso8601String(), notes: _notes.isNotEmpty ? _notes : null, irrigationReminder: _irrigationReminder, fertilizerReminder: _fertilizerReminder, cropName: '');
     try {
       final created = await widget.cropService.createCropPlanning(planning);
-      // Schedule notifications if reminder dates chosen
-      await NotificationService().requestPermissions();
-      if (_irrigationReminder && _irrigationReminderDate != null) {
-        await NotificationService().scheduleIrrigationReminder(
-          planningId: created.id,
-          scheduledDate: _irrigationReminderDate!,
-          cropName: _selectedCropName ?? '',
-          lang: widget.lang,
-        );
-      }
-      if (_fertilizerReminder && _fertilizerReminderDate != null) {
-        await NotificationService().scheduleFertilizerReminder(
-          planningId: created.id,
-          scheduledDate: _fertilizerReminderDate!,
-          cropName: _selectedCropName ?? '',
-          lang: widget.lang,
-        );
-      }
+      // Plan créé avec succès — ferme le dialog
       if (mounted) { Navigator.pop(context); widget.onPlanningCreated(); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.planCreated))); }
+      // Schedule notifications séparément (erreur ignorée si permissions refusées)
+      try {
+        await NotificationService().requestPermissions();
+        if (_irrigationReminder && _irrigationReminderDate != null) {
+          await NotificationService().scheduleIrrigationReminder(
+            planningId: created.id,
+            scheduledDate: _irrigationReminderDate!,
+            cropName: _selectedCropName ?? '',
+            lang: widget.lang,
+          );
+        }
+        if (_fertilizerReminder && _fertilizerReminderDate != null) {
+          await NotificationService().scheduleFertilizerReminder(
+            planningId: created.id,
+            scheduledDate: _fertilizerReminderDate!,
+            cropName: _selectedCropName ?? '',
+            lang: widget.lang,
+          );
+        }
+      } catch (_) {
+        // Notification failed silently — plan already created
+      }
     } catch (e) {
       final errStr = e.toString().toLowerCase();
       String errMsg;

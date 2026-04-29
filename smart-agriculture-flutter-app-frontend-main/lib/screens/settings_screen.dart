@@ -3,6 +3,7 @@ import 'package:smart_agri_app/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_agri_app/utils/app_theme.dart';
 import 'history_screen.dart';
+import 'package:smart_agri_app/service/notification_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   final Function(Locale) onLocaleChange;
@@ -84,7 +85,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             body: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                // Language — 3 options
                 _sectionLabel(l.language, textSecondary),
                 _card(surface, border, child: Row(
                   children: ['EN', 'FR', 'AR'].map((lang) {
@@ -111,10 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     );
                   }).toList(),
                 )),
-
                 const SizedBox(height: 20),
-
-                // Dark Mode
                 _sectionLabel(l.appearance, textSecondary),
                 _card(surface, border, child: Row(children: [
                   Icon(Icons.dark_mode_outlined, color: textSecondary, size: 20),
@@ -132,10 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                 ])),
-
                 const SizedBox(height: 20),
-
-                // Image Quality
                 _sectionLabel(l.imageQuality, textSecondary),
                 _card(surface, border, child: Column(children: [
                   _qualityOption(l.low, l.lowDesc, Icons.image_outlined, 'low', primary, textPrimary, textSecondary),
@@ -144,10 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(height: 16, color: border, thickness: 0.5),
                   _qualityOption(l.high, l.highDesc, Icons.hd_outlined, 'high', primary, textPrimary, textSecondary),
                 ])),
-
                 const SizedBox(height: 20),
-
-                // History
                 _sectionLabel(l.data, textSecondary),
                 _card(surface, border, child: GestureDetector(
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryScreen(isDarkMode: isDark))),
@@ -161,10 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Icon(Icons.arrow_forward_ios, size: 14, color: textSecondary),
                   ]),
                 )),
-
                 const SizedBox(height: 20),
-
-                // About
                 _sectionLabel(l.about, textSecondary),
                 _card(surface, border, child: Column(children: [
                   _infoRow(l.appNameLabel, 'AgriScan', textPrimary, textSecondary),
@@ -175,7 +163,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(height: 16, color: border, thickness: 0.5),
                   _infoRow(l.technology, 'Flutter + Node.js + AI', textPrimary, textSecondary),
                 ])),
-
                 const SizedBox(height: 40),
               ],
             ),

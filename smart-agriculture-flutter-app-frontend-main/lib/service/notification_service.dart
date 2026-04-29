@@ -1,61 +1,47 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/material.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
 
-  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
-
-  static const _channelId   = 'agriscan_reminders';
-  static const _channelName = 'AgriScan Reminders';
-  static const _channelDesc = 'Irrigation and fertilizer reminders';
-
   Future<void> init() async {
-    tz.initializeTimeZones();
-
-    const android = AndroidInitializationSettings('@mipmap/launcher_icon');
-    const ios     = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-
-    await _plugin.initialize(
-      const InitializationSettings(android: android, iOS: ios),
-    );
-
-    // Create notification channel for Android
-    await _plugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(const AndroidNotificationChannel(
-          _channelId,
-          _channelName,
-          description: _channelDesc,
-          importance: Importance.high,
+    await AwesomeNotifications().initialize(
+      'resource://mipmap/launcher_icon',
+      [
+        NotificationChannel(
+          channelKey: 'agriscan_reminders',
+          channelName: 'AgriScan Reminders',
+          channelDescription: 'Irrigation and fertilizer reminders',
+          importance: NotificationImportance.Max,
+          channelShowBadge: true,
           playSound: true,
           enableVibration: true,
-        ));
+          enableLights: true,
+          ledColor: Colors.green,
+          defaultColor: Colors.green,
+        ),
+      ],
+      debug: false,
+    );
   }
 
   Future<bool> requestPermissions() async {
-    final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-    final ios     = _plugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
-
-    bool granted = false;
-    if (android != null) {
-      granted = await android.requestNotificationsPermission() ?? false;
-      await android.requestExactAlarmsPermission();
-    }
-    if (ios != null) {
-      granted = await ios.requestPermissions(alert: true, badge: true, sound: true) ?? false;
-    }
-    return granted;
+    return await AwesomeNotifications().requestPermissionToSendNotifications(
+      permissions: [
+        NotificationPermission.Alert,
+        NotificationPermission.Sound,
+        NotificationPermission.Badge,
+        NotificationPermission.Vibration,
+        NotificationPermission.Light,
+        NotificationPermission.FullScreenIntent,
+        NotificationPermission.CriticalAlert,
+        NotificationPermission.PreciseAlarms,
+      ],
+    );
   }
 
-  /// Schedule an irrigation reminder
   Future<void> scheduleIrrigationReminder({
     required int planningId,
     required DateTime scheduledDate,
@@ -65,24 +51,23 @@ class NotificationService {
     final title = lang == 'AR'
         ? '💧 تذكير بالري'
         : lang == 'FR'
-            ? '💧 Rappel d\'irrigation'
+            ? "💧 Rappel d'irrigation"
             : '💧 Irrigation Reminder';
 
     final body = lang == 'AR'
         ? 'حان وقت ري محصول $cropName'
         : lang == 'FR'
-            ? 'Il est temps d\'irriguer votre culture de $cropName'
+            ? "Il est temps d'irriguer votre culture de $cropName"
             : 'Time to irrigate your $cropName crop';
 
     await _scheduleNotification(
-      id: planningId * 10 + 1, // unique id: planningId*10+1 for irrigation
+      id: planningId * 10 + 1,
       title: title,
       body: body,
       scheduledDate: scheduledDate,
     );
   }
 
-  /// Schedule a fertilizer reminder
   Future<void> scheduleFertilizerReminder({
     required int planningId,
     required DateTime scheduledDate,
@@ -92,17 +77,17 @@ class NotificationService {
     final title = lang == 'AR'
         ? '🌿 تذكير بالتسميد'
         : lang == 'FR'
-            ? '🌿 Rappel d\'engrais'
+            ? "🌿 Rappel d'engrais"
             : '🌿 Fertilizer Reminder';
 
     final body = lang == 'AR'
         ? 'حان وقت تسميد محصول $cropName'
         : lang == 'FR'
-            ? 'Il est temps de fertiliser votre culture de $cropName'
+            ? "Il est temps de fertiliser votre culture de $cropName"
             : 'Time to fertilize your $cropName crop';
 
     await _scheduleNotification(
-      id: planningId * 10 + 2, // unique id: planningId*10+2 for fertilizer
+      id: planningId * 10 + 2,
       title: title,
       body: body,
       scheduledDate: scheduledDate,
@@ -115,43 +100,53 @@ class NotificationService {
     required String body,
     required DateTime scheduledDate,
   }) async {
-    final tzDate = tz.TZDateTime.from(scheduledDate, tz.local);
-
-    await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tzDate,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: _channelDesc,
-          importance: Importance.high,
-          priority: Priority.high,
-          icon: '@mipmap/launcher_icon',
-          styleInformation: BigTextStyleInformation(body),
-        ),
-        iOS: const DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: id,
+        channelKey: 'agriscan_reminders',
+        title: title,
+        body: body,
+        notificationLayout: NotificationLayout.BigText,
+        wakeUpScreen: true,
+        fullScreenIntent: true,
+        criticalAlert: true,
+        category: NotificationCategory.Reminder,
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      schedule: NotificationCalendar(
+        year: scheduledDate.year,
+        month: scheduledDate.month,
+        day: scheduledDate.day,
+        hour: scheduledDate.hour,
+        minute: scheduledDate.minute,
+        second: 0,
+        millisecond: 0,
+        repeats: false,
+        preciseAlarm: true,
+        allowWhileIdle: true,
+      ),
     );
   }
 
-  /// Cancel reminders for a specific planning
   Future<void> cancelPlanningReminders(int planningId) async {
-    await _plugin.cancel(planningId * 10 + 1);
-    await _plugin.cancel(planningId * 10 + 2);
+    await AwesomeNotifications().cancel(planningId * 10 + 1);
+    await AwesomeNotifications().cancel(planningId * 10 + 2);
   }
 
-  /// Cancel all notifications
   Future<void> cancelAll() async {
-    await _plugin.cancelAll();
+    await AwesomeNotifications().cancelAll();
   }
+
+  Future<void> showTestNotification() async {
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: 1,
+      channelKey: 'agriscan_reminders',
+      title: 'Test AgriScan 🌱',
+      body: 'Les notifications fonctionnent!',
+      notificationLayout: NotificationLayout.Default,
+      wakeUpScreen: true,
+      icon: 'resource://mipmap/launcher_icon',
+    ),
+  );
+}
 }

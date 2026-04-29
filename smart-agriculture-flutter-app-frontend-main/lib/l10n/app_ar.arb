@@ -182,7 +182,7 @@
   "saveChanges": "حفظ",
   "noUsersFound": "لا يوجد مستخدمون",
   "shop": "المتجر",
-  "usernameRequired": "اسم المستخدم مطلوب",
+  "usernameRequired": "اسم المستخدم موجود بالفعل",
   "nameRequired": "الاسم الكامل مطلوب",
   "phoneInvalid": "رقم هاتف أقل من 8 أرقام",
   "anErrorOccurred": "حدث خطأ ما",

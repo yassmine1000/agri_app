@@ -98,8 +98,19 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
           const SizedBox(height: 12),
           GestureDetector(
             onTap: () async {
-              final d = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
-              if (d != null) setState(() => _selectedDate = d);
+              final d = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2100));
+              if (d != null) {
+                final today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+                final chosen = DateTime(d.year, d.month, d.day);
+                if (chosen.isBefore(today)) {
+                  if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(widget.lang == 'AR' ? 'لا يمكن اختيار تاريخ في الماضي' : widget.lang == 'FR' ? 'Impossible de choisir une date passée' : 'Cannot choose a past date'),
+                    backgroundColor: Colors.red,
+                  ));
+                } else {
+                  setState(() => _selectedDate = d);
+                }
+              }
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),

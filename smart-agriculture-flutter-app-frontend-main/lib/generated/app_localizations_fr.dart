@@ -511,14 +511,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shop => 'Magasin';
 
   @override
-  String get usernameRequired => 'Le nom d\'utilisateur est requis';
+  String get usernameRequired => 'Le nom d\'utilisateur existe deja';
 
   @override
   String get nameRequired => 'Le nom complet est requis';
 
   @override
-  String get phoneInvalid =>
-      'Le numéro de téléphone doit contenir au moins 8 chiffres';
+  String get phoneInvalid => 'au moins 8 chiffres';
 
   @override
   String get anErrorOccurred => 'Une erreur est survenue';
@@ -552,12 +551,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get regNoRequired => 'Le numéro d\'enregistrement est requis';
 
   @override
-  String get passwordMin =>
-      'Le mot de passe doit contenir au moins 6 caractères';
+  String get passwordMin => 'au moins 6 caractères';
 
   @override
-  String get usernameMin =>
-      'Le nom d\'utilisateur doit contenir au moins 3 caractères';
+  String get usernameMin => 'au moins 3 caractères';
 
   @override
   String get onboardingTitle1 => 'Détection Intelligente';

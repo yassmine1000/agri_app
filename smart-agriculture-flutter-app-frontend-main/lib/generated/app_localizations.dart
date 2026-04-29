@@ -1093,7 +1093,7 @@ abstract class AppLocalizations {
   /// No description provided for @usernameRequired.
   ///
   /// In en, this message translates to:
-  /// **'Username is required'**
+  /// **'username already exists'**
   String get usernameRequired;
 
   /// No description provided for @nameRequired.
@@ -1105,7 +1105,7 @@ abstract class AppLocalizations {
   /// No description provided for @phoneInvalid.
   ///
   /// In en, this message translates to:
-  /// **'Phone number must be at least 8 digits'**
+  /// **'at least 8 digits'**
   String get phoneInvalid;
 
   /// No description provided for @anErrorOccurred.
@@ -1171,13 +1171,13 @@ abstract class AppLocalizations {
   /// No description provided for @passwordMin.
   ///
   /// In en, this message translates to:
-  /// **'Password must be at least 6 characters'**
+  /// **'at least 6 characters'**
   String get passwordMin;
 
   /// No description provided for @usernameMin.
   ///
   /// In en, this message translates to:
-  /// **'Username must be at least 3 characters'**
+  /// **'at least 3 characters'**
   String get usernameMin;
 
   /// No description provided for @onboardingTitle1.

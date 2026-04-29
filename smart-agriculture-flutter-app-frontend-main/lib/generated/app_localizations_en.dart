@@ -510,13 +510,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shop => 'Shop';
 
   @override
-  String get usernameRequired => 'Username is required';
+  String get usernameRequired => 'username already exists';
 
   @override
   String get nameRequired => 'Full name is required';
 
   @override
-  String get phoneInvalid => 'Phone number must be at least 8 digits';
+  String get phoneInvalid => 'at least 8 digits';
 
   @override
   String get anErrorOccurred => 'An error occurred';
@@ -549,10 +549,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get regNoRequired => 'Registration number is required';
 
   @override
-  String get passwordMin => 'Password must be at least 6 characters';
+  String get passwordMin => 'at least 6 characters';
 
   @override
-  String get usernameMin => 'Username must be at least 3 characters';
+  String get usernameMin => 'at least 3 characters';
 
   @override
   String get onboardingTitle1 => 'Smart Disease Detection';

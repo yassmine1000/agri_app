@@ -511,7 +511,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get shop => 'المتجر';
 
   @override
-  String get usernameRequired => 'اسم المستخدم مطلوب';
+  String get usernameRequired => 'اسم المستخدم موجود بالفعل';
 
   @override
   String get nameRequired => 'الاسم الكامل مطلوب';

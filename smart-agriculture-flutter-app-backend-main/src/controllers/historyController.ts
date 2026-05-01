@@ -3,6 +3,7 @@ import {
     saveDetectionService,
     getHistoryService,
     deleteHistoryService,
+    deleteOneHistoryService,
 } from "../models/historyModel";
 
 export const saveDetection = async (req: Request, res: Response, next: NextFunction) => {
@@ -36,6 +37,16 @@ export const deleteHistory = async (req: Request, res: Response, next: NextFunct
     try {
         await deleteHistoryService(user_id);
         res.status(200).json({ status: 200, message: "History cleared" });
+    } catch (error) {
+        next(error);
+    }
+};
+export const deleteOneHistory = async (req: Request, res: Response, next: NextFunction) => {
+    const user_id = (req.user as any).userId;
+    const { id } = req.params;
+    try {
+        await deleteOneHistoryService(parseInt(id as string), user_id);
+        res.status(200).json({ status: 200, message: "Deleted" });
     } catch (error) {
         next(error);
     }

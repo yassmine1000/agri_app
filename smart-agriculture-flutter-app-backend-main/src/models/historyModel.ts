@@ -41,3 +41,11 @@ export const deleteHistoryService = async (user_id: number): Promise<void> => {
         [user_id]
     );
 };
+// historyModel.ts
+export const deleteOneHistoryService = async (id: number, userId: number) => {
+  const result = await pool.query(
+      "DELETE FROM history WHERE id = $1 AND user_id = $2 RETURNING id",
+      [id, userId]
+  );
+  return result.rows[0];
+};

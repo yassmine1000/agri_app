@@ -96,3 +96,19 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
+// ── Get products by category ──────────────────────────────────────
+export const getProductsByCategory = async (req: Request, res: Response, next: NextFunction) => {
+  const { category } = req.params; // ou req.query si tu préfères
+  try {
+    const result = await pool.query(
+      "SELECT * FROM products WHERE category = $1 ORDER BY name ASC",
+      [category]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "No products found in this category" });
+    }
+    res.json({ status: "success", data: result.rows });
+  } catch (error) {
+    next(error);
+  }
+};

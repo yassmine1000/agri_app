@@ -29,7 +29,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
       final response = await _dio.get('${Config.baseUrl}/history', options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true'}));
       setState(() { _history = response.data['data'] ?? []; _loading = false; });
     } catch (e) {
-      setState(() { _error = 'Failed to load history'; _loading = false; });
+      setState(() { _error = AppLocalizations.of(context)!.failedToLoadHistory; _loading = false; });
+    }
+  }
+
+  Future<void> _deleteOne(int id, AppLocalizations l) async {
+    try {
+      final token = await PrefHelper.getToken();
+      await _dio.delete(
+        '\${Config.baseUrl}/history/\$id',
+        options: Options(headers: {'Authorization': 'Bearer \$token', 'ngrok-skip-browser-warning': 'true'}),
+      );
+      _loadHistory();
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l.anErrorOccurred)),
+      );
     }
   }
 
@@ -127,7 +142,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           final isHealthy = item['disease'].toString().contains('healthy');
                           final statusColor = isHealthy ? primary : errorColor;
 
-                          return Container(
+                          return Dismissible(
+                            key: Key(item['id'].toString()),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.only(right: 20),
+                              decoration: BoxDecoration(color: errorColor.withOpacity(0.15), borderRadius: BorderRadius.circular(14)),
+                              alignment: Alignment.centerRight,
+                              child: Icon(Icons.delete_outline, color: errorColor, size: 22),
+                            ),
+                            onDismissed: (_) => _deleteOne(item['id'], l),
+                            child: Container(
                             margin: const EdgeInsets.only(bottom: 10),
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(color: surface, borderRadius: BorderRadius.circular(14), border: Border.all(color: border)),
@@ -152,6 +178,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 Text(_formatDate(item['detected_at']), style: TextStyle(color: textMuted, fontSize: 11)),
                               ]),
                             ]),
+                            ),
                           );
                         },
                       ),

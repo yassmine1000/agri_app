@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_agri_app/config.dart';
 import 'package:smart_agri_app/local/pref_helper.dart';
@@ -188,6 +190,294 @@ class _ShopScreenState extends State<ShopScreen> {
     }
   }
 
+
+
+  // ── helpers trilingues ───────────────────────────────────────────
+  String _t(String en, String fr, String ar) {
+    if (_lang == 'FR') return fr;
+    if (_lang == 'AR') return ar;
+    return en;
+  }
+
+  String? _validateNotEmpty(String? v, String fieldLabel) {
+    if (v == null || v.trim().isEmpty) return '$fieldLabel ${_t("is required", "est requis", "مطلوب")}';
+    return null;
+  }
+
+  String? _validatePrice(String? v) {
+    if (v == null || v.trim().isEmpty) return _t('Price is required', 'Le prix est requis', 'السعر مطلوب');
+    final n = double.tryParse(v.trim());
+    if (n == null || n <= 0) return _t('Invalid price', 'Prix invalide', 'سعر غير صالح');
+    return null;
+  }
+
+  void _openAddProductDialog(bool isDark) {
+    final formKey = GlobalKey<FormState>();
+    final nameCtrl    = TextEditingController();
+    final nameFrCtrl  = TextEditingController();
+    final nameArCtrl  = TextEditingController();
+    final priceCtrl   = TextEditingController();
+    final descCtrl    = TextEditingController();
+    final descFrCtrl  = TextEditingController();
+    final descArCtrl  = TextEditingController();
+    String selectedCategory   = 'Insecticide';
+    String selectedCategoryFr = 'Insecticide';
+    String selectedCategoryAr = 'مبيد حشري';
+    bool stockAvailable = true;
+    XFile? pickedImage;
+    bool submitting = false;
+    final isAr = _lang == 'AR';
+
+    // category maps
+    final catKeys = ['Insecticide','Fongicide','Herbicide','Fertilisant','Biostimulant','Adjuvant'];
+    final catFr   = ['Insecticide','Fongicide','Herbicide','Fertilisant','Biostimulant','Adjuvant'];
+    final catAr   = ['مبيد حشري','مبيد فطري','مبيد أعشاب','سماد','منشط بيولوجي','مادة مساعدة'];
+    final catEn   = ['Insecticide','Fungicide','Herbicide','Fertilizer','Biostimulant','Adjuvant'];
+
+    final surface       = isDark ? AppColors.surfaceAlt       : AppColorsLight.surfaceAlt;
+    final border        = isDark ? AppColors.border            : AppColorsLight.border;
+    final primary       = isDark ? AppColors.primary           : AppColorsLight.primary;
+    final cyan          = isDark ? AppColors.cyan              : AppColorsLight.cyan;
+    final textPrimary   = isDark ? AppColors.textPrimary       : AppColorsLight.textPrimary;
+    final textSecondary = isDark ? AppColors.textSecondary     : AppColorsLight.textSecondary;
+    final dialogBg      = isDark ? AppColors.surface           : AppColorsLight.surface;
+    final bg            = isDark ? AppColors.background        : AppColorsLight.background;
+    final errorColor    = isDark ? AppColors.error             : AppColorsLight.error;
+
+    InputDecoration _field(String label, {String? hint}) => InputDecoration(
+      labelText: label,
+      hintText: hint,
+      labelStyle: TextStyle(color: textSecondary, fontSize: 13),
+      hintStyle: TextStyle(color: textSecondary.withOpacity(0.5), fontSize: 12),
+      filled: true, fillColor: surface,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: border)),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: border)),
+      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primary, width: 1.5)),
+      errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: errorColor)),
+      focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: errorColor, width: 1.5)),
+      errorStyle: TextStyle(color: errorColor, fontSize: 11),
+    );
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setD) => Directionality(
+          textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
+          child: AlertDialog(
+            backgroundColor: dialogBg,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: border)),
+            title: Text(
+              _t('Add Product', 'Ajouter un produit', 'إضافة منتج'),
+              style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700),
+            ),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, children: [
+
+                  // ── Image picker ─────────────────────────────────
+                  GestureDetector(
+                    onTap: () async {
+                      final picker = ImagePicker();
+                      final img = await picker.pickImage(
+                      source: ImageSource.gallery,
+                      imageQuality: 80,
+                      maxWidth: 1920,
+                      maxHeight: 1920,
+                    );
+                      if (img != null) setD(() => pickedImage = img);
+                    },
+                    child: Container(
+                      height: 120, width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: surface, borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: border, style: BorderStyle.solid),
+                      ),
+                      child: pickedImage != null
+                          ? ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.file(File(pickedImage!.path), fit: BoxFit.cover))
+                          : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                              Icon(Icons.add_photo_alternate_outlined, color: primary, size: 36),
+                              const SizedBox(height: 6),
+                              Text(_t('Tap to add image', 'Appuyer pour ajouter une image', 'اضغط لإضافة صورة'),
+                                style: TextStyle(color: textSecondary, fontSize: 12)),
+                            ]),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+
+                  // ── Name EN ──────────────────────────────────────
+                  TextFormField(
+                    controller: nameCtrl,
+                    style: TextStyle(color: textPrimary, fontSize: 14),
+                    decoration: _field(_t('Name (EN)', 'Nom (EN)', 'الاسم (EN)')),
+                    validator: (v) => _validateNotEmpty(v, _t('Name EN', 'Nom EN', 'الاسم بالإنجليزية')),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Name FR ──────────────────────────────────────
+                  TextFormField(
+                    controller: nameFrCtrl,
+                    style: TextStyle(color: textPrimary, fontSize: 14),
+                    decoration: _field(_t('Name (FR)', 'Nom (FR)', 'الاسم (FR)')),
+                    validator: (v) => _validateNotEmpty(v, _t('Name FR', 'Nom FR', 'الاسم بالفرنسية')),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Name AR ──────────────────────────────────────
+                  TextFormField(
+                    controller: nameArCtrl,
+                    style: TextStyle(color: textPrimary, fontSize: 14),
+                    textDirection: TextDirection.rtl,
+                    decoration: _field(_t('Name (AR)', 'Nom (AR)', 'الاسم (AR)')),
+                    validator: (v) => _validateNotEmpty(v, _t('Name AR', 'Nom AR', 'الاسم بالعربية')),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Price ────────────────────────────────────────
+                  TextFormField(
+                    controller: priceCtrl,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    style: TextStyle(color: textPrimary, fontSize: 14),
+                    decoration: _field(_t('Price (DT)', 'Prix (DT)', 'السعر (د.ت)')),
+                    validator: _validatePrice,
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Category ─────────────────────────────────────
+                  DropdownButtonFormField<int>(
+                    value: 0,
+                    dropdownColor: surface,
+                    style: TextStyle(color: textPrimary, fontSize: 14),
+                    decoration: _field(_t('Category', 'Catégorie', 'الفئة')),
+                    items: List.generate(catKeys.length, (i) => DropdownMenuItem(
+                      value: i,
+                      child: Text(_lang == 'FR' ? catFr[i] : _lang == 'AR' ? catAr[i] : catEn[i]),
+                    )),
+                    onChanged: (i) => setD(() {
+                      selectedCategory   = catKeys[i!];
+                      selectedCategoryFr = catFr[i];
+                      selectedCategoryAr = catAr[i];
+                    }),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Description EN ───────────────────────────────
+                  TextFormField(
+                    controller: descCtrl,
+                    maxLines: 2,
+                    style: TextStyle(color: textPrimary, fontSize: 14),
+                    decoration: _field(
+                      _t('Description (EN)', 'Description (EN)', 'الوصف (EN)'),
+                      hint: _t('Optional', 'Facultatif', 'اختياري'),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Description FR ───────────────────────────────
+                  TextFormField(
+                    controller: descFrCtrl,
+                    maxLines: 2,
+                    style: TextStyle(color: textPrimary, fontSize: 14),
+                    decoration: _field(
+                      _t('Description (FR)', 'Description (FR)', 'الوصف (FR)'),
+                      hint: _t('Optional', 'Facultatif', 'اختياري'),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Description AR ───────────────────────────────
+                  TextFormField(
+                    controller: descArCtrl,
+                    maxLines: 2,
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(color: textPrimary, fontSize: 14),
+                    decoration: _field(
+                      _t('Description (AR)', 'Description (AR)', 'الوصف (AR)'),
+                      hint: _t('Optional', 'Facultatif', 'اختياري'),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ── Stock toggle ─────────────────────────────────
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(color: surface, borderRadius: BorderRadius.circular(10), border: Border.all(color: border)),
+                    child: Row(children: [
+                      Text(_t('In stock', 'En stock', 'متوفر'), style: TextStyle(color: textPrimary, fontSize: 13)),
+                      const Spacer(),
+                      Switch(
+                        value: stockAvailable,
+                        onChanged: (v) => setD(() => stockAvailable = v),
+                        activeColor: primary,
+                      ),
+                    ]),
+                  ),
+                ])),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(_t('Cancel', 'Annuler', 'إلغاء'), style: TextStyle(color: textSecondary)),
+              ),
+              Container(
+                decoration: BoxDecoration(gradient: LinearGradient(colors: [primary, cyan]), borderRadius: BorderRadius.circular(10)),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                  onPressed: submitting ? null : () async {
+                    if (!formKey.currentState!.validate()) return;
+                    setD(() => submitting = true);
+                    try {
+                      final token = await PrefHelper.getToken();
+                      final formData = FormData.fromMap({
+                        'name':            nameCtrl.text.trim(),
+                        'name_fr':         nameFrCtrl.text.trim(),
+                        'name_ar':         nameArCtrl.text.trim(),
+                        'price':           double.parse(priceCtrl.text.trim()),
+                        'category':        selectedCategory,
+                        'category_fr':     selectedCategoryFr,
+                        'category_ar':     selectedCategoryAr,
+                        'description':     descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
+                        'description_fr':  descFrCtrl.text.trim().isEmpty ? null : descFrCtrl.text.trim(),
+                        'description_ar':  descArCtrl.text.trim().isEmpty ? null : descArCtrl.text.trim(),
+                        'stock_available': stockAvailable.toString(),
+                        if (pickedImage != null)
+                          'image': await MultipartFile.fromFile(pickedImage!.path,
+                            filename: pickedImage!.name),
+                      });
+                      await _dio.post(
+                        '${Config.baseUrl}/products',
+                        data: formData,
+                        options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true',
+                          'Content-Type': 'multipart/form-data'}),
+                      );
+                      if (ctx.mounted) Navigator.pop(ctx);
+                      _loadProducts();
+                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(_t('Product added successfully', 'Produit ajouté avec succès', 'تمت إضافة المنتج بنجاح')),
+                        backgroundColor: primary,
+                      ));
+                    } catch (e) {
+                      setD(() => submitting = false);
+                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(_t('Error adding product', "Erreur lors de l'ajout", 'خطأ في إضافة المنتج')),
+                        backgroundColor: errorColor,
+                      ));
+                    }
+                  },
+                  child: submitting
+                      ? SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: bg, strokeWidth: 2))
+                      : Text(_t('Add', 'Ajouter', 'إضافة'), style: TextStyle(color: bg, fontWeight: FontWeight.w700)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   void _openEditPriceDialog(dynamic product, bool isDark) {
     final priceCtrl = TextEditingController(text: product['price'].toString());
@@ -446,17 +736,16 @@ class _ShopScreenState extends State<ShopScreen> {
       textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: bg,
-        body: _loading
-            ? Center(child: CircularProgressIndicator(color: primary))
-            : _error != null
-                ? Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Icon(Icons.error_outline, color: textSecondary, size: 48),
-                    const SizedBox(height: 12),
-                    Text(_error!, style: TextStyle(color: textSecondary)),
-                    const SizedBox(height: 16),
-                    ElevatedButton(onPressed: _loadProducts, style: ElevatedButton.styleFrom(backgroundColor: primary), child: Text(_lang == 'AR' ? 'إعادة المحاولة' : _lang == 'FR' ? 'Réessayer' : 'Retry', style: TextStyle(color: bg))),
-                  ]))
-                : RefreshIndicator(
+        body: Builder(builder: (context) {
+          if (_loading) return Center(child: CircularProgressIndicator(color: primary));
+          if (_error != null) return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Icon(Icons.error_outline, color: textSecondary, size: 48),
+            const SizedBox(height: 12),
+            Text(_error!, style: TextStyle(color: textSecondary)),
+            const SizedBox(height: 16),
+            ElevatedButton(onPressed: _loadProducts, style: ElevatedButton.styleFrom(backgroundColor: primary), child: Text(_lang == 'AR' ? 'إعادة المحاولة' : _lang == 'FR' ? 'Réessayer' : 'Retry', style: TextStyle(color: bg))),
+          ]));
+          return RefreshIndicator(
                     onRefresh: _loadProducts, color: primary,
                     child: CustomScrollView(slivers: [
                       // Search bar
@@ -600,7 +889,25 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                       ),
                     ]),
+                  );
+        }),
+        floatingActionButton: _isAdmin
+            ? Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [primary, cyan]),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: FloatingActionButton.extended(
+                  onPressed: () => _openAddProductDialog(isDark),
+                  backgroundColor: Colors.transparent, elevation: 0,
+                  icon: Icon(Icons.add, color: bg),
+                  label: Text(
+                    _lang == 'AR' ? 'إضافة منتج' : _lang == 'FR' ? 'Ajouter un produit' : 'Add Product',
+                    style: TextStyle(color: bg, fontWeight: FontWeight.w700),
                   ),
+                ),
+              )
+            : null,
       ),
     );
   }

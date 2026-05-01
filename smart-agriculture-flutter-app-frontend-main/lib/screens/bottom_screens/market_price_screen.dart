@@ -307,6 +307,7 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
     final textSecondary = isDark ? AppColors.textSecondary: AppColorsLight.textSecondary;
     final dialogBg  = isDark ? AppColors.surface          : AppColorsLight.surface;
     final bg        = isDark ? AppColors.background       : AppColorsLight.background;
+    final errorColor = isDark ? AppColors.error           : AppColorsLight.error;
 
     InputDecoration fieldDeco(String label) => InputDecoration(
       labelText: label, labelStyle: TextStyle(color: textSecondary, fontSize: 13),
@@ -377,20 +378,35 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
-                    if (priceCtrl.text.isEmpty) return;
-
-                    // Résolution crop_id
-                    final cropId = _resolveCropId(selectedPlant);
-                    if (cropId == null) {
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Crop "$selectedPlant" introuvable dans la bibliothèque')),
-                        );
-                      }
+                    // ── Validation prix ──────────────────────────
+                    final priceText = priceCtrl.text.trim();
+                    if (priceText.isEmpty) {
+                      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                        content: Text(_lang == 'AR' ? 'السعر مطلوب' : _lang == 'FR' ? 'Le prix est requis' : 'Price is required'),
+                        backgroundColor: errorColor,
+                      ));
+                      return;
+                    }
+                    final parsedPrice = double.tryParse(priceText);
+                    if (parsedPrice == null || parsedPrice <= 0) {
+                      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                        content: Text(_lang == 'AR' ? 'سعر غير صالح' : _lang == 'FR' ? 'Prix invalide' : 'Invalid price'),
+                        backgroundColor: errorColor,
+                      ));
                       return;
                     }
 
-                    // Récupérer le name EN depuis cropLibrary
+                    // ── Résolution crop_id ───────────────────────
+                    final cropId = _resolveCropId(selectedPlant);
+                    if (cropId == null) {
+                      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                        content: Text(_lang == 'AR' ? 'النبات غير موجود في المكتبة' : _lang == 'FR' ? 'Plante introuvable dans la bibliothèque' : 'Crop not found in library'),
+                        backgroundColor: errorColor,
+                      ));
+                      return;
+                    }
+
+                    // ── Récupérer le name EN depuis cropLibrary ──
                     final cropEntry = _cropLibrary.cast<Map<String, dynamic>?>().firstWhere(
                       (c) => c!['name_fr'] == selectedPlant || c['name'] == selectedPlant,
                       orElse: () => null,
@@ -404,7 +420,7 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                         data: {
                           'plant_name': cropNameEn,
                           'category': selectedCategory,
-                          'price': double.parse(priceCtrl.text),
+                          'price': parsedPrice,
                           'unit': selectedUnit,
                           'crop_id': cropId,
                         },
@@ -412,9 +428,24 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                       );
                       if (ctx.mounted) Navigator.pop(ctx);
                       _loadPrices();
-                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.priceAdded)));
+                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(l.priceAdded),
+                        backgroundColor: primary,
+                      ));
                     } catch (e) {
-                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.errorAdding)));
+                      // ── Duplicate plant_name (409 from backend) ─
+                      String errMsg = l.errorAdding;
+                      if (e is DioException && e.response?.statusCode == 409) {
+                        errMsg = _lang == 'AR'
+                            ? 'هذا النبات موجود بالفعل في السوق'
+                            : _lang == 'FR'
+                                ? 'Cette plante existe déjà sur le marché'
+                                : 'This plant already exists in the market';
+                      }
+                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(errMsg),
+                        backgroundColor: errorColor,
+                      ));
                     }
                   },
                   child: Text(l.add, style: TextStyle(color: bg, fontWeight: FontWeight.w700)),
@@ -468,18 +499,39 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                 onPressed: () async {
-                  if (priceCtrl.text.isEmpty) return;
+                  final priceText = priceCtrl.text.trim();
+                  if (priceText.isEmpty) {
+                    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                      content: Text(_lang == 'AR' ? 'السعر مطلوب' : _lang == 'FR' ? 'Le prix est requis' : 'Price is required'),
+                      backgroundColor: isDark ? AppColors.error : AppColorsLight.error,
+                    ));
+                    return;
+                  }
+                  final parsedPrice = double.tryParse(priceText);
+                  if (parsedPrice == null || parsedPrice <= 0) {
+                    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                      content: Text(_lang == 'AR' ? 'سعر غير صالح' : _lang == 'FR' ? 'Prix invalide' : 'Invalid price'),
+                      backgroundColor: isDark ? AppColors.error : AppColorsLight.error,
+                    ));
+                    return;
+                  }
                   try {
                     final token = await PrefHelper.getToken();
                     await _dio.put('${Config.baseUrl}/prices/${price['id']}',
-                      data: {'price': double.parse(priceCtrl.text)},
+                      data: {'price': parsedPrice},
                       options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true'}),
                     );
                     if (ctx.mounted) Navigator.pop(ctx);
                     _loadPrices();
-                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.priceUpdated)));
+                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(l.priceUpdated),
+                      backgroundColor: isDark ? AppColors.primary : AppColorsLight.primary,
+                    ));
                   } catch (e) {
-                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.errorAdding)));
+                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(l.errorAdding),
+                      backgroundColor: isDark ? AppColors.error : AppColorsLight.error,
+                    ));
                   }
                 },
                 child: Text(l.saveChanges, style: TextStyle(color: bg, fontWeight: FontWeight.w700)),

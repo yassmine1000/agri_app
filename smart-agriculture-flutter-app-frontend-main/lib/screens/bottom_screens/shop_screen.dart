@@ -156,7 +156,7 @@ class _ShopScreenState extends State<ShopScreen> {
         final token = await PrefHelper.getToken();
         await _dio.delete('${Config.baseUrl}/products/${product['id']}', options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true'}));
         _loadProducts();
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_lang == 'AR' ? 'تم حذف المنتج' : _lang == 'FR' ? 'Produit supprimé' : 'Product deleted'), backgroundColor: primary));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_lang == 'AR' ? 'تم حذف المنتج' : _lang == 'FR' ? 'Produit supprimé' : 'Product deleted'), backgroundColor: isDark ? AppColors.primary : AppColorsLight.primary));
       } catch (e) {
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
@@ -457,7 +457,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       _loadProducts();
                       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(_t('Product added successfully', 'Produit ajouté avec succès', 'تمت إضافة المنتج بنجاح')),
-                        backgroundColor: primary,
+                        backgroundColor: isDark ? AppColors.primary : AppColorsLight.primary,
                       ));
                     } catch (e) {
                       setD(() => submitting = false);
@@ -535,9 +535,21 @@ class _ShopScreenState extends State<ShopScreen> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                 onPressed: () async {
-                  if (priceCtrl.text.isEmpty) return;
-                  final newPrice = double.tryParse(priceCtrl.text);
-                  if (newPrice == null) return;
+                  if (priceCtrl.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                      content: Text(isAr ? 'السعر مطلوب' : _lang == 'FR' ? 'Le prix est requis' : 'Price is required'),
+                      backgroundColor: (isDark ? AppColors.error : AppColorsLight.error),
+                    ));
+                    return;
+                  }
+                  final newPrice = double.tryParse(priceCtrl.text.trim());
+                  if (newPrice == null || newPrice <= 0) {
+                    ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                      content: Text(isAr ? 'سعر غير صالح' : _lang == 'FR' ? 'Prix invalide' : 'Invalid price'),
+                      backgroundColor: (isDark ? AppColors.error : AppColorsLight.error),
+                    ));
+                    return;
+                  }
                   try {
                     final token = await PrefHelper.getToken();
                     await _dio.put(
@@ -561,7 +573,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     _loadProducts();
                     if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(isAr ? 'تم تحديث السعر' : _lang == 'FR' ? 'Prix mis à jour' : 'Price updated'),
-                      backgroundColor: primary,
+                      backgroundColor: isDark ? AppColors.primary : AppColorsLight.primary,
                     ));
                   } catch (e) {
                     if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));

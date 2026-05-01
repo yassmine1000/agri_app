@@ -362,7 +362,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 CustomTextField(
                   controller: _regNoCtrl,
                   label: l.registrationNumber,
-                  validator: (v) => (v == null || v.trim().isEmpty) ? l.regNoRequired : null,
+                  keyboardType: TextInputType.number,
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) return l.regNoRequired;
+                    final digits = v.trim().replaceAll(RegExp(r'[^0-9]'), '');
+                    if (digits.length < 5) return l.regNoInvalid;
+                    if (!RegExp(r'^[0-9]{5,20}$').hasMatch(v.trim())) return l.regNoInvalid;
+                    return null;
+                  },
                 ),
               ],
 

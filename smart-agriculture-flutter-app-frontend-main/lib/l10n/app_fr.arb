@@ -195,6 +195,7 @@
   "emailRequired": "L'email est requis",
   "farmNameRequired": "Le nom de la ferme est requis",
   "regNoRequired": "Le numéro d'enregistrement est requis",
+  "regNoInvalid": "Le numéro d'enregistrement doit contenir au moins 5 chiffres",
   "passwordMin": "au moins 6 caractères",
   "usernameMin": "au moins 3 caractères",
   "onboardingTitle1": "Détection Intelligente",

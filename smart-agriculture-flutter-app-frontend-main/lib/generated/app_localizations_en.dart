@@ -549,10 +549,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get regNoRequired => 'Registration number is required';
 
   @override
-  String get passwordMin => 'at least 6 characters';
+  String get regNoInvalid =>
+      'Registration number must contain at least 5 digits';
 
   @override
-  String get usernameMin => 'at least 3 characters';
+  String get passwordMin => 'At least 6 characters';
+
+  @override
+  String get usernameMin => 'At least 3 characters';
 
   @override
   String get onboardingTitle1 => 'Smart Disease Detection';

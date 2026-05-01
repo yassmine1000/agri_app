@@ -1168,16 +1168,22 @@ abstract class AppLocalizations {
   /// **'Registration number is required'**
   String get regNoRequired;
 
+  /// No description provided for @regNoInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration number must contain at least 5 digits'**
+  String get regNoInvalid;
+
   /// No description provided for @passwordMin.
   ///
   /// In en, this message translates to:
-  /// **'at least 6 characters'**
+  /// **'At least 6 characters'**
   String get passwordMin;
 
   /// No description provided for @usernameMin.
   ///
   /// In en, this message translates to:
-  /// **'at least 3 characters'**
+  /// **'At least 3 characters'**
   String get usernameMin;
 
   /// No description provided for @onboardingTitle1.

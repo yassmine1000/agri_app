@@ -18,6 +18,7 @@ class MarketPricesScreen extends StatefulWidget {
 class _MarketPricesScreenState extends State<MarketPricesScreen> {
   final Dio _dio = Dio();
   List<dynamic> _prices = [];
+  List<dynamic> _cropLibrary = []; // ← AJOUTÉ
   bool _loading = true;
   bool _isAdmin = false;
   String? _error;
@@ -166,6 +167,18 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
     'Herbes':  ['Menthe','Persil','Coriandre','Basilic','Thym','Romarin','Laurier','Sauge','Origan','Aneth','Estragon','Ciboulette','Mélisse','Verveine','Lavande','Cumin','Carvi','Fenouil sauvage','Zaatar','Harissa','Fenugrec'],
   };
 
+  // ── AJOUTÉ : résolution du crop_id depuis la crop_library ────────
+  int? _resolveCropId(String plantNameFr) {
+    for (final crop in _cropLibrary) {
+      final nameFr = crop['name_fr']?.toString() ?? '';
+      final name   = crop['name']?.toString() ?? '';
+      if (nameFr == plantNameFr || name == plantNameFr) {
+        return crop['id'] is int ? crop['id'] : int.tryParse(crop['id'].toString());
+      }
+    }
+    return null;
+  }
+
   String _formatDate(String? dateStr) {
     if (dateStr == null) return '';
     try {
@@ -199,7 +212,6 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
   String _catLabel(String key) => _categories[key]?[_lang] ?? key;
   String _unitLabel(String key) => _units[key]?[_lang] ?? key;
   String _plantLabel(String key) {
-    // Try direct key first, then search all entries
     if (_plants.containsKey(key)) return _plants[key]![_lang] ?? key;
     for (final entry in _plants.entries) {
       if (entry.value.values.contains(key)) return entry.value[_lang] ?? key;
@@ -215,13 +227,11 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
   }
 
   void _startDayTimer() {
-    // Refresh at midnight every day
     final now = DateTime.now();
     final midnight = DateTime(now.year, now.month, now.day + 1);
     final untilMidnight = midnight.difference(now);
     _dayTimer = Timer(untilMidnight, () {
       if (mounted) setState(() => _today = DateTime.now());
-      // Re-schedule every 24h after first midnight
       _dayTimer = Timer.periodic(const Duration(days: 1), (_) {
         if (mounted) setState(() => _today = DateTime.now());
       });
@@ -240,6 +250,7 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
     setState(() => _lang = prefs.getString('language') ?? 'EN');
     _checkAdmin();
     _loadPrices();
+    _loadCropLibrary(); // ← AJOUTÉ
   }
 
   Future<void> _checkAdmin() async {
@@ -265,6 +276,22 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
     }
   }
 
+  // ── AJOUTÉ : charge la crop_library pour résoudre crop_id ────────
+  Future<void> _loadCropLibrary() async {
+    try {
+      final token = await PrefHelper.getToken();
+      final response = await _dio.get(
+        '${Config.baseUrl}/farmer/get_crop_list',
+        options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true'}),
+      );
+      if (!mounted) return;
+      setState(() => _cropLibrary = response.data['data'] ?? []);
+    } catch (_) {
+      // Non bloquant — l'écran fonctionne même sans crop_library
+      // L'ajout de prix échouera proprement si cropLibrary est vide
+    }
+  }
+
   void _openAddPriceDialog(AppLocalizations l, bool isDark) {
     String selectedCategory = 'Légumes';
     String selectedPlant = 'Tomate';
@@ -281,7 +308,7 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
     final dialogBg  = isDark ? AppColors.surface          : AppColorsLight.surface;
     final bg        = isDark ? AppColors.background       : AppColorsLight.background;
 
-    InputDecoration _fieldDeco(String label) => InputDecoration(
+    InputDecoration fieldDeco(String label) => InputDecoration(
       labelText: label, labelStyle: TextStyle(color: textSecondary, fontSize: 13),
       filled: true, fillColor: surface,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: border)),
@@ -304,7 +331,7 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                 value: selectedCategory,
                 dropdownColor: surface,
                 style: TextStyle(color: textPrimary, fontSize: 14),
-                decoration: _fieldDeco(l.category),
+                decoration: fieldDeco(l.category),
                 items: ['Légumes','Fruits','Céréales','Herbes']
                     .map((k) => DropdownMenuItem(value: k, child: Text(_catLabel(k)))).toList(),
                 onChanged: (v) => setD(() {
@@ -313,12 +340,12 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                 }),
               ),
               const SizedBox(height: 12),
-              // Plant — dropdown from predefined list
+              // Plant
               DropdownButtonFormField<String>(
                 value: selectedPlant,
                 dropdownColor: surface,
                 style: TextStyle(color: textPrimary, fontSize: 14),
-                decoration: _fieldDeco(l.plantName),
+                decoration: fieldDeco(l.plantName),
                 items: (_plantsByCategory[selectedCategory] ?? [])
                     .map((k) => DropdownMenuItem(value: k, child: Text(_plantLabel(k)))).toList(),
                 onChanged: (v) => setD(() => selectedPlant = v!),
@@ -329,7 +356,7 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                 controller: priceCtrl,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 style: TextStyle(color: textPrimary, fontSize: 14),
-                decoration: _fieldDeco(l.price),
+                decoration: fieldDeco(l.price),
               ),
               const SizedBox(height: 12),
               // Unit
@@ -337,7 +364,7 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                 value: selectedUnit,
                 dropdownColor: surface,
                 style: TextStyle(color: textPrimary, fontSize: 14),
-                decoration: _fieldDeco(l.unit),
+                decoration: fieldDeco(l.unit),
                 items: ['kg','g','pièce','litre','botte']
                     .map((k) => DropdownMenuItem(value: k, child: Text(_unitLabel(k)))).toList(),
                 onChanged: (v) => setD(() => selectedUnit = v!),
@@ -351,10 +378,36 @@ class _MarketPricesScreenState extends State<MarketPricesScreen> {
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
                     if (priceCtrl.text.isEmpty) return;
+
+                    // Résolution crop_id
+                    final cropId = _resolveCropId(selectedPlant);
+                    if (cropId == null) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Crop "$selectedPlant" introuvable dans la bibliothèque')),
+                        );
+                      }
+                      return;
+                    }
+
+                    // Récupérer le name EN depuis cropLibrary
+                    final cropEntry = _cropLibrary.cast<Map<String, dynamic>?>().firstWhere(
+                      (c) => c!['name_fr'] == selectedPlant || c['name'] == selectedPlant,
+                      orElse: () => null,
+                    );
+                    final cropNameEn = cropEntry?['name'] ?? selectedPlant;
+
                     try {
                       final token = await PrefHelper.getToken();
-                      await _dio.post('${Config.baseUrl}/prices',
-                        data: {'plant_name': selectedPlant, 'category': selectedCategory, 'price': double.parse(priceCtrl.text), 'unit': selectedUnit},
+                      await _dio.post(
+                        '${Config.baseUrl}/prices',
+                        data: {
+                          'plant_name': cropNameEn,
+                          'category': selectedCategory,
+                          'price': double.parse(priceCtrl.text),
+                          'unit': selectedUnit,
+                          'crop_id': cropId,
+                        },
                         options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true'}),
                       );
                       if (ctx.mounted) Navigator.pop(ctx);

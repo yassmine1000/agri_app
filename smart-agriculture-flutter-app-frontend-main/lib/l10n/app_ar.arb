@@ -195,6 +195,7 @@
   "emailRequired": "البريد الإلكتروني مطلوب",
   "farmNameRequired": "اسم المزرعة مطلوب",
   "regNoRequired": "رقم التسجيل مطلوب",
+  "regNoInvalid": "رقم التسجيل يجب أن يحتوي على 5 أرقام على الأقل",
   "passwordMin": "كلمة مرور أقل من 6 أحرف",
   "usernameMin": "اسم المستخدم أقل من 3 أحرف",
   "onboardingTitle1": "كشف ذكي للأمراض",

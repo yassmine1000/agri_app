@@ -188,6 +188,104 @@ class _ShopScreenState extends State<ShopScreen> {
     }
   }
 
+
+  void _openEditPriceDialog(dynamic product, bool isDark) {
+    final priceCtrl = TextEditingController(text: product['price'].toString());
+    final isAr = _lang == 'AR';
+    final surface       = isDark ? AppColors.surfaceAlt       : AppColorsLight.surfaceAlt;
+    final border        = isDark ? AppColors.border            : AppColorsLight.border;
+    final primary       = isDark ? AppColors.primary           : AppColorsLight.primary;
+    final cyan          = isDark ? AppColors.cyan              : AppColorsLight.cyan;
+    final textPrimary   = isDark ? AppColors.textPrimary       : AppColorsLight.textPrimary;
+    final textSecondary = isDark ? AppColors.textSecondary     : AppColorsLight.textSecondary;
+    final dialogBg      = isDark ? AppColors.surface           : AppColorsLight.surface;
+    final bg            = isDark ? AppColors.background        : AppColorsLight.background;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => Directionality(
+        textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
+        child: AlertDialog(
+          backgroundColor: dialogBg,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: border)),
+          title: Text(
+            isAr ? 'تعديل السعر' : _lang == 'FR' ? 'Modifier le prix' : 'Edit Price',
+            style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700),
+          ),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text(
+              _displayName(product),
+              style: TextStyle(color: textSecondary, fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: priceCtrl,
+              autofocus: true,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              style: TextStyle(color: textPrimary, fontSize: 14),
+              decoration: InputDecoration(
+                labelText: isAr ? 'السعر' : _lang == 'FR' ? 'Prix' : 'Price',
+                labelStyle: TextStyle(color: textSecondary, fontSize: 13),
+                suffixText: isAr ? 'د.ت' : 'DT',
+                suffixStyle: TextStyle(color: primary),
+                filled: true, fillColor: surface,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: border)),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: border)),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primary, width: 1.5)),
+              ),
+            ),
+          ]),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(isAr ? 'إلغاء' : _lang == 'FR' ? 'Annuler' : 'Cancel', style: TextStyle(color: textSecondary)),
+            ),
+            Container(
+              decoration: BoxDecoration(gradient: LinearGradient(colors: [primary, cyan]), borderRadius: BorderRadius.circular(10)),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                onPressed: () async {
+                  if (priceCtrl.text.isEmpty) return;
+                  final newPrice = double.tryParse(priceCtrl.text);
+                  if (newPrice == null) return;
+                  try {
+                    final token = await PrefHelper.getToken();
+                    await _dio.put(
+                      '${Config.baseUrl}/products/${product['id']}',
+                      data: {
+                        'name':            product['name'],
+                        'name_fr':         product['name_fr'],
+                        'name_ar':         product['name_ar'],
+                        'price':           newPrice,
+                        'category':        product['category'],
+                        'category_fr':     product['category_fr'],
+                        'category_ar':     product['category_ar'],
+                        'description':     product['description'],
+                        'description_fr':  product['description_fr'],
+                        'description_ar':  product['description_ar'],
+                        'stock_available': product['stock_available'],
+                      },
+                      options: Options(headers: {'Authorization': 'Bearer $token', 'ngrok-skip-browser-warning': 'true'}),
+                    );
+                    if (ctx.mounted) Navigator.pop(ctx);
+                    _loadProducts();
+                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(isAr ? 'تم تحديث السعر' : _lang == 'FR' ? 'Prix mis à jour' : 'Price updated'),
+                      backgroundColor: primary,
+                    ));
+                  } catch (e) {
+                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                  }
+                },
+                child: Text(isAr ? 'حفظ' : _lang == 'FR' ? 'Enregistrer' : 'Save', style: TextStyle(color: bg, fontWeight: FontWeight.w700)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showProductDetail(dynamic p, bool isDark) {
     final surface = isDark ? AppColors.surface : AppColorsLight.surface;
     final border = isDark ? AppColors.border : AppColorsLight.border;
@@ -270,8 +368,28 @@ class _ShopScreenState extends State<ShopScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Admin: toggle stock button
-              if (_isAdmin)
+              // Admin: edit price + toggle stock buttons
+              if (_isAdmin) ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _openEditPriceDialog(p, isDark);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: cyan),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: Icon(Icons.edit_outlined, color: cyan, size: 18),
+                    label: Text(
+                      _lang == 'AR' ? 'تعديل السعر' : _lang == 'FR' ? 'Modifier le prix' : 'Edit Price',
+                      style: TextStyle(color: cyan, fontWeight: FontWeight.w700, fontSize: 13),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
@@ -301,6 +419,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                   ),
                 ),
+              ],
               const SizedBox(height: 20),
             ]),
           ),
@@ -430,7 +549,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                               )
                                             : Container(height: 130, color: bg, child: Icon(Icons.eco_outlined, color: primary, size: 40)),
                                       ),
-                                      if (_isAdmin)
+                                      if (_isAdmin) ...[
                                         Positioned(top: 4, right: 4, child: GestureDetector(
                                           onTap: () => _deleteProduct(p, isDark),
                                           child: Container(
@@ -439,6 +558,15 @@ class _ShopScreenState extends State<ShopScreen> {
                                             child: const Icon(Icons.delete_outline, color: Colors.white, size: 16),
                                           ),
                                         )),
+                                        Positioned(top: 4, right: 36, child: GestureDetector(
+                                          onTap: () => _openEditPriceDialog(p, isDark),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(color: cyan.withOpacity(0.9), borderRadius: BorderRadius.circular(8)),
+                                            child: const Icon(Icons.edit_outlined, color: Colors.white, size: 16),
+                                          ),
+                                        )),
+                                      ],
                                       if (p['stock_available'] == false)
                                         Positioned(top: 4, left: 4, child: Container(
                                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),

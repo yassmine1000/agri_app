@@ -550,6 +550,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get regNoRequired => 'رقم التسجيل مطلوب';
 
   @override
+  String get regNoInvalid => 'رقم التسجيل يجب أن يحتوي على 5 أرقام على الأقل';
+
+  @override
   String get passwordMin => 'كلمة مرور أقل من 6 أحرف';
 
   @override

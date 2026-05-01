@@ -551,6 +551,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get regNoRequired => 'Le numéro d\'enregistrement est requis';
 
   @override
+  String get regNoInvalid =>
+      'Le numéro d\'enregistrement doit contenir au moins 5 chiffres';
+
+  @override
   String get passwordMin => 'au moins 6 caractères';
 
   @override

@@ -1,0 +1,30 @@
+# =========================
+# AUTHENTICATION WORKFLOW
+# =========================
+
+### Login (récupère le JWT et le stocke dans une variable)
+POST https://agri-app-5pab.onrender.com/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+
+
+> {% client.global.set("jwt_token", response.body.token); %}
+
+### Exemple : utiliser le JWT pour accéder à un endpoint protégé
+GET http://localhost:3000/api/farmer/get_crop_list
+Authorization: Bearer {{jwt_token}}
+
+### Exemple : créer une tâche avec le JWT
+POST http://localhost:3000/api/farmer/tasks
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "title": "Arroser tomates",
+  "date": "2026-05-01"
+}

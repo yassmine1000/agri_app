@@ -6,6 +6,7 @@ export interface PlantPrice {
     category: string;
     price: number;
     unit: string;
+    crop_id: number;        // ← ajouter
     created_at?: Date;
     updated_at?: Date;
 }
@@ -21,13 +22,14 @@ export const createPriceService = async (
     plant_name: string,
     category: string,
     price: number,
-    unit: string
+    unit: string,
+    crop_id: number         // ← ajouter
 ): Promise<PlantPrice> => {
     const result = await pool.query<PlantPrice>(
-        `INSERT INTO plant_prices (plant_name, category, price, unit, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, NOW(), NOW())
+        `INSERT INTO plant_prices (plant_name, category, price, unit, crop_id, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
          RETURNING *`,
-        [plant_name, category, price, unit]
+        [plant_name, category, price, unit, crop_id]   // ← ajouter
     );
     return result.rows[0];
 };

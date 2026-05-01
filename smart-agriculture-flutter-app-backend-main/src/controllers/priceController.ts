@@ -14,14 +14,27 @@ export const getPrices = async (req: Request, res: Response, next: NextFunction)
 };
 
 export const createPrice = async (req: Request, res: Response, next: NextFunction) => {
-    const { plant_name, category, price, unit } = req.body;
-    if (!plant_name || !category || !price || !unit) {
-        return res.status(400).json({ status: 400, message: "All fields are required" });
-    }
-    try {
-        const newPrice = await createPriceService(plant_name, category, parseFloat(Array.isArray(price) ? price[0] : String(price)), unit);
-        res.status(201).json({ status: 201, message: "Price added", data: newPrice });
-    } catch (error) { next(error); }
+  const { plant_name, category, price, unit, crop_id } = req.body;
+
+  if (!plant_name || !category || !price || !unit || !crop_id) {
+      return res.status(400).json({ status: 400, message: "All fields are required" });
+  }
+
+  const cropId = Number(crop_id);
+  if (isNaN(cropId)) {
+      return res.status(400).json({ status: 400, message: "Invalid crop_id" });
+  }
+
+  try {
+    const newPrice = await createPriceService(
+      plant_name,
+      category,
+      parseFloat(Array.isArray(price) ? price[0] : String(price)),
+      unit,
+      cropId
+  );
+      res.status(201).json({ status: 201, message: "Price added", data: newPrice });
+  } catch (error) { next(error); }
 };
 
 export const updatePrice = async (req: Request, res: Response, next: NextFunction) => {

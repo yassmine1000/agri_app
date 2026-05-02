@@ -26,15 +26,20 @@ export const createPrice = async (req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    const newPrice = await createPriceService(
-      plant_name,
-      category,
-      parseFloat(Array.isArray(price) ? price[0] : String(price)),
-      unit,
-      cropId
-  );
+      const newPrice = await createPriceService(
+          plant_name,
+          category,
+          parseFloat(Array.isArray(price) ? price[0] : String(price)),
+          unit,
+          cropId
+      );
       res.status(201).json({ status: 201, message: "Price added", data: newPrice });
-  } catch (error) { next(error); }
+  } catch (error: any) {
+      if (error.code === '23505') {  // PostgreSQL unique violation
+          return res.status(409).json({ status: 409, message: "Plant already exists in market" });
+      }
+      next(error);
+  }
 };
 
 export const updatePrice = async (req: Request, res: Response, next: NextFunction) => {

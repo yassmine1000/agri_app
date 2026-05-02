@@ -39,7 +39,14 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
        description || null, description_fr || null, description_ar || null, imageUrl, stock_available === true || stock_available === 'true']
     );
     res.status(201).json({ status: "success", data: result.rows[0] });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === '23505') {
+      // Distinguish EN vs FR duplicate based on constraint name
+      if (error.constraint === 'unique_product_name_fr') {
+        return res.status(409).json({ status: 409, message: "Product FR name already exists" });
+      }
+      return res.status(409).json({ status: 409, message: "Product already exists" });
+    }
     next(error);
   }
 };
@@ -50,11 +57,9 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
   const { name, name_fr, name_ar, price, category, category_fr, category_ar, description, description_fr, description_ar, stock_available } = req.body;
 
   try {
-    // Get old image if new one uploaded
     let imageUrl: string | null = null;
     if (req.file) {
       imageUrl = `/uploads/products/${req.file.filename}`;
-      // Delete old image
       const old = await pool.query("SELECT image_url FROM products WHERE id = $1", [id]);
       if (old.rows[0]?.image_url) {
         const oldPath = path.join(__dirname, "../..", old.rows[0].image_url);
@@ -96,9 +101,10 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
+
 // ── Get products by category ──────────────────────────────────────
 export const getProductsByCategory = async (req: Request, res: Response, next: NextFunction) => {
-  const { category } = req.params; // ou req.query si tu préfères
+  const { category } = req.params;
   try {
     const result = await pool.query(
       "SELECT * FROM products WHERE category = $1 ORDER BY name ASC",

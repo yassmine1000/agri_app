@@ -461,8 +461,25 @@ class _ShopScreenState extends State<ShopScreen> {
                       ));
                     } catch (e) {
                       setD(() => submitting = false);
+                      String errMsg = _t('Error adding product', "Erreur lors de l'ajout", 'خطأ في إضافة المنتج');
+                      if (e is DioException && e.response?.statusCode == 409) {
+                        final msg = e.response?.data['message']?.toString() ?? '';
+                        if (msg.contains('FR')) {
+                          errMsg = _t(
+                            'A product with this French name already exists',
+                            'Un produit avec ce nom français existe déjà',
+                            'منتج بهذا الاسم الفرنسي موجود بالفعل',
+                          );
+                        } else {
+                          errMsg = _t(
+                            'A product with this English name already exists',
+                            'Un produit avec ce nom anglais existe déjà',
+                            'منتج بهذا الاسم الإنجليزي موجود بالفعل',
+                          );
+                        }
+                      }
                       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(_t('Error adding product', "Erreur lors de l'ajout", 'خطأ في إضافة المنتج')),
+                        content: Text(errMsg),
                         backgroundColor: errorColor,
                       ));
                     }

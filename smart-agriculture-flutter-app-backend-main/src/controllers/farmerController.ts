@@ -192,3 +192,44 @@ export const deletePlanning = async (req: Request, res: Response, next: NextFunc
         next(error);
     }
 };
+// Get single planning with its tasks
+export const getPlanningById = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = (req.user as any).userId;
+  const { planning_id } = req.params;
+
+  try {
+      // Check ownership + get planning details
+      const planResult = await pool.query(
+          `SELECT cp.*, 
+                  c.name AS crop_name, c.name_fr AS crop_name_fr, c.name_ar AS crop_name_ar,
+                  c.ideal_season, c.ideal_season_fr, c.ideal_season_ar,
+                  c.duration_days, c.duration_label_en, c.duration_label_fr, c.duration_label_ar,
+                  c.ideal_sowing_period, c.ideal_sowing_period_fr, c.ideal_sowing_period_ar,
+                  c.category
+           FROM crop_planning cp
+           JOIN crop_library c ON cp.crop_id = c.id
+           WHERE cp.id = $1 AND cp.user_id = $2`,
+          [planning_id, userId]
+      );
+
+      if (planResult.rowCount === 0) {
+          return res.status(404).json({ status: "fail", message: "Planning not found or unauthorized" });
+      }
+
+      // Get associated tasks
+      const tasksResult = await pool.query(
+          `SELECT * FROM crop_tasks WHERE planning_id = $1 ORDER BY task_date ASC`,
+          [planning_id]
+      );
+
+      res.json({
+          status: "success",
+          data: {
+              ...planResult.rows[0],
+              tasks: tasksResult.rows,
+          }
+      });
+  } catch (error) {
+      next(error);
+  }
+};

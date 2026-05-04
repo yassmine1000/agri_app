@@ -52,31 +52,39 @@ app.post("/predict", upload.single("image"), async (req: Request, res: Response)
   const imagePath = path.resolve(req.file.path);
   const requestedLang = (req.headers['accept-language'] || 'EN').toString().toUpperCase();
 
-  // Helper: call CNN for a single language
+  // Helper: call CNN for a single language with timeout
   const callCNN = async (lang: string): Promise<any> => {
       const fd = new FormData();
       fd.append("image", fs.createReadStream(imagePath));
       const r = await axios.post(
           `https://agriscan-cnn.onrender.com/predict?lang=${lang}`,
           fd,
-          { headers: fd.getHeaders() }
+          { headers: fd.getHeaders(), timeout: 60000 }
       );
       return r.data;
   };
 
   try {
-      // Call all 3 languages in parallel
-      const [resEN, resFR, resAR] = await Promise.all([
-          callCNN('EN'),
-          callCNN('FR'),
-          callCNN('AR'),
-      ]);
+      // Step 1: call CNN once with the requested language
+      const primary = await callCNN(requestedLang);
 
-      // Pick primary result based on requested language
-      const byLang: Record<string, any> = { EN: resEN, FR: resFR, AR: resAR };
-      const primary = byLang[requestedLang] ?? resEN;
+      // Step 2: call the other 2 languages independently — never block the response
+      const otherLangs = ['EN', 'FR', 'AR'].filter(l => l !== requestedLang);
+      const results: Record<string, any> = { [requestedLang]: primary };
+
+      await Promise.allSettled(
+          otherLangs.map(lang =>
+              callCNN(lang)
+                  .then(r => { results[lang] = r; })
+                  .catch(() => { results[lang] = null; })
+          )
+      );
 
       if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+
+      const en = results['EN'];
+      const fr = results['FR'];
+      const ar = results['AR'];
 
       res.json({
           disease:          primary.disease,
@@ -84,15 +92,15 @@ app.post("/predict", upload.single("image"), async (req: Request, res: Response)
           plant_name:       primary.plant_name,
           disease_label:    primary.disease_label,
           advice:           primary.advice,
-          advice_en:        resEN?.advice        ?? primary.advice,
-          advice_fr:        resFR?.advice        ?? primary.advice,
-          advice_ar:        resAR?.advice        ?? primary.advice,
-          plant_name_en:    resEN?.plant_name    ?? primary.plant_name,
-          plant_name_fr:    resFR?.plant_name    ?? primary.plant_name,
-          plant_name_ar:    resAR?.plant_name    ?? primary.plant_name,
-          disease_label_en: resEN?.disease_label ?? primary.disease_label,
-          disease_label_fr: resFR?.disease_label ?? primary.disease_label,
-          disease_label_ar: resAR?.disease_label ?? primary.disease_label,
+          advice_en:        en?.advice        ?? primary.advice,
+          advice_fr:        fr?.advice        ?? primary.advice,
+          advice_ar:        ar?.advice        ?? primary.advice,
+          plant_name_en:    en?.plant_name    ?? primary.plant_name,
+          plant_name_fr:    fr?.plant_name    ?? primary.plant_name,
+          plant_name_ar:    ar?.plant_name    ?? primary.plant_name,
+          disease_label_en: en?.disease_label ?? primary.disease_label,
+          disease_label_fr: fr?.disease_label ?? primary.disease_label,
+          disease_label_ar: ar?.disease_label ?? primary.disease_label,
       });
   } catch (error: any) {
       if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);

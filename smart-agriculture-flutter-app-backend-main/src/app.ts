@@ -50,26 +50,56 @@ app.post("/predict", upload.single("image"), async (req: Request, res: Response)
   }
 
   const imagePath = path.resolve(req.file.path);
-  const lang = req.headers['accept-language'] || 'EN'; // ← récupère la langue
+  const requestedLang = (req.headers['accept-language'] || 'EN').toString().toUpperCase();
+
+  // Helper: call CNN for a single language
+  const callCNN = async (lang: string): Promise<any> => {
+      const fd = new FormData();
+      fd.append("image", fs.createReadStream(imagePath));
+      const r = await axios.post(
+          `https://agriscan-cnn.onrender.com/predict?lang=${lang}`,
+          fd,
+          { headers: fd.getHeaders() }
+      );
+      return r.data;
+  };
 
   try {
-      const formData = new FormData();
-      const fileStream = fs.createReadStream(imagePath);
-      formData.append("image", fileStream);
+      // Call all 3 languages in parallel
+      const [resEN, resFR, resAR] = await Promise.all([
+          callCNN('EN'),
+          callCNN('FR'),
+          callCNN('AR'),
+      ]);
 
-      const response = await axios.post(
-          `https://agriscan-cnn.onrender.com/predict?lang=${lang}`, // ← ajoute lang dans l'URL
-          formData,
-          { headers: formData.getHeaders() }
-      );
+      // Pick primary result based on requested language
+      const byLang: Record<string, any> = { EN: resEN, FR: resFR, AR: resAR };
+      const primary = byLang[requestedLang] ?? resEN;
 
-      fs.unlinkSync(imagePath);
-      res.json(response.data);
+      if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
+
+      res.json({
+          disease:          primary.disease,
+          confidence:       primary.confidence,
+          plant_name:       primary.plant_name,
+          disease_label:    primary.disease_label,
+          advice:           primary.advice,
+          advice_en:        resEN?.advice        ?? primary.advice,
+          advice_fr:        resFR?.advice        ?? primary.advice,
+          advice_ar:        resAR?.advice        ?? primary.advice,
+          plant_name_en:    resEN?.plant_name    ?? primary.plant_name,
+          plant_name_fr:    resFR?.plant_name    ?? primary.plant_name,
+          plant_name_ar:    resAR?.plant_name    ?? primary.plant_name,
+          disease_label_en: resEN?.disease_label ?? primary.disease_label,
+          disease_label_fr: resFR?.disease_label ?? primary.disease_label,
+          disease_label_ar: resAR?.disease_label ?? primary.disease_label,
+      });
   } catch (error: any) {
-      fs.unlinkSync(imagePath);
+      if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
       res.status(500).json({ error: error.message });
   }
 });
+
 
 app.use((err: any, req: any, res: any, next: any) => {
   console.error("ERREUR GLOBALE:", err);

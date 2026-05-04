@@ -72,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   void _nextPage() {
-    if (_currentPage < 2) {
+    if (_currentPage < 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
@@ -368,7 +368,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                     ),
                                     const SizedBox(width: 8),
                                     Icon(
-                                      _currentPage < 2 ? Icons.arrow_forward_rounded : Icons.rocket_launch_rounded,
+                                      _currentPage < pages.length - 1
+                                        ? Icons.arrow_forward_rounded
+                                        : Icons.rocket_launch_rounded,
                                       color: isDark ? AppColors.background : Colors.white,
                                       size: 18,
                                     ),

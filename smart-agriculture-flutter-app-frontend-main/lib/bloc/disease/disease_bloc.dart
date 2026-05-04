@@ -93,28 +93,50 @@ class DiseaseBloc extends Bloc<DiseaseEvent, DiseaseState> {
         ),
       );
 
-      // ── Clé brute dataset (pour l'historique) ───────────────────
-      final disease = response.data['disease'] as String;
-
-      // ── Noms traduits retournés par l'API Python ─────────────────
-      // Fallback : parser la clé brute si l'API ne les retourne pas encore
-      final plantName = (response.data['plant_name'] as String?) ??
-          _fallbackPlant(disease);
-      final diseaseLabel = (response.data['disease_label'] as String?) ??
-          _fallbackDisease(disease);
-
+      // ── Clé brute dataset (stable, langue-indépendant) ──────────
+      final disease    = response.data['disease'] as String;
       final confidence = (response.data['confidence'] as num).toDouble();
-      final advice = response.data['advice'] as String;
 
-      // ── Sauvegarder dans l'historique ────────────────────────────
+      // ── Conseils dans les 3 langues ──────────────────────────────
+      final adviceEn = (response.data['advice_en'] as String?)
+          ?? response.data['advice'] as String;
+      final adviceFr = (response.data['advice_fr'] as String?) ?? adviceEn;
+      final adviceAr = (response.data['advice_ar'] as String?) ?? adviceEn;
+
+      // ── Noms plante / maladie dans les 3 langues ─────────────────
+      final plantNameEn = (response.data['plant_name_en'] as String?)
+          ?? _fallbackPlant(disease);
+      final plantNameFr = (response.data['plant_name_fr'] as String?) ?? plantNameEn;
+      final plantNameAr = (response.data['plant_name_ar'] as String?) ?? plantNameEn;
+
+      final diseaseLabelEn = (response.data['disease_label_en'] as String?)
+          ?? _fallbackDisease(disease);
+      final diseaseLabelFr = (response.data['disease_label_fr'] as String?) ?? diseaseLabelEn;
+      final diseaseLabelAr = (response.data['disease_label_ar'] as String?) ?? diseaseLabelEn;
+
+      // ── Valeurs dans la langue active (pour l'écran résultat) ────
+      final advice       = lang == 'FR' ? adviceFr       : lang == 'AR' ? adviceAr       : adviceEn;
+      final plantName    = lang == 'FR' ? plantNameFr    : lang == 'AR' ? plantNameAr    : plantNameEn;
+      final diseaseLabel = lang == 'FR' ? diseaseLabelFr : lang == 'AR' ? diseaseLabelAr : diseaseLabelEn;
+
+      // ── Sauvegarder dans l'historique (toutes les langues) ───────
       try {
         final token = await PrefHelper.getToken();
         await Dio().post(
           '${Config.baseUrl}/history',
           data: {
-            'disease': disease,
-            'confidence': confidence,
-            'advice': advice,
+            'disease':          disease,
+            'confidence':       confidence,
+            'advice':           advice,
+            'advice_en':        adviceEn,
+            'advice_fr':        adviceFr,
+            'advice_ar':        adviceAr,
+            'plant_name_en':    plantNameEn,
+            'plant_name_fr':    plantNameFr,
+            'plant_name_ar':    plantNameAr,
+            'disease_label_en': diseaseLabelEn,
+            'disease_label_fr': diseaseLabelFr,
+            'disease_label_ar': diseaseLabelAr,
           },
           options: Options(headers: {
             'Authorization': 'Bearer $token',
@@ -140,7 +162,7 @@ class DiseaseBloc extends Bloc<DiseaseEvent, DiseaseState> {
     }
   }
 
-  /// Fallback local si l'API n'a pas encore été mise à jour
+  /// Fallback local si l'API ne retourne pas les champs traduits
   String _fallbackPlant(String disease) {
     final parts = disease.split('___');
     return parts.isNotEmpty ? parts[0].replaceAll('_', ' ') : disease;

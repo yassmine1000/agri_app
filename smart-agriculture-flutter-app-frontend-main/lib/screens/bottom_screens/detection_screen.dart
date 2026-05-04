@@ -65,14 +65,15 @@ class DetectionScreen extends StatelessWidget {
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DiseaseDetectionScreen())),
           ),
           const SizedBox(height: 12),
-          FeatureCard(
-            title: l.fertilizerRecommendation,
-            subtitle: l.fertilizerRecommendationDesc,
-            emoji: '⚗️',
-            accentColor: gold,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => FertilizerForm())),
-          ),
-          const SizedBox(height: 28),
+          // FeatureCard(
+//   title: l.fertilizerRecommendation,
+//   subtitle: l.fertilizerRecommendationDesc,
+//   emoji: '⚗️',
+//   accentColor: gold,
+//   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => FertilizerForm())),
+// ),
+// const SizedBox(height: 12),
+
           Row(children: [
             _statCard('95%', l.accuracy, primary, surface, border),
             const SizedBox(width: 12),

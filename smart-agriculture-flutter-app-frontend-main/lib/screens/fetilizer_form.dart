@@ -229,14 +229,14 @@ class _FertilizerFormState extends State<FertilizerForm> {
         if (state is FertilizerDropdownsLoaded) {
           setState(() { _crops = state.crops; _stages = state.stages; _soilTypes = state.soilTypes; });
         } else if (state is FertilizerRecommendationSuccess) {
-          _showDialog(state.recommendation, false, l);
+          // _showDialog(state.recommendation, false, l);   ← COMMENTÉ pour désactiver
         } else if (state is FertilizerError) {
           final msg = state.errorMessage.contains('dropdown')
               ? l.failedDropdowns
               : state.errorMessage.startsWith('server_error:')
                   ? state.errorMessage.replaceFirst('server_error: ', '')
                   : l.failedRecommendation;
-          _showDialog(msg, true, l);
+          // _showDialog(msg, true, l);   ← COMMENTÉ pour désactiver
         }
       },
       builder: (ctx, state) {
@@ -335,13 +335,13 @@ class _FertilizerFormState extends State<FertilizerForm> {
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [BoxShadow(color: gold.withOpacity(0.35), blurRadius: 16, offset: const Offset(0, 6))],
                   ),
-                  child: ElevatedButton(
-                    onPressed: loading ? null : _submit,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
-                    child: loading
-                        ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.5, color: bg))
-                        : Text(l.getRecommendation, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: bg)),
-                  ),
+                  //child: ElevatedButton(
+                  //  onPressed: loading ? null : _submit,
+                    //style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent, shadowColor: Colors.transparent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
+                    //child: loading
+                    //    ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.5, color: bg))
+                    //    : Text(l.getRecommendation, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: bg)),
+                  //),
                 ),
                 const SizedBox(height: 40),
               ]),

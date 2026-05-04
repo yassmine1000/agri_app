@@ -111,17 +111,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               _Feature('📸', '⚡', l.chipAnalysis),
             ],
           ),
-          _OnboardingPage(
-            emoji: '🌱',
-            gradientColors: [const Color(0xFF4CAF50), cyan],
-            title: l.onboardingTitle2,
-            description: l.onboardingDesc2,
-            features: [
-              _Feature('🧪', l.chipNpk, l.chipSoilAnalysis),
-              _Feature('🌾', '🌾', l.chipCropPlans),
-              _Feature('💊', '💊', l.chipDosing),
-            ],
-          ),
+          //_OnboardingPage(
+          //  emoji: '🌱',
+          //  gradientColors: [const Color(0xFF4CAF50), cyan],
+          //  title: l.onboardingTitle2,
+          //  description: l.onboardingDesc2,
+          //  features: [
+          //    _Feature('🧪', l.chipNpk, l.chipSoilAnalysis),
+          //    _Feature('🌾', '🌾', l.chipCropPlans),
+          //    _Feature('💊', '💊', l.chipDosing),
+          //  ],
+        //  ),
           _OnboardingPage(
             emoji: '📊',
             gradientColors: [gold, primary],
@@ -213,7 +213,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             setState(() => _currentPage = i);
                             _animateIn();
                           },
-                          itemCount: 3,
+                          itemCount: 2,
                           itemBuilder: (context, index) {
                             final page = pages[index];
                             return FadeTransition(
@@ -315,7 +315,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           // Dots
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(3, (i) {
+                            children: List.generate(2, (i) {
                               final active = i == _currentPage;
                               return AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),

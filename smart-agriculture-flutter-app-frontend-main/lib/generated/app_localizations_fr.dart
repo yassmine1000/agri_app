@@ -917,5 +917,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get administrator => 'Administrateur';
 
   @override
+  String get viewMyQrCode => 'Voir mon QR Code';
+
+  @override
+  String get close => 'Fermer';
+
+  @override
   String get techStack => 'Flutter + Node.js + IA';
 }

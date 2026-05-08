@@ -911,5 +911,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get administrator => 'مسؤول';
 
   @override
+  String get viewMyQrCode => 'عرض رمز QR الخاص بي';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
   String get techStack => 'Flutter + Node.js + ذكاء اصطناعي';
 }

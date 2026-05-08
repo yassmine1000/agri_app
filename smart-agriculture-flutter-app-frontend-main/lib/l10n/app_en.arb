@@ -315,5 +315,7 @@
 
   "planName": "Plan name",
   "administrator": "Administrator",
+  "viewMyQrCode": "View my QR Code",
+  "close": "Close",
   "techStack": "Flutter + Node.js + AI"
 }

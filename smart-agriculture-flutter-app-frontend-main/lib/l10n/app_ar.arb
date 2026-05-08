@@ -314,5 +314,7 @@
 
   "planName": "اسم الخطة",
   "administrator": "مسؤول",
+  "viewMyQrCode": "عرض رمز QR الخاص بي",
+  "close": "إغلاق",
   "techStack": "Flutter + Node.js + ذكاء اصطناعي"
 }

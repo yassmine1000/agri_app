@@ -1864,6 +1864,18 @@ abstract class AppLocalizations {
   /// **'Administrator'**
   String get administrator;
 
+  /// No description provided for @viewMyQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'View my QR Code'**
+  String get viewMyQrCode;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
   /// No description provided for @techStack.
   ///
   /// In en, this message translates to:

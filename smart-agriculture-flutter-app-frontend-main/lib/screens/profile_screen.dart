@@ -263,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Row(mainAxisSize: MainAxisSize.min, children: [
                                 Icon(Icons.qr_code, color: primary, size: 18),
                                 const SizedBox(width: 8),
-                                Text('Voir mon QR Code', style: TextStyle(color: primary, fontWeight: FontWeight.w600, fontSize: 13)),
+                                Text(l.viewMyQrCode, style: TextStyle(color: primary, fontWeight: FontWeight.w600, fontSize: 13)),
                               ]),
                             ),
                           ),
@@ -452,7 +452,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (_) => AlertDialog(
         backgroundColor: surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: border)),
-        title: Text('Mon QR Code', style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700)),
+        title: Text(l.myQrCode, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700)),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             padding: const EdgeInsets.all(16),
@@ -473,10 +473,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          Text('Faites scanner ce code pour vous connecter', textAlign: TextAlign.center, style: TextStyle(color: textSecondary, fontSize: 12, height: 1.5)),
+          Text(l.scanToLogin, textAlign: TextAlign.center, style: TextStyle(color: textSecondary, fontSize: 12, height: 1.5)),
         ]),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text('Fermer', style: TextStyle(color: textSecondary))),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(l.close, style: TextStyle(color: textSecondary))),
         ],
       ),
     );

@@ -313,5 +313,6 @@
   "adminAccessOnly": "Accès réservé aux administrateurs",
 
   "planName": "Nom du plan",
+  "administrator": "Administrateur",
   "techStack": "Flutter + Node.js + IA"
 }

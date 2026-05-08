@@ -357,15 +357,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // ── Traduction du rôle selon la langue active ──────────────────────────────
   String _localizeRole(String? role, AppLocalizations l) {
     switch (role) {
-      case 'farmer':   return l.farmer;
-      case 'customer': return l.customer;
-      case 'admin':    return 'Admin';
+      case 'farmer':   return l.farmer;       // Farmer / Agriculteur / مزارع
+      case 'customer': return l.customer;     // Customer / Client / عميل
+      case 'admin':    return l.administrator; // Administrator / Administrateur / مشرف
       default:         return role ?? '-';
     }
   }
 
+  // ── Traduction du genre selon la langue active ─────────────────────────────
   String _localizeGender(String? gender, AppLocalizations l) {
     switch (gender) {
       case 'male':   return l.male;
@@ -443,39 +445,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Text(value, style: TextStyle(color: textPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
     ]),
   );
+
   void _showQrDialog(bool isDark, Color primary, Color surface, Color border, Color textPrimary, Color textSecondary) {
-  showDialog(
-    context: context,
-    builder: (_) => AlertDialog(
-      backgroundColor: surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: border)),
-      title: Text('Mon QR Code', style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700)),
-      content: Column(mainAxisSize: MainAxisSize.min, children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-          child: SizedBox(
-            width: 200, height: 200,
-            child: PrettyQrView.data(
-              data: _qrToken!,
-              errorCorrectLevel: QrErrorCorrectLevel.H,
-              decoration: PrettyQrDecoration(
-                shape: PrettyQrSmoothSymbol(color: const Color(0xFF050E1A)),
-                image: const PrettyQrDecorationImage(
-                  image: AssetImage('assets/icons/agriscan_logo.png'),
-                  scale: 0.2,
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: border)),
+        title: Text('Mon QR Code', style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700)),
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+            child: SizedBox(
+              width: 200, height: 200,
+              child: PrettyQrView.data(
+                data: _qrToken!,
+                errorCorrectLevel: QrErrorCorrectLevel.H,
+                decoration: PrettyQrDecoration(
+                  shape: PrettyQrSmoothSymbol(color: const Color(0xFF050E1A)),
+                  image: const PrettyQrDecorationImage(
+                    image: AssetImage('assets/icons/agriscan_logo.png'),
+                    scale: 0.2,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Text('Faites scanner ce code pour vous connecter', textAlign: TextAlign.center, style: TextStyle(color: textSecondary, fontSize: 12, height: 1.5)),
-      ]),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: Text('Fermer', style: TextStyle(color: textSecondary))),
-      ],
-    ),
-  );
-}
+          const SizedBox(height: 12),
+          Text('Faites scanner ce code pour vous connecter', textAlign: TextAlign.center, style: TextStyle(color: textSecondary, fontSize: 12, height: 1.5)),
+        ]),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text('Fermer', style: TextStyle(color: textSecondary))),
+        ],
+      ),
+    );
+  }
 }

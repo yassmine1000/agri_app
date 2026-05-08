@@ -313,5 +313,6 @@
   "adminAccessOnly": "الوصول مخصص للمسؤولين فقط",
 
   "planName": "اسم الخطة",
+  "administrator": "مسؤول",
   "techStack": "Flutter + Node.js + ذكاء اصطناعي"
 }

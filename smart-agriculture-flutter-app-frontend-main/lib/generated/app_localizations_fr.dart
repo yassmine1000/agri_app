@@ -914,5 +914,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get planName => 'Nom du plan';
 
   @override
+  String get administrator => 'Administrateur';
+
+  @override
   String get techStack => 'Flutter + Node.js + IA';
 }

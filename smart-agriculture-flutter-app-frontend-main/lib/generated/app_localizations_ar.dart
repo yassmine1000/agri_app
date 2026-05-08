@@ -908,5 +908,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get planName => 'اسم الخطة';
 
   @override
+  String get administrator => 'مسؤول';
+
+  @override
   String get techStack => 'Flutter + Node.js + ذكاء اصطناعي';
 }

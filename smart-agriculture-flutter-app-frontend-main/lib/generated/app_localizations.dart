@@ -1858,6 +1858,12 @@ abstract class AppLocalizations {
   /// **'Plan name'**
   String get planName;
 
+  /// No description provided for @administrator.
+  ///
+  /// In en, this message translates to:
+  /// **'Administrator'**
+  String get administrator;
+
   /// No description provided for @techStack.
   ///
   /// In en, this message translates to:

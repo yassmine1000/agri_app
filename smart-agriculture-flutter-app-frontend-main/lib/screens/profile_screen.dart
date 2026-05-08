@@ -252,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (_qrToken != null) ...[
                           const SizedBox(height: 20),
                           GestureDetector(
-                            onTap: () => _showQrDialog(isDark, primary, surface, border, textPrimary, textSecondary),
+                            onTap: () => _showQrDialog(isDark, primary, surface, border, textPrimary, textSecondary, l),
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                               decoration: BoxDecoration(
@@ -446,7 +446,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ]),
   );
 
-  void _showQrDialog(bool isDark, Color primary, Color surface, Color border, Color textPrimary, Color textSecondary) {
+  void _showQrDialog(bool isDark, Color primary, Color surface, Color border, Color textPrimary, Color textSecondary, AppLocalizations l) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(

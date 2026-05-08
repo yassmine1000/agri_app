@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tagline => 'Plant Intelligence Platform';
 
   @override
+  String get appTagline => 'Plant Intelligence Platform';
+
+  @override
   String get signIn => 'Sign In';
 
   @override

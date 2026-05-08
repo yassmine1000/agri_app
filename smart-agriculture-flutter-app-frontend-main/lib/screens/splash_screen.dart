@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_agri_app/generated/app_localizations.dart';
 import '../local/pref_helper.dart';
 import 'onboarding_screen.dart';
 import 'main_screen.dart';
@@ -80,12 +81,14 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
     return ValueListenableBuilder<bool>(
       valueListenable: widget.isDarkNotifier,
       builder: (context, isDark, _) {
-        final bg      = isDark ? AppColors.background : AppColorsLight.background;
-        final primary = isDark ? AppColors.primary    : AppColorsLight.primary;
-        final cyan    = isDark ? AppColors.cyan       : AppColorsLight.cyan;
+        final bg            = isDark ? AppColors.background    : AppColorsLight.background;
+        final primary       = isDark ? AppColors.primary       : AppColorsLight.primary;
+        final cyan          = isDark ? AppColors.cyan          : AppColorsLight.cyan;
         final textPrimary   = isDark ? AppColors.textPrimary   : AppColorsLight.textPrimary;
         final textSecondary = isDark ? AppColors.textSecondary : AppColorsLight.textSecondary;
 
@@ -134,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Plant Intelligence Platform',
+                      l.appTagline,
                       style: TextStyle(fontSize: 12, color: textSecondary, letterSpacing: 1),
                     ),
                     const SizedBox(height: 48),

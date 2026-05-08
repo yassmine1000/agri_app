@@ -112,6 +112,12 @@ abstract class AppLocalizations {
   /// **'Plant Intelligence Platform'**
   String get tagline;
 
+  /// No description provided for @appTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Plant Intelligence Platform'**
+  String get appTagline;
+
   /// No description provided for @signIn.
   ///
   /// In en, this message translates to:

@@ -3,6 +3,7 @@
 
   "appName": "AgriScan",
   "tagline": "Plant Intelligence Platform",
+  "appTagline": "Plant Intelligence Platform",
 
   "signIn": "Sign In",
   "signOut": "Sign Out",

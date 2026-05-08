@@ -15,6 +15,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tagline => 'منصة الذكاء النباتي';
 
   @override
+  String get appTagline => 'منصة الذكاء النباتي';
+
+  @override
   String get signIn => 'تسجيل الدخول';
 
   @override

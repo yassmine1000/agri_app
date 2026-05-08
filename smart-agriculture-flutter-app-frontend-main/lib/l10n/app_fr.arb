@@ -3,6 +3,7 @@
 
   "appName": "AgriScan",
   "tagline": "Plateforme d'Intelligence Végétale",
+  "appTagline": "Plateforme d'Intelligence Végétale",
 
   "signIn": "Se connecter",
   "signOut": "Déconnexion",

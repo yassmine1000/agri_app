@@ -15,6 +15,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tagline => 'Plateforme d\'Intelligence Végétale';
 
   @override
+  String get appTagline => 'Plateforme d\'Intelligence Végétale';
+
+  @override
   String get signIn => 'Se connecter';
 
   @override

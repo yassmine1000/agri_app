@@ -1857,6 +1857,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan name'**
   String get planName;
+
+  /// No description provided for @techStack.
+  ///
+  /// In en, this message translates to:
+  /// **'Flutter + Node.js + AI'**
+  String get techStack;
 }
 
 class _AppLocalizationsDelegate

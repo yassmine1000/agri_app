@@ -313,5 +313,6 @@
   "farmerAccessOnly": "Access reserved for farmers",
   "adminAccessOnly": "Access reserved for administrators",
 
-  "planName": "Plan name"
+  "planName": "Plan name",
+  "techStack": "Flutter + Node.js + AI"
 }

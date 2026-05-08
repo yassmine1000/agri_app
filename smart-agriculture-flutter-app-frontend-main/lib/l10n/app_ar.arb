@@ -312,5 +312,6 @@
   "farmerAccessOnly": "الوصول مخصص للمزارعين فقط",
   "adminAccessOnly": "الوصول مخصص للمسؤولين فقط",
 
-  "planName": "اسم الخطة"
+  "planName": "اسم الخطة",
+  "techStack": "Flutter + Node.js + ذكاء اصطناعي"
 }

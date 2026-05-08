@@ -246,7 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(color: primary.withOpacity(0.12), borderRadius: BorderRadius.circular(20)),
-                            child: Text(_profile?['role']?.toUpperCase() ?? '', style: TextStyle(fontSize: 12, color: primary, fontWeight: FontWeight.w700)),
+                            child: Text(_localizeRole(_profile?['role'], l).toUpperCase(), style: TextStyle(fontSize: 12, color: primary, fontWeight: FontWeight.w700)),
                           ),
                         ])),
                         if (_qrToken != null) ...[
@@ -321,7 +321,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(height: 20),
                           _sectionLabel(l.accountInfo, textSecondary),
                           _card(surface, border, child: Column(children: [
-                            _infoRow(l.gender, _profile?['gender'] ?? '-', textPrimary, textSecondary),
+                            _infoRow(l.gender, _localizeGender(_profile?['gender'], l), textPrimary, textSecondary),
                             _divider(border),
                             _infoRow(l.dateOfBirth, _formatDate(_profile?['dob']), textPrimary, textSecondary),
                             _divider(border),
@@ -355,6 +355,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  String _localizeRole(String? role, AppLocalizations l) {
+    switch (role) {
+      case 'farmer':   return l.farmer;
+      case 'customer': return l.customer;
+      case 'admin':    return 'Admin';
+      default:         return role ?? '-';
+    }
+  }
+
+  String _localizeGender(String? gender, AppLocalizations l) {
+    switch (gender) {
+      case 'male':   return l.male;
+      case 'female': return l.female;
+      case 'other':  return l.other;
+      default:       return gender ?? '-';
+    }
   }
 
   String _formatDate(dynamic dateStr) {

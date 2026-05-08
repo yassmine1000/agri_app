@@ -161,7 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(height: 16, color: border, thickness: 0.5),
                   _infoRow(l.developer, 'Jarray Agro', textPrimary, textSecondary),
                   Divider(height: 16, color: border, thickness: 0.5),
-                  _infoRow(l.technology, 'Flutter + Node.js + AI', textPrimary, textSecondary),
+                  _infoRow(l.technology, l.techStack, textPrimary, textSecondary),
                 ])),
                 const SizedBox(height: 40),
               ],

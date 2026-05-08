@@ -30,10 +30,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get password => 'Mot de passe';
 
   @override
-  String get welcomeBack => 'Bon retour';
+  String get welcomeBack => 'Bienvenue';
 
   @override
-  String get signInToAccount => 'Connectez-vous à votre compte';
+  String get signInToAccount => 'S\'identifier';
 
   @override
   String get noAccount => 'Pas encore de compte ? ';
@@ -124,17 +124,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get plantIntelligenceDesc =>
-      'Détectez les maladies et optimisez vos cultures grâce à l\'analyse IA avancée.';
+      'Identifiez les maladies et maximisez le rendement de vos cultures grâce à une analyse par IA de pointe.';
 
   @override
   String get tools => 'OUTILS';
 
   @override
-  String get diseaseDetection => 'Détection des maladies';
+  String get diseaseDetection => 'Détection de maladies';
 
   @override
   String get diseaseDetectionDesc =>
-      'Prenez ou importez une photo de feuille pour identifier les maladies et obtenir des conseils instantanément.';
+      'Prenez ou importez la photo d\'une feuille pour identifier une pathologie et obtenir des conseils instantanément.';
 
   @override
   String get fertilizerRecommendation => 'Recommandations d\'engrais';
@@ -150,14 +150,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get diseases => 'Maladies';
 
   @override
-  String get available => 'Disponibilité';
+  String get available => 'Service';
 
   @override
   String get leafAnalysis => 'Analyse de la feuille';
 
   @override
   String get leafAnalysisDesc =>
-      'Prenez ou importez une photo de feuille pour détecter les maladies des plantes grâce à l\'IA.';
+      'Prenez ou importez une photo de votre plante pour détecter d\'éventuelles maladies grâce à l\'IA.';
 
   @override
   String get takePhoto => 'Prendre une photo';
@@ -166,10 +166,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get useCamera => 'Utiliser l\'appareil photo';
 
   @override
-  String get chooseGallery => 'Choisir depuis la galerie';
+  String get chooseGallery => 'Importer une image';
 
   @override
-  String get browsePhotos => 'Parcourir les photos existantes';
+  String get browsePhotos => 'Choisir depuis votre galerie';
 
   @override
   String get analysisInProgress => 'Analyse en cours...';
@@ -188,7 +188,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tipText =>
-      'Pour de meilleurs résultats, photographiez une seule feuille de façon nette et sous un bon éclairage.';
+      'Pour un résultat optimal, assurez-vous que la feuille est nette et bien éclairée.';
 
   @override
   String get detectionResults => 'Résultats de détection';
@@ -356,7 +356,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get darkMode => 'Mode sombre';
 
   @override
-  String get darkModeDesc => 'Basculer entre les thèmes sombre et clair';
+  String get darkModeDesc => 'Alterner entre les modes clair et sombre';
 
   @override
   String get imageQuality => 'QUALITÉ D\'IMAGE';
@@ -365,7 +365,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get low => 'Faible';
 
   @override
-  String get lowDesc => 'Télechargement plus rapide, moins de détails';
+  String get lowDesc => 'Télechargement plus rapide, résolution réduite';
 
   @override
   String get medium => 'Moyenne';
@@ -377,7 +377,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get high => 'Haute';
 
   @override
-  String get highDesc => 'Meilleure précision pour la détection';
+  String get highDesc => 'Précision maximale pour l\'analyse';
 
   @override
   String get data => 'DONNÉES';
@@ -386,7 +386,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get detectionHistory => 'Historique de détection';
 
   @override
-  String get detectionHistoryDesc => 'Voir vos analyses passées';
+  String get detectionHistoryDesc => 'Consulter l\'historique des analyses';
 
   @override
   String get about => 'À PROPOS';
@@ -493,7 +493,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get userUpdated => 'Utilisateur modifié';
 
   @override
-  String get searchUsers => 'Rechercher par nom, username, email, rôle...';
+  String get searchUsers =>
+      'Rechercher par nom, nom d\'utilisateur, email, rôle...';
 
   @override
   String get registeredOn => 'Inscrit:';
@@ -533,7 +534,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgotPassword => 'Mot de passe oublié ?';
 
   @override
-  String get loginWithQr => 'Se connecter avec QR Code';
+  String get loginWithQr => 'Se connecter avec un QR Code';
 
   @override
   String get phoneRequired => 'Le numéro de téléphone est requis';
@@ -565,7 +566,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingDesc1 =>
-      'Scannez n\'importe quelle feuille et identifiez instantanément les maladies grâce à l\'IA';
+      'Scannez vos feuilles et identifiez instantanément les maladies grâce à notre IA  de pointe';
 
   @override
   String get onboardingTitle2 => 'Intelligence Fertilisants';
@@ -579,7 +580,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingDesc3 =>
-      'Suivez les prix des cultures en temps réel et planifiez votre calendrier agricole';
+      'Suivez le cours des cultures en temps réel et optimisez votre calendrier agricole';
 
   @override
   String get getStarted => 'Commencer';
@@ -762,13 +763,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les cultures disponibles sont limitées au dataset d\'entraînement (5 cultures).';
 
   @override
-  String get chipPlantSpecies => 'Espèces';
+  String get chipPlantSpecies => 'Variétés';
 
   @override
-  String get chipAccuracy => 'Précision IA';
+  String get chipAccuracy => ' de Précision';
 
   @override
-  String get chipAnalysis => 'Analyse';
+  String get chipAnalysis => 'Analyse Flash';
 
   @override
   String get chipCustom => 'Personnalisé';
@@ -780,13 +781,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get chipDosing => 'Dosage';
 
   @override
-  String get chipLive => 'En direct';
+  String get chipLive => 'Prix en direct';
 
   @override
-  String get chipCalendar => 'Calendrier';
+  String get chipCalendar => 'Agenda cultural';
 
   @override
-  String get chipProducts => 'Produits';
+  String get chipProducts => 'Catalogue des produits';
 
   @override
   String get chipSoilAnalysis => 'Analyse du sol';
@@ -804,7 +805,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get yourPersonalQr => 'Votre QR Code personnel';
 
   @override
-  String get scanToLogin => 'Faites scanner ce code pour vous connecter';
+  String get scanToLogin => 'Scannez ce code pour vous connecter';
 
   @override
   String get saveToGallery => 'Sauvegarder dans la galerie';

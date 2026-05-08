@@ -331,7 +331,7 @@ abstract class AppLocalizations {
   /// No description provided for @plantIntelligenceDesc.
   ///
   /// In en, this message translates to:
-  /// **'Detect diseases and optimize your crops with advanced AI analysis.'**
+  /// **'Identify diseases and maximize your crop yield through advanced AI analysis.'**
   String get plantIntelligenceDesc;
 
   /// No description provided for @tools.
@@ -349,7 +349,7 @@ abstract class AppLocalizations {
   /// No description provided for @diseaseDetectionDesc.
   ///
   /// In en, this message translates to:
-  /// **'Upload or capture a leaf image to identify diseases and get treatment advice instantly.'**
+  /// **'Upload or capture a leaf image a disease and instantly receive advice.'**
   String get diseaseDetectionDesc;
 
   /// No description provided for @fertilizerRecommendation.
@@ -379,7 +379,7 @@ abstract class AppLocalizations {
   /// No description provided for @available.
   ///
   /// In en, this message translates to:
-  /// **'Availability'**
+  /// **'Service'**
   String get available;
 
   /// No description provided for @leafAnalysis.
@@ -391,7 +391,7 @@ abstract class AppLocalizations {
   /// No description provided for @leafAnalysisDesc.
   ///
   /// In en, this message translates to:
-  /// **'Capture or upload a leaf photo to detect plant diseases using AI.'**
+  /// **'Take or upload a photo of your plant to detect possible diseases using AI.'**
   String get leafAnalysisDesc;
 
   /// No description provided for @takePhoto.
@@ -409,13 +409,13 @@ abstract class AppLocalizations {
   /// No description provided for @chooseGallery.
   ///
   /// In en, this message translates to:
-  /// **'Choose from Gallery'**
+  /// **'Import an image'**
   String get chooseGallery;
 
   /// No description provided for @browsePhotos.
   ///
   /// In en, this message translates to:
-  /// **'Browse existing photos'**
+  /// **'Choose from your gallery'**
   String get browsePhotos;
 
   /// No description provided for @analysisInProgress.
@@ -451,7 +451,7 @@ abstract class AppLocalizations {
   /// No description provided for @tipText.
   ///
   /// In en, this message translates to:
-  /// **'For best results, take a clear photo of a single leaf in good lighting.'**
+  /// **'For optimal results, make sure the leaf is clear and well-lit.'**
   String get tipText;
 
   /// No description provided for @detectionResults.
@@ -787,7 +787,7 @@ abstract class AppLocalizations {
   /// No description provided for @darkModeDesc.
   ///
   /// In en, this message translates to:
-  /// **'Switch between dark and light theme'**
+  /// **'Switch between light and dark modes'**
   String get darkModeDesc;
 
   /// No description provided for @imageQuality.
@@ -805,7 +805,7 @@ abstract class AppLocalizations {
   /// No description provided for @lowDesc.
   ///
   /// In en, this message translates to:
-  /// **'Faster upload, less detail'**
+  /// **'Faster download, reduced resolution'**
   String get lowDesc;
 
   /// No description provided for @medium.
@@ -829,7 +829,7 @@ abstract class AppLocalizations {
   /// No description provided for @highDesc.
   ///
   /// In en, this message translates to:
-  /// **'Best accuracy for detection'**
+  /// **'Maximum accuracy for analysis'**
   String get highDesc;
 
   /// No description provided for @data.
@@ -847,7 +847,7 @@ abstract class AppLocalizations {
   /// No description provided for @detectionHistoryDesc.
   ///
   /// In en, this message translates to:
-  /// **'View your past analyses'**
+  /// **'View analysis history'**
   String get detectionHistoryDesc;
 
   /// No description provided for @about.
@@ -1603,19 +1603,19 @@ abstract class AppLocalizations {
   /// No description provided for @chipLive.
   ///
   /// In en, this message translates to:
-  /// **'Live'**
+  /// **' Live prices'**
   String get chipLive;
 
   /// No description provided for @chipCalendar.
   ///
   /// In en, this message translates to:
-  /// **'Calendar'**
+  /// **'Cultural agenda'**
   String get chipCalendar;
 
   /// No description provided for @chipProducts.
   ///
   /// In en, this message translates to:
-  /// **'Products'**
+  /// **'Product catalog'**
   String get chipProducts;
 
   /// No description provided for @chipSoilAnalysis.

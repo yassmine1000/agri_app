@@ -124,7 +124,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get plantIntelligenceDesc =>
-      'Detect diseases and optimize your crops with advanced AI analysis.';
+      'Identify diseases and maximize your crop yield through advanced AI analysis.';
 
   @override
   String get tools => 'TOOLS';
@@ -134,7 +134,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diseaseDetectionDesc =>
-      'Upload or capture a leaf image to identify diseases and get treatment advice instantly.';
+      'Upload or capture a leaf image a disease and instantly receive advice.';
 
   @override
   String get fertilizerRecommendation => 'Fertilizer Recommendations';
@@ -150,14 +150,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diseases => 'Diseases';
 
   @override
-  String get available => 'Availability';
+  String get available => 'Service';
 
   @override
   String get leafAnalysis => 'Leaf Analysis';
 
   @override
   String get leafAnalysisDesc =>
-      'Capture or upload a leaf photo to detect plant diseases using AI.';
+      'Take or upload a photo of your plant to detect possible diseases using AI.';
 
   @override
   String get takePhoto => 'Take a Photo';
@@ -166,10 +166,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get useCamera => 'Use your camera';
 
   @override
-  String get chooseGallery => 'Choose from Gallery';
+  String get chooseGallery => 'Import an image';
 
   @override
-  String get browsePhotos => 'Browse existing photos';
+  String get browsePhotos => 'Choose from your gallery';
 
   @override
   String get analysisInProgress => 'Analyzing leaf...';
@@ -188,7 +188,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tipText =>
-      'For best results, take a clear photo of a single leaf in good lighting.';
+      'For optimal results, make sure the leaf is clear and well-lit.';
 
   @override
   String get detectionResults => 'Detection Results';
@@ -356,7 +356,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get darkMode => 'Dark Mode';
 
   @override
-  String get darkModeDesc => 'Switch between dark and light theme';
+  String get darkModeDesc => 'Switch between light and dark modes';
 
   @override
   String get imageQuality => 'IMAGE QUALITY';
@@ -365,7 +365,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get low => 'Low';
 
   @override
-  String get lowDesc => 'Faster upload, less detail';
+  String get lowDesc => 'Faster download, reduced resolution';
 
   @override
   String get medium => 'Medium';
@@ -377,7 +377,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get high => 'High';
 
   @override
-  String get highDesc => 'Best accuracy for detection';
+  String get highDesc => 'Maximum accuracy for analysis';
 
   @override
   String get data => 'DATA';
@@ -386,7 +386,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get detectionHistory => 'Detection History';
 
   @override
-  String get detectionHistoryDesc => 'View your past analyses';
+  String get detectionHistoryDesc => 'View analysis history';
 
   @override
   String get about => 'ABOUT';
@@ -778,13 +778,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chipDosing => 'Dosing';
 
   @override
-  String get chipLive => 'Live';
+  String get chipLive => ' Live prices';
 
   @override
-  String get chipCalendar => 'Calendar';
+  String get chipCalendar => 'Cultural agenda';
 
   @override
-  String get chipProducts => 'Products';
+  String get chipProducts => 'Product catalog';
 
   @override
   String get chipSoilAnalysis => 'Soil analysis';

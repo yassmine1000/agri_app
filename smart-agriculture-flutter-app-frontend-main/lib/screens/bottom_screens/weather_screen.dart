@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_agri_app/generated/app_localizations.dart';
 import 'package:smart_agri_app/bloc/weather/weather_bloc.dart';
 import 'package:smart_agri_app/bloc/weather/weather_state.dart';
@@ -21,20 +20,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
   String _langCode = 'en';
   String _lastLangCode = '';
 
-  Future<String> _getSavedLang() async {
-    final prefs = await SharedPreferences.getInstance();
-    final saved = prefs.getString('language') ?? 'EN';
-    switch (saved) {
-      case 'FR': return 'fr';
-      case 'AR': return 'ar';
-      default:   return 'en';
-    }
-  }
-
-  Future<void> _searchWeather() async {
+  void _searchWeather() {
     final city = _cityController.text.trim();
     if (city.isEmpty) return;
-    _langCode = await _getSavedLang();
+    _langCode = Localizations.localeOf(context).languageCode;
     context.read<WeatherBloc>().add(FetchCurrentWeatherByCity(city: city, lang: _langCode));
     context.read<WeatherBloc>().add(FetchWeatherForecastByCity(city: city, days: 3, lang: _langCode));
   }
@@ -43,18 +32,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
   void initState() {
     super.initState();
     _cityController.text = 'Kairouan';
-    WidgetsBinding.instance.addPostFrameCallback((_) => _searchWeather());
   }
 
-  // Appelé automatiquement à chaque changement de locale
+  // Appelé au premier build ET à chaque changement de locale
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final currentLang = Localizations.localeOf(context).languageCode;
-    if (_lastLangCode.isNotEmpty && currentLang != _lastLangCode) {
-      _searchWeather();
+    if (currentLang != _lastLangCode) {
+      _lastLangCode = currentLang;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _searchWeather());
     }
-    _lastLangCode = currentLang;
   }
 
   @override

@@ -19,6 +19,7 @@ class WeatherScreen extends StatefulWidget {
 class _WeatherScreenState extends State<WeatherScreen> {
   final TextEditingController _cityController = TextEditingController();
   String _langCode = 'en';
+  String _lastLangCode = '';
 
   Future<String> _getSavedLang() async {
     final prefs = await SharedPreferences.getInstance();
@@ -43,6 +44,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
     super.initState();
     _cityController.text = 'Kairouan';
     WidgetsBinding.instance.addPostFrameCallback((_) => _searchWeather());
+  }
+
+  // Appelé automatiquement à chaque changement de locale
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currentLang = Localizations.localeOf(context).languageCode;
+    if (_lastLangCode.isNotEmpty && currentLang != _lastLangCode) {
+      _searchWeather();
+    }
+    _lastLangCode = currentLang;
   }
 
   @override

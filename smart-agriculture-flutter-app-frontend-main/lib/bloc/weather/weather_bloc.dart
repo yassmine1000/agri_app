@@ -16,7 +16,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   Future<void> _fetchCurrentWeather(FetchCurrentWeather event, Emitter<WeatherState> emit) async {
     emit(WeatherLoading());
     try {
-      final weatherResponse = await weatherApiService.getCurrentWeather(event.lat, event.lon);
+      final weatherResponse = await weatherApiService.getCurrentWeather(event.lat, event.lon, lang: event.lang);
       emit(WeatherLoaded(weatherResponse: weatherResponse, isCurrentWeather: true));
     } catch (e) {
       emit(WeatherError(message: e.toString()));
@@ -26,7 +26,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   Future<void> _fetchWeatherForecast(FetchWeatherForecast event, Emitter<WeatherState> emit) async {
     emit(WeatherLoading());
     try {
-      final weatherResponse = await weatherApiService.getForecast(event.lat, event.lon, event.days);
+      final weatherResponse = await weatherApiService.getForecast(event.lat, event.lon, event.days, lang: event.lang);
       emit(WeatherLoaded(weatherResponse: weatherResponse, isCurrentWeather: false));
     } catch (e) {
       emit(WeatherError(message: e.toString()));
@@ -36,7 +36,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   Future<void> _fetchCurrentWeatherByCity(FetchCurrentWeatherByCity event, Emitter<WeatherState> emit) async {
     emit(WeatherLoading());
     try {
-      final weatherResponse = await weatherApiService.getCurrentWeatherByCity(event.city);
+      final weatherResponse = await weatherApiService.getCurrentWeatherByCity(event.city, lang: event.lang);
       emit(WeatherLoaded(weatherResponse: weatherResponse, isCurrentWeather: true));
     } catch (e) {
       emit(WeatherError(message: e.toString()));
@@ -46,7 +46,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   Future<void> _fetchWeatherForecastByCity(FetchWeatherForecastByCity event, Emitter<WeatherState> emit) async {
     emit(WeatherLoading());
     try {
-      final weatherResponse = await weatherApiService.getForecastByCity(event.city, event.days);
+      final weatherResponse = await weatherApiService.getForecastByCity(event.city, event.days, lang: event.lang);
       emit(WeatherLoaded(weatherResponse: weatherResponse, isCurrentWeather: false));
     } catch (e) {
       emit(WeatherError(message: e.toString()));

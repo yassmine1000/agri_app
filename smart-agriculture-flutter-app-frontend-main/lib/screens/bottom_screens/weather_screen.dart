@@ -9,7 +9,8 @@ import '../../bloc/weather/weather_event.dart';
 
 class WeatherScreen extends StatefulWidget {
   final bool isDarkMode;
-  const WeatherScreen({super.key, this.isDarkMode = true});
+  final String langCode;
+  const WeatherScreen({super.key, this.isDarkMode = true, this.langCode = 'en'});
 
   @override
   State<WeatherScreen> createState() => _WeatherScreenState();
@@ -18,8 +19,8 @@ class WeatherScreen extends StatefulWidget {
 class _WeatherScreenState extends State<WeatherScreen> {
   final TextEditingController _cityController = TextEditingController();
 
-  // Retourne le code langue compatible WeatherAPI (en / fr / ar)
-  String get _langCode => Localizations.localeOf(context).languageCode;
+  // Langue passée depuis main_screen où le contexte est déjà prêt
+  String get _langCode => widget.langCode;
 
   void _searchWeather() {
     final city = _cityController.text.trim();
@@ -31,7 +32,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   @override
   void initState() {
     super.initState();
-    _cityController.text = 'Tunis';
+    _cityController.text = 'Kairouan';
     WidgetsBinding.instance.addPostFrameCallback((_) => _searchWeather());
   }
 

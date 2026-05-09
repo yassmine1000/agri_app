@@ -91,6 +91,7 @@
   "searchCity": "Search city...",
   "daysForecast": "3-DAY FORECAST",
   "humidity": "Humidity",
+  "cityNotFound": "City not found",
 
   "cropLibrary": "Crop Library",
   "noCropsAvailable": "No crops available",

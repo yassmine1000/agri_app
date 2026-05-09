@@ -263,6 +263,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get humidity => 'Humidité';
 
   @override
+  String get cityNotFound => 'Ville introuvable';
+
+  @override
   String get cropLibrary => 'Bibliothèque de cultures';
 
   @override

@@ -598,6 +598,12 @@ abstract class AppLocalizations {
   /// **'Humidity'**
   String get humidity;
 
+  /// No description provided for @cityNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'City not found'**
+  String get cityNotFound;
+
   /// No description provided for @cropLibrary.
   ///
   /// In en, this message translates to:

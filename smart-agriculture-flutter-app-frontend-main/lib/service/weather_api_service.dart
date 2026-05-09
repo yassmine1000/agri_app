@@ -8,13 +8,14 @@ class WeatherApiService {
     receiveTimeout: Duration(seconds: 30),
   ));
 
-  final String _apiKey = '031aa34fff274d6390800546260504'; // remplace par ta vraie clé
+  final String _apiKey = '031aa34fff274d6390800546260504';
 
-  Future<WeatherResponse> getCurrentWeather(double lat, double lon) async {
+  Future<WeatherResponse> getCurrentWeather(double lat, double lon, {String lang = 'en'}) async {
     try {
       final res = await _dio.get('/current.json', queryParameters: {
         'key': _apiKey,
         'q': '$lat,$lon',
+        'lang': lang,
       });
       return WeatherResponse.fromJson(res.data);
     } on DioException catch (e) {
@@ -22,11 +23,12 @@ class WeatherApiService {
     }
   }
 
-  Future<WeatherResponse> getCurrentWeatherByCity(String city) async {
+  Future<WeatherResponse> getCurrentWeatherByCity(String city, {String lang = 'en'}) async {
     try {
       final res = await _dio.get('/current.json', queryParameters: {
         'key': _apiKey,
         'q': city,
+        'lang': lang,
       });
       return WeatherResponse.fromJson(res.data);
     } on DioException catch (e) {
@@ -34,13 +36,14 @@ class WeatherApiService {
     }
   }
 
-  Future<WeatherResponse> getForecast(double lat, double lon, int days) async {
+  Future<WeatherResponse> getForecast(double lat, double lon, int days, {String lang = 'en'}) async {
     try {
       final res = await _dio.get('/forecast.json', queryParameters: {
         'key': _apiKey,
         'q': '$lat,$lon',
         'days': days,
         'alerts': 'yes',
+        'lang': lang,
       });
       return WeatherResponse.fromJson(res.data);
     } on DioException catch (e) {
@@ -48,13 +51,14 @@ class WeatherApiService {
     }
   }
 
-  Future<WeatherResponse> getForecastByCity(String city, int days) async {
+  Future<WeatherResponse> getForecastByCity(String city, int days, {String lang = 'en'}) async {
     try {
       final res = await _dio.get('/forecast.json', queryParameters: {
         'key': _apiKey,
         'q': city,
         'days': days,
         'alerts': 'yes',
+        'lang': lang,
       });
       return WeatherResponse.fromJson(res.data);
     } on DioException catch (e) {

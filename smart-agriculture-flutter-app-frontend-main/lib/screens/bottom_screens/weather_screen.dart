@@ -18,11 +18,14 @@ class WeatherScreen extends StatefulWidget {
 class _WeatherScreenState extends State<WeatherScreen> {
   final TextEditingController _cityController = TextEditingController();
 
+  // Retourne le code langue compatible WeatherAPI (en / fr / ar)
+  String get _langCode => Localizations.localeOf(context).languageCode;
+
   void _searchWeather() {
     final city = _cityController.text.trim();
     if (city.isEmpty) return;
-    context.read<WeatherBloc>().add(FetchCurrentWeatherByCity(city: city));
-    context.read<WeatherBloc>().add(FetchWeatherForecastByCity(city: city, days: 3));
+    context.read<WeatherBloc>().add(FetchCurrentWeatherByCity(city: city, lang: _langCode));
+    context.read<WeatherBloc>().add(FetchWeatherForecastByCity(city: city, days: 3, lang: _langCode));
   }
 
   @override
@@ -94,7 +97,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           if (state is WeatherError) return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Icon(Icons.cloud_off_outlined, size: 60, color: textSecondary),
             const SizedBox(height: 12),
-            Text('City not found', style: TextStyle(color: textSecondary)),
+            Text(l.cityNotFound, style: TextStyle(color: textSecondary)),
           ]));
           return Center(child: Text(l.searchCity, style: TextStyle(color: textSecondary)));
         },

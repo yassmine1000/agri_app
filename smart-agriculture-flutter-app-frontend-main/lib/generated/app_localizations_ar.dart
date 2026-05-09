@@ -263,6 +263,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get humidity => 'الرطوبة';
 
   @override
+  String get cityNotFound => 'المدينة غير موجودة';
+
+  @override
   String get cropLibrary => 'مكتبة المحاصيل';
 
   @override

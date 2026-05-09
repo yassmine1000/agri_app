@@ -91,6 +91,7 @@
   "searchCity": "Rechercher une ville...",
   "daysForecast": "PRÉVISIONS 3 JOURS",
   "humidity": "Humidité",
+  "cityNotFound": "Ville introuvable",
 
   "cropLibrary": "Bibliothèque de cultures",
   "noCropsAvailable": "Aucune culture disponible",

@@ -91,6 +91,7 @@
   "searchCity": "البحث عن مدينة...",
   "daysForecast": "توقعات 3 أيام",
   "humidity": "الرطوبة",
+  "cityNotFound": "المدينة غير موجودة",
 
   "cropLibrary": "مكتبة المحاصيل",
   "noCropsAvailable": "لا توجد محاصيل متاحة",

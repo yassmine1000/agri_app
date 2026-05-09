@@ -263,6 +263,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get humidity => 'Humidity';
 
   @override
+  String get cityNotFound => 'City not found';
+
+  @override
   String get cropLibrary => 'Crop Library';
 
   @override

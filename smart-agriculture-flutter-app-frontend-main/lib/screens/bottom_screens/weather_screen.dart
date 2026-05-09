@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_agri_app/generated/app_localizations.dart';
 import 'package:smart_agri_app/bloc/weather/weather_bloc.dart';
 import 'package:smart_agri_app/bloc/weather/weather_state.dart';
@@ -9,8 +10,7 @@ import '../../bloc/weather/weather_event.dart';
 
 class WeatherScreen extends StatefulWidget {
   final bool isDarkMode;
-  final String langCode;
-  const WeatherScreen({super.key, this.isDarkMode = true, this.langCode = 'en'});
+  const WeatherScreen({super.key, this.isDarkMode = true});
 
   @override
   State<WeatherScreen> createState() => _WeatherScreenState();
@@ -18,13 +18,22 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen> {
   final TextEditingController _cityController = TextEditingController();
+  String _langCode = 'en';
 
-  // Langue passée depuis main_screen où le contexte est déjà prêt
-  String get _langCode => widget.langCode;
+  Future<String> _getSavedLang() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getString('language') ?? 'EN';
+    switch (saved) {
+      case 'FR': return 'fr';
+      case 'AR': return 'ar';
+      default:   return 'en';
+    }
+  }
 
-  void _searchWeather() {
+  Future<void> _searchWeather() async {
     final city = _cityController.text.trim();
     if (city.isEmpty) return;
+    _langCode = await _getSavedLang();
     context.read<WeatherBloc>().add(FetchCurrentWeatherByCity(city: city, lang: _langCode));
     context.read<WeatherBloc>().add(FetchWeatherForecastByCity(city: city, days: 3, lang: _langCode));
   }

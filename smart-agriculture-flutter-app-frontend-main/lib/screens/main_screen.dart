@@ -132,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
           DetectionScreen(isDarkMode: isDark),
           FarmerScreen(isDarkMode: isDark),
           MarketPricesScreen(isDarkMode: isDark),
-          WeatherScreen(isDarkMode: isDark, langCode: Localizations.localeOf(context).languageCode),
+          WeatherScreen(isDarkMode: isDark),
           ShopScreen(isDarkMode: isDark),
         ];
         final titles = [l.detection, l.planning, l.market, l.weather, l.shop];
